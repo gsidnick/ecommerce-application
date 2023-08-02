@@ -6,7 +6,13 @@ module.exports =
     'plugin:@typescript-eslint/stylistic-type-checked',
     'prettier'
   ],
-  overrides: [],
+  overrides: [{
+    "files": [
+      "**/__tests__/**/*.[jt]s?(x)",
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ],
+    "extends": ["plugin:testing-library/react"]
+  }],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -15,6 +21,7 @@ module.exports =
     project: './tsconfig.json'
   },
   plugins: [
+    'testing-library',
     '@typescript-eslint'
   ],
   root: true,
