@@ -67,7 +67,6 @@ module.exports =
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/no-non-null-assertion': 'error',
     'no-debugger': 'off',
-    'no-console': 0,
-    'class-methods-use-this': 'off'
+    'no-console': 0
   }
 }
