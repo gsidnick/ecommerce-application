@@ -19,6 +19,7 @@ By completing this e-commerce app project, our developers group will demonstrate
 - JavaScript
 - Typescript
 - React ⚛️
+- Redux Toolkit
 - Next.JS
 - Tailwind
 - ESLint
@@ -41,7 +42,7 @@ You will also see any lint errors in the console.</details>
 Runs the app in the production mode.
 
 Before start generate an optimized production build through run the command '**npm run build**'
-Open http://localhost:3000 to view it in the browser.
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 </details>
 
