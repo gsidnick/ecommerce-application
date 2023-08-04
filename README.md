@@ -73,7 +73,7 @@ Launches the check weither your files are formatted.
 This command formats all files supported by Prettier in the current directory and its subdirectories.
 </details>
 
-## 🚀Getting Started Locally (Installation Guide)
+## Getting Started Locally (Installation Guide) 🚀
 ### Getting Started in developing mode 💻
 1. Run **npm install** (install all dependencies)
 2. Run **npm run dev** (run project in developing mode)
