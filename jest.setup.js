@@ -3,12 +3,12 @@
 
 // Used for __tests__/testing-library.js
 // Learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect';
 
-import React from 'react'
+import React from 'react';
 
 function MockImage(props) {
-    return React.createElement('img', props);
+  return React.createElement('img', props);
 }
 
 jest.mock('next/image', () => MockImage);

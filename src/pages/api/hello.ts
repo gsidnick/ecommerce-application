@@ -3,11 +3,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface Data {
   name: string;
-};
+}
 
 enum ResponseCode {
   'OK' = 200,
-};
+}
 
 export default function handler(
   req: NextApiRequest,
