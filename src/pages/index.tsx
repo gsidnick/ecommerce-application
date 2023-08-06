@@ -1,10 +1,10 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { AppStore, wrapper } from '@/store/store';
+import { wrapper } from '@/store/store';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useActions } from '@/hooks/useActions';
 import Link from 'next/link';
 
-interface Data {
+interface AuthState {
   authState: boolean;
 }
 
@@ -38,17 +38,17 @@ const Home: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<{ props: Data }> =
-  wrapper.getServerSideProps(() => {
-    (store: AppStore): { props: Data } => {
-      console.log(store);
-
+export const getServerSideProps: GetServerSideProps<AuthState> =
+  wrapper.getServerSideProps(
+    (store) => async (): Promise<{ props: AuthState }> => {
+      await Promise.resolve();
+      store.dispatch(setAuthState(false));
       return {
         props: {
           authState: false,
         },
       };
-    };
-  });
+    }
+  );
 
 export default Home;
