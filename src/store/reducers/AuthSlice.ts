@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-import { AppState } from './store';
 import { HYDRATE } from 'next-redux-wrapper';
 
-export interface AuthState {
+interface AuthState {
   authState: boolean;
 }
 
@@ -15,6 +13,8 @@ enum ESlices {
   auth = 'auth',
 }
 
+type SliceTypes = Record<ESlices, string[]>;
+
 export const authSlice = createSlice({
   name: ESlices.auth,
   initialState,
@@ -23,26 +23,14 @@ export const authSlice = createSlice({
       state.authState = action.payload;
     },
   },
-
   extraReducers: {
     [HYDRATE]: (
       state: AuthState,
-      action: PayloadAction<keyof typeof ESlices>
-    ) => {
-      console.log('HYDRATE', action.payload);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-      return {
-        ...state,
-        ...action.payload.auth,
-      };
+      action: PayloadAction<SliceTypes>
+    ): AuthState => {
+      return { ...state, ...action.payload.auth };
     },
   },
 });
-
-export const { setAuthState } = authSlice.actions;
-
-export const selectAuthState = (state: AppState): boolean =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  state.auth?.authState as boolean;
 
 export default authSlice.reducer;

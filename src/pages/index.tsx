@@ -1,17 +1,16 @@
 import type { GetServerSideProps, NextPage } from 'next';
-import { selectAuthState, setAuthState } from '../store/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppStore, wrapper } from '../store/store';
+import { AppStore, wrapper } from '@/store/store';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { useActions } from '@/hooks/useActions';
 import Link from 'next/link';
-import { PayloadAction } from '@reduxjs/toolkit';
 
 interface Data {
   authState: boolean;
 }
 
 const Home: NextPage = () => {
-  const authState: boolean = useSelector(selectAuthState);
-  const dispatch = useDispatch();
+  const { authState } = useAppSelector((state) => state.authReducer);
+  const { setAuthState } = useActions();
 
   return (
     <div
@@ -25,11 +24,13 @@ const Home: NextPage = () => {
       <Link href="/second-page">Go to second page</Link>
       <div>{authState ? 'Logged in' : 'Not Logged In'}</div>
       <button
-        onClick={(): PayloadAction<boolean> =>
-          authState
-            ? dispatch(setAuthState(false))
-            : dispatch(setAuthState(true))
-        }
+        onClick={(): void => {
+          if (authState) {
+            setAuthState(false);
+          } else {
+            setAuthState(true);
+          }
+        }}
       >
         {authState ? 'Logout' : 'LogIn'}
       </button>

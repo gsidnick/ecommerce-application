@@ -4,21 +4,21 @@ import {
   ThunkAction,
   Action,
 } from '@reduxjs/toolkit';
-import { authSlice } from './authSlice';
 import { createWrapper } from 'next-redux-wrapper';
 import { Persistor, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
+import authReducer from './reducers/AuthSlice';
 
 const rootReducer = combineReducers({
-  [authSlice.name]: authSlice.reducer,
+  authReducer,
 });
 
 export interface IPersistorStore {
   __persistor?: Persistor;
 }
 
-const makeConfiguredStore = (): ToolkitStore =>
+const setupStore = (): ToolkitStore =>
   configureStore({
     reducer: rootReducer,
     devTools: true,
@@ -26,18 +26,14 @@ const makeConfiguredStore = (): ToolkitStore =>
 
 export const makeStore = (): ToolkitStore & IPersistorStore => {
   const isServer = typeof window === 'undefined';
-
   if (isServer) {
-    return makeConfiguredStore();
+    return setupStore();
   } else {
-    // we need it only on client side
-
     const persistConfig = {
       key: 'nextjs',
       whitelist: ['auth'], // make sure it does not clash with server keys
       storage,
     };
-
     const persistedReducer = persistReducer(persistConfig, rootReducer);
     const store: ToolkitStore = configureStore({
       reducer: persistedReducer,
@@ -50,8 +46,11 @@ export const makeStore = (): ToolkitStore & IPersistorStore => {
   }
 };
 
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
+export type ClientStore = ReturnType<typeof setupStore>;
+export type AppDispatch = ClientStore['dispatch'];
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   AppState,

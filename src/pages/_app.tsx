@@ -1,6 +1,6 @@
-import '../styles/globals.css';
+import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { wrapper } from '../store/store';
+import { wrapper } from '@/store/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 
