@@ -13,5 +13,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ): void {
+  console.log(req);
+
   res.status(ResponseCode.OK).json({ name: 'John Doe' });
 }

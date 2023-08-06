@@ -1,6 +1,8 @@
 module.exports = {
   extends: [
     'plugin:@next/next/recommended',
+    'airbnb',
+    'airbnb-typescript',
     'plugin:@typescript-eslint/recommended-type-checked',
     'plugin:@typescript-eslint/stylistic-type-checked',
     'prettier',
@@ -63,5 +65,8 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'error',
     'no-debugger': 'off',
     'no-console': 0,
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-uses-react': 'off',
+    'react/jsx-props-no-spreading': 'off',
   },
 };
