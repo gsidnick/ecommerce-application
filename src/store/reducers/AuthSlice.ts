@@ -9,7 +9,7 @@ const initialState: AuthState = {
   authState: false,
 };
 
-enum ESlices {
+export enum ESlices {
   auth = 'auth',
 }
 
