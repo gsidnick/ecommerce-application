@@ -16,9 +16,10 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
 import { authSlice } from '@/store/slices/authSlice';
+import storage from './helpers/storage';
 
 const rootReducer = combineReducers({
   [authSlice.name]: authSlice.reducer,

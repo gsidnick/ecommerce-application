@@ -1,7 +1,6 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { wrapper } from '@/store/store';
 import { useAppSelector } from '@/hooks/useAppSelector';
-import Link from 'next/link';
 import { selectAuthState, setAuthState } from '@/store/slices/authSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 
@@ -22,7 +21,6 @@ const Home: NextPage = () => {
         gridRowGap: '20px',
       }}
     >
-      <Link href="/second-page">Go to second page</Link>
       <div>{authState ? 'Logged in' : 'Not Logged In'}</div>
       <button
         onClick={(): void => {
