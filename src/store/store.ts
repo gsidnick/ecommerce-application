@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
 });
 
 export interface IPersistorStore {
-  __persistor?: Persistor;
+  __persistor: Persistor;
 }
 
 const setupStore = (): ToolkitStore =>
@@ -44,7 +44,12 @@ const setupStore = (): ToolkitStore =>
 export const makeStore = (): ToolkitStore & IPersistorStore => {
   const isServer = typeof window === 'undefined';
   if (isServer) {
-    return setupStore();
+    const store: ToolkitStore & IPersistorStore = {
+      ...setupStore(),
+      __persistor: persistStore(setupStore()),
+    };
+
+    return store;
   } else {
     const persistConfig = {
       key: 'nextjs',
@@ -63,9 +68,9 @@ export const makeStore = (): ToolkitStore & IPersistorStore => {
         }),
     });
 
-    (store as ToolkitStore & IPersistorStore).__persistor = persistStore(store); // Nasty hack
+    const persistedStore = { ...store, __persistor: persistStore(store) };
 
-    return store as ToolkitStore & IPersistorStore;
+    return persistedStore;
   }
 };
 
