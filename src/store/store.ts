@@ -5,7 +5,17 @@ import {
   Action,
 } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { Persistor, persistReducer, persistStore } from 'redux-persist';
+import {
+  Persistor,
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
 import { authSlice } from '@/store/slices/authSlice';
@@ -22,6 +32,12 @@ const setupStore = (): ToolkitStore =>
   configureStore({
     reducer: rootReducer,
     devTools: true,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
   });
 
 export const makeStore = (): ToolkitStore & IPersistorStore => {
@@ -38,6 +54,12 @@ export const makeStore = (): ToolkitStore & IPersistorStore => {
     const store: ToolkitStore = configureStore({
       reducer: persistedReducer,
       devTools: process.env.NODE_ENV !== 'production',
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+          serializableCheck: {
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+          },
+        }),
     });
 
     (store as ToolkitStore & IPersistorStore).__persistor = persistStore(store); // Nasty hack
