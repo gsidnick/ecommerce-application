@@ -44,34 +44,27 @@ const setupStore = (): ToolkitStore =>
 export const makeStore = (): ToolkitStore & IPersistorStore => {
   const isServer = typeof window === 'undefined';
   if (isServer) {
-    const store: ToolkitStore & IPersistorStore = {
-      ...setupStore(),
-      __persistor: persistStore(setupStore()),
-    };
-
-    return store;
-  } else {
-    const persistConfig = {
-      key: 'nextjs',
-      whitelist: ['auth'], // make sure it does not clash with server keys
-      storage,
-    };
-    const persistedReducer = persistReducer(persistConfig, rootReducer);
-    const store: ToolkitStore = configureStore({
-      reducer: persistedReducer,
-      devTools: process.env.NODE_ENV !== 'production',
-      middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-          serializableCheck: {
-            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-          },
-        }),
-    });
-
-    const persistedStore = { ...store, __persistor: persistStore(store) };
-
-    return persistedStore;
+    return { ...setupStore(), __persistor: persistStore(setupStore()) };
   }
+
+  const persistConfig = {
+    key: 'nextjs',
+    whitelist: ['auth'],
+    storage,
+  };
+  const persistedReducer = persistReducer(persistConfig, rootReducer);
+  const store: ToolkitStore = configureStore({
+    reducer: persistedReducer,
+    devTools: process.env.NODE_ENV !== 'production',
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
+  });
+
+  return { ...store, __persistor: persistStore(store) };
 };
 
 export type RootState = ReturnType<typeof rootReducer>;
