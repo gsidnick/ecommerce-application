@@ -6,12 +6,12 @@ import {
 } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { Persistor, persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
-import authReducer, { ESlices } from './reducers/AuthSlice';
-import storage from './helpers/storage';
+import { authSlice } from '@/store/slices/authSlice';
 
 const rootReducer = combineReducers({
-  [ESlices.auth]: authReducer,
+  [authSlice.name]: authSlice.reducer,
 });
 
 export interface IPersistorStore {

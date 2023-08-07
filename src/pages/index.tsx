@@ -1,17 +1,17 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import { wrapper } from '@/store/store';
 import { useAppSelector } from '@/hooks/useAppSelector';
-import { useActions } from '@/hooks/useActions';
 import Link from 'next/link';
-import { setAuthState } from '../store/actionCreators';
+import { selectAuthState, setAuthState } from '@/store/slices/authSlice';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
 
 interface AuthState {
   authState: boolean;
 }
 
 const Home: NextPage = () => {
-  const { authState } = useAppSelector((state) => state.auth);
-  const { setAuthState } = useActions();
+  const { authState } = useAppSelector(selectAuthState);
+  const dispatch = useAppDispatch();
 
   return (
     <div
@@ -27,9 +27,9 @@ const Home: NextPage = () => {
       <button
         onClick={(): void => {
           if (authState) {
-            setAuthState(false);
+            dispatch(setAuthState(false));
           } else {
-            setAuthState(true);
+            dispatch(setAuthState(true));
           }
         }}
       >
@@ -44,7 +44,6 @@ export const getServerSideProps: GetServerSideProps<AuthState> =
     (store) => async (): Promise<{ props: AuthState }> => {
       await Promise.resolve();
       store.dispatch(setAuthState(false));
-
       return {
         props: {
           authState: false,
