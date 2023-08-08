@@ -5,19 +5,17 @@ interface Storage {
   setItem: (_key: string, value: string) => Promise<string>;
   removeItem: () => Promise<void>;
 }
-const createNoopStorage = (): Storage => {
-  return {
-    getItem(): Promise<null> {
-      return Promise.resolve(null);
-    },
-    setItem(_key, value): Promise<string> {
-      return Promise.resolve(value);
-    },
-    removeItem(): Promise<void> {
-      return Promise.resolve();
-    },
-  };
-};
+const createNoopStorage = (): Storage => ({
+  getItem(): Promise<null> {
+    return Promise.resolve(null);
+  },
+  setItem(_key, value): Promise<string> {
+    return Promise.resolve(value);
+  },
+  removeItem(): Promise<void> {
+    return Promise.resolve();
+  },
+});
 
 const storage =
   typeof window !== 'undefined'

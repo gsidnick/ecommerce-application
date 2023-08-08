@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
 });
 
 export interface IPersistorStore {
-  __persistor: Persistor;
+  persistor: Persistor;
 }
 
 const setupStore = (): ToolkitStore =>
