@@ -1,14 +1,15 @@
-import type { GetServerSideProps, NextPage } from 'next';
-import { wrapper } from '@/store/store';
-import { useAppSelector } from '@/hooks/useAppSelector';
+import { ReactElement } from 'react';
+import type { GetServerSideProps } from 'next';
 import { selectAuthState, setAuthState } from '@/store/slices/authSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { wrapper } from '@/store/store';
 
 interface AuthState {
   authState: boolean;
 }
 
-const Home: NextPage = () => {
+function Home(): ReactElement {
   const { authState } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
 
@@ -23,6 +24,7 @@ const Home: NextPage = () => {
     >
       <div>{authState ? 'Logged in' : 'Not Logged In'}</div>
       <button
+        type="button"
         onClick={(): void => {
           if (authState) {
             dispatch(setAuthState(false));
@@ -35,7 +37,7 @@ const Home: NextPage = () => {
       </button>
     </div>
   );
-};
+}
 
 export const getServerSideProps: GetServerSideProps<AuthState> =
   wrapper.getServerSideProps(

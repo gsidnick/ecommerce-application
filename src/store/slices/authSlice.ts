@@ -23,15 +23,18 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setAuthState(state: AuthState, action: PayloadAction<boolean>) {
-      state.authState = action.payload;
+      return {
+        authState: action.payload,
+      };
     },
   },
   extraReducers: (builder) => {
     builder.addCase(
       hydrateAction,
-      (state: AuthState, action: PayloadAction<SliceTypes>): AuthState => {
-        return { ...state, ...action.payload.auth };
-      }
+      (state: AuthState, action: PayloadAction<SliceTypes>): AuthState => ({
+        ...state,
+        ...action.payload.auth,
+      })
     );
   },
 });
