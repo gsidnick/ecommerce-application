@@ -1,0 +1,18 @@
+import Link from 'next/link';
+import React, { ReactElement } from 'react';
+
+import { IMenuLink } from './menuItemTypes';
+
+interface IMenuItem {
+  item: IMenuLink;
+}
+
+function MenuItem({ item }: IMenuItem): ReactElement {
+  return (
+    <li>
+      <Link href={item.link}>{item.name}</Link>
+    </li>
+  );
+}
+
+export default MenuItem;
