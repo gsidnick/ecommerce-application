@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 import { IMenuLink } from './menuItemTypes';
 

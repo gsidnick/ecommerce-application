@@ -19,13 +19,13 @@ module.exports = {
       '2sm': '320px',
       // => @media (min-width: 320px) { ... }
       sm: '480px',
-      // => @media (min-width: 320px) { ... }
+      // => @media (min-width: 480px) { ... }
       md: '768px',
       // => @media (min-width: 768px) { ... }
       lg: '1024px',
       // => @media (min-width: 1024px) { ... }
       xl: '1200px',
-      // => @media (min-width: 1280px) { ... }
+      // => @media (min-width: 1200px) { ... }
     },
     extend: {
       backgroundImage: {
