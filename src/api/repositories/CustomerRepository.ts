@@ -1,6 +1,10 @@
 import { ApiRoot } from '@commercetools/platform-sdk';
 import ApiClient from '@/api/client/ApiClient';
-import { ApiClientOptions, UserCredentialData } from '../types';
+import {
+  ApiClientOptions,
+  UserCredentialData,
+  UserRegistrationData,
+} from '../types';
 
 class CustomerRepository {
   private readonly projectKey: string;
@@ -11,6 +15,24 @@ class CustomerRepository {
     const apiClient = new ApiClient(options);
     this.projectKey = apiClient.getProjectKey();
     this.apiRoot = apiClient.getApiRoot();
+  }
+
+  public async registerCustomer(
+    userData: UserRegistrationData
+  ): Promise<unknown> {
+    try {
+      return await this.apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .customers()
+        .post({
+          body: userData,
+        })
+        .execute();
+    } catch (error) {
+      return error;
+    }
   }
 
   public async loginCustomer(userData: UserCredentialData): Promise<unknown> {
