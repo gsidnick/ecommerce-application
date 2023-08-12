@@ -3,7 +3,7 @@ import {
   AnonymousAuthMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
-import { UserCredentialData } from '../types';
+import { ExistingTokenFlowOptions, UserCredentialData } from '../types';
 import TokenService from '@/api/services/TokenService';
 import {
   API_URL,
@@ -61,4 +61,15 @@ export function getHttpMiddlewareOptions(): HttpMiddlewareOptions {
 
 export function getProjectKey(): string {
   return PROJECT_KEY;
+}
+
+export function getExistingTokenFlowOptions(
+  token: string
+): ExistingTokenFlowOptions {
+  return {
+    authorization: `Bearer ${token}`,
+    options: {
+      force: true,
+    },
+  };
 }
