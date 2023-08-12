@@ -3,40 +3,37 @@ import {
   ApiRoot,
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
-import { ApiClientOptions } from '../types';
+import {
+  getAnonymousAuthMiddlewareOptions,
+  getHttpMiddlewareOptions,
+  getProjectKey,
+} from '@/api/helpers/options';
 
-class ApiClient {
-  private readonly projectKey: string;
-
+class AnonymousClient {
   private readonly clientBuilder: ClientBuilder;
 
   private readonly client: Client;
 
-  constructor(options: ApiClientOptions) {
-    this.projectKey = options.projectKey;
+  constructor() {
     this.clientBuilder = new ClientBuilder();
-    this.client = this.getClientFromOptions(options);
+    this.client = this.getClient();
   }
 
   public getApiRoot(): ApiRoot {
     return createApiBuilderFromCtpClient(this.client);
   }
 
-  public getProjectKey(): string {
-    return this.projectKey;
-  }
-
-  private getClientFromOptions(options: ApiClientOptions): Client {
-    const { projectKey, authMiddlewareOptions, httpMiddlewareOptions } =
-      options;
-
+  private getClient(): Client {
+    const projectKey = getProjectKey();
+    const anonymousAuthMiddlewareOptions = getAnonymousAuthMiddlewareOptions();
+    const httpMiddlewareOptions = getHttpMiddlewareOptions();
     return this.clientBuilder
       .withProjectKey(projectKey)
-      .withMiddleware(authMiddlewareOptions)
+      .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
       .withHttpMiddleware(httpMiddlewareOptions)
       .withLoggerMiddleware()
       .build();
   }
 }
 
-export default ApiClient;
+export default AnonymousClient;

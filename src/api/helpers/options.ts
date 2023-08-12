@@ -1,58 +1,64 @@
 import {
-  createAuthForAnonymousSessionFlow,
-  createAuthForPasswordFlow,
-  Middleware,
+  HttpMiddlewareOptions,
+  AnonymousAuthMiddlewareOptions,
+  PasswordAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
-import { ApiClientOptions, UserCredentialData } from '../types';
+import { UserCredentialData } from '../types';
+import TokenService from '@/api/services/TokenService';
+import {
+  API_URL,
+  AUTH_URL,
+  CLIENT_ID,
+  CLIENT_SECRET,
+  PROJECT_KEY,
+  SCOPES,
+} from '@/api/constants';
 
-const projectKey = process.env.NEXT_PUBLIC_CTP_PROJECT_KEY ?? '';
-const clientSecret = process.env.NEXT_PUBLIC_CTP_CLIENT_SECRET ?? '';
-const clientId = process.env.NEXT_PUBLIC_CTP_CLIENT_ID ?? '';
-const authUrl = process.env.NEXT_PUBLIC_CTP_AUTH_URL ?? '';
-const apiUrl = process.env.NEXT_PUBLIC_CTP_API_URL ?? '';
-const scopes = process.env.NEXT_PUBLIC_CTP_SCOPES
-  ? process.env.NEXT_PUBLIC_CTP_SCOPES.split(' ')
-  : [];
-
-export function getOptions(userData?: UserCredentialData): ApiClientOptions {
-  let authMiddlewareOptions: Middleware;
-
-  if (userData) {
-    const { email, password } = userData;
-    authMiddlewareOptions = createAuthForPasswordFlow({
-      host: authUrl,
-      projectKey,
-      credentials: {
-        clientId,
-        clientSecret,
-        user: {
-          username: email,
-          password,
-        },
-      },
-      scopes,
-      fetch,
-    });
-  } else {
-    authMiddlewareOptions = createAuthForAnonymousSessionFlow({
-      host: authUrl,
-      projectKey,
-      credentials: {
-        clientId,
-        clientSecret,
-      },
-      scopes,
-      fetch,
-    });
-  }
-
+export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOptions {
   return {
-    projectKey,
-    credentials: userData ?? null,
-    authMiddlewareOptions,
-    httpMiddlewareOptions: {
-      host: apiUrl,
-      fetch,
+    host: AUTH_URL,
+    projectKey: PROJECT_KEY,
+    credentials: {
+      clientId: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
     },
+    scopes: SCOPES,
+    fetch,
   };
+}
+
+export function getAuthMiddlewareOptions(
+  userData: UserCredentialData
+): PasswordAuthMiddlewareOptions {
+  const { email, password } = userData;
+  const tokenService = new TokenService();
+  return {
+    host: AUTH_URL,
+    projectKey: PROJECT_KEY,
+    credentials: {
+      clientId: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      user: {
+        username: email,
+        password,
+      },
+    },
+    scopes: SCOPES,
+    tokenCache: {
+      get: () => tokenService.getToken(),
+      set: (cache) => tokenService.setToken(cache),
+    },
+    fetch,
+  };
+}
+
+export function getHttpMiddlewareOptions(): HttpMiddlewareOptions {
+  return {
+    host: API_URL,
+    fetch,
+  };
+}
+
+export function getProjectKey(): string {
+  return PROJECT_KEY;
 }

@@ -1,27 +1,26 @@
-import { ApiRoot } from '@commercetools/platform-sdk';
-import ApiClient from '@/api/client/ApiClient';
-import {
-  ApiClientOptions,
-  UserCredentialData,
-  UserRegistrationData,
-} from '../types';
+import AuthClient from '@/api/client/AuthClient';
+import { UserCredentialData, UserRegistrationData } from '../types';
+import { getProjectKey } from '@/api/helpers/options';
+import AnonymousClient from '@/api/client/AnonymousClient';
+import TokenService from '@/api/services/TokenService';
 
 class CustomerRepository {
   private readonly projectKey: string;
 
-  private apiRoot: ApiRoot;
+  private tokenService: TokenService;
 
-  constructor(options: ApiClientOptions) {
-    const apiClient = new ApiClient(options);
-    this.projectKey = apiClient.getProjectKey();
-    this.apiRoot = apiClient.getApiRoot();
+  constructor() {
+    this.projectKey = getProjectKey();
+    this.tokenService = new TokenService();
   }
 
   public async registerCustomer(
     userData: UserRegistrationData
   ): Promise<unknown> {
+    const client = new AnonymousClient();
+    const apiRoot = client.getApiRoot();
     try {
-      return await this.apiRoot
+      return await apiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
@@ -36,9 +35,11 @@ class CustomerRepository {
   }
 
   public async loginCustomer(userData: UserCredentialData): Promise<unknown> {
+    const client = new AuthClient(userData);
+    const apiRoot = client.getApiRoot();
     try {
       const { email, password } = userData;
-      return await this.apiRoot
+      return await apiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
@@ -54,6 +55,10 @@ class CustomerRepository {
     } catch (error) {
       return error;
     }
+  }
+
+  public logoutCustomer(): void {
+    this.tokenService.removeToken();
   }
 }
 

@@ -1,18 +1,25 @@
 import CustomerRepository from '@/api/repositories/CustomerRepository';
-import { getOptions } from '@/api/helpers/options';
 import { UserCredentialData, UserRegistrationData } from '../types';
 
 class CustomerController {
+  private customerRepository: CustomerRepository;
+
+  constructor() {
+    this.customerRepository = new CustomerRepository();
+  }
+
   public async registerCustomer(userData: UserRegistrationData): Promise<void> {
-    const options = getOptions();
-    const data = await new CustomerRepository(options).registerCustomer(
-      userData
-    );
+    const data = await this.customerRepository.registerCustomer(userData);
+    console.log('Registration Check', data);
   }
 
   public async loginCustomer(userData: UserCredentialData): Promise<void> {
-    const options = getOptions(userData);
-    const data = await new CustomerRepository(options).loginCustomer(userData);
+    const data = await this.customerRepository.loginCustomer(userData);
+    console.log('Login Check', data);
+  }
+
+  public logoutCustomer(): void {
+    this.customerRepository.logoutCustomer();
   }
 }
 
