@@ -1,4 +1,4 @@
-import { MainSliderData } from './mainSliderTypes';
+import { MainSliderData } from './types';
 
 import sliderImg1 from '../../assets/images/main-slider/slider-01.png';
 import sliderImg2 from '../../assets/images/main-slider/slider-02-video-call.png';
@@ -11,7 +11,6 @@ export const productsToSlide: MainSliderData[] = [
     title: 'Takamine',
     content: 'винтажная 12 струнная GJ72CE - 12BSB',
     imageSrc: sliderImg1,
-    // imageSrc: '../../assets/images/main-slider/slider-01.png',
   },
   {
     id: 2,
@@ -19,20 +18,17 @@ export const productsToSlide: MainSliderData[] = [
     content:
       'Эта фунция помогает увидеть и услышать инструмент в реальном времени, что заметно упрощает выбор',
     imageSrc: sliderImg2,
-    // imageSrc: '../../assets/images/main-slider/slider-02-video-call.png',
   },
   {
     id: 3,
     title: 'Отстройка каждого инструмента',
     content: 'Наши мастера отстраивают каждый инструмент перед отправкой',
     imageSrc: sliderImg3,
-    // imageSrc: '../../assets/images/main-slider/slider-03-kempa.png',
   },
   {
     id: 4,
     title: 'Акустическая гитара Kepma G1',
     content: 'Инструмент из премиальной линейки G1',
     imageSrc: sliderImg4,
-    // imageSrc: '../../assets/images/main-slider/slider-04.png',
   },
 ];

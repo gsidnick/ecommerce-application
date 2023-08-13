@@ -8,11 +8,7 @@ import { useKeenSlider } from 'keen-slider/react';
 import { productsToSlide } from './slider-data';
 import styles from './slider.module.css';
 
-interface ArrowProps {
-  disabled: boolean;
-  left: boolean;
-  onClick: (event: MouseEvent) => void;
-}
+import { ArrowProps } from './types';
 
 function Arrow({ disabled, left = false, onClick }: ArrowProps): ReactElement {
   const disabeld = disabled ? styles.arrowDisabled : '';
