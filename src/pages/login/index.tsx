@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { NextPage } from 'next';
+import { ReactElement } from 'react';
 import { selectAuthState, setAuthState } from '../../store/slices/authSlice';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { LoginProps } from '../api/user/login';
@@ -35,6 +36,31 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
         'Password must meet the requirements'
+      )
+      .test(
+        'special-characters',
+        'Password must contain at least one special character (e.g., !@#$%^&*)',
+        (value) => /[!@#$%^&*]/.test(value)
+      )
+      .test(
+        'no-whitespace',
+        'Password must not contain leading or trailing whitespace',
+        (value) => !/^\s|\s$/.test(value)
+      )
+      .test(
+        'has-uppercase',
+        'Password must contain at least one uppercase letter (A-Z)',
+        (value) => /[A-Z]/.test(value)
+      )
+      .test(
+        'has-lowercase',
+        'Password must contain at least one lowercase letter (a-z)',
+        (value) => /[a-z]/.test(value)
+      )
+      .test(
+        'has-digit',
+        'Password must contain at least one digit (0-9)',
+        (value) => /\d/.test(value)
       )
       .trim(),
     }),
@@ -72,6 +98,13 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
         });
     },
   });
+
+  const renderValidationMessage = (fieldName: string, condition: boolean, message: string): ReactElement => (
+    <div className={`mb-2 ${condition ? 'text-green-500' : 'text-red-500'}`}>
+      {condition ? '✓' : '×'} {message}
+    </div>
+  );
+
 
   const handleRegistration = (): void => {
     console.log('Registration clicked');
@@ -111,7 +144,39 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
               className="w-full p-2 text-white border rounded-md border-neutral-800 focus:border-neutral-500 focus:outline-none bg-background-main"
             />
             {formik.touched.password && formik.errors.password && (
-              <div className="text-rose-500">{formik.errors.password}</div>
+              <div className="text-rose-500">   {formik.errors.password}
+              <ul className="mt-1 ml-6 text-sm text-red-500 list-disc">
+                {renderValidationMessage(
+                  'length',
+                  formik.values.password.length >= MIN_PASSWORD_LENGTH,
+                  'At least 8 characters long'
+                )}
+                {renderValidationMessage(
+                  'uppercase',
+                  /[A-Z]/.test(formik.values.password),
+                  'At least one uppercase letter (A-Z)'
+                )}
+                {renderValidationMessage(
+                  'lowercase',
+                  /[a-z]/.test(formik.values.password),
+                  'At least one lowercase letter (a-z)'
+                )}
+                {renderValidationMessage(
+                  'digit',
+                  /\d/.test(formik.values.password),
+                  'At least one digit (0-9)'
+                )}
+                {renderValidationMessage(
+                  'special-character',
+                  /[!@#$%^&*]/.test(formik.values.password),
+                  'At least one special character (e.g., !@#$%^&*)'
+                )}
+                {renderValidationMessage(
+                  'no-whitespace',
+                  !/^\s|\s$/.test(formik.values.password),
+                  'No leading or trailing whitespace'
+                )}
+              </ul></div>
             )}
           </div>
           <div className="flex items-center mb-4">
