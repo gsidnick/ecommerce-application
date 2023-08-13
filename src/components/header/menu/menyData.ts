@@ -2,16 +2,20 @@ import { IMenuLink } from './menu-item/menuItemTypes'
 
 export const menu: IMenuLink[] = [
 	{
+		link: '/',
+		name: 'HOME'
+	},
+	{
 		link: '/catalog',
-		name: 'КАТАЛОГ'
+		name: 'CATALOG'
 	},
 	{
 		link: '/services',
-		name: 'УСЛУГИ'
+		name: 'SERVICES'
 	},
 	{
 		link: '/about',
-		name: 'О НАС'
+		name: 'ABOUT US'
 	},
 	{
 		link: '/delivery',
@@ -19,18 +23,18 @@ export const menu: IMenuLink[] = [
 	},
 	{
 		link: '/feedbacks',
-		name: 'ОТЗЫВЫ'
+		name: 'FEEDBACKS'
 	},
 	{
 		link: '/study',
-		name: 'ОБУЧЕНИЕ'
+		name: 'STUDY'
 	},
 	{
 		link: '/contacts',
-		name: 'КОНТАКТЫ'
+		name: 'CONTACTS'
 	},
 	{
 		link: '/opt',
-		name: 'ОПТ'
+		name: 'OPT'
 	},
 ]
