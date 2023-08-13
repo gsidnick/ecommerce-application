@@ -82,8 +82,8 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-900">
-      <div className="p-6 rounded shadow-modal background-main w-96">
+    <div className="flex items-center justify-center h-screen">
+      <div className="p-6 rounded shadow-modal bg-background-main w-96">
         <h1 className="mb-4 text-2xl font-semibold text-white">Login</h1>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-4">
@@ -94,7 +94,7 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full p-2 text-white bg-gray-700 border rounded-md"
+              className="w-full p-2 text-white border rounded-md border-neutral-800 focus:border-neutral-500 focus:outline-none bg-background-main"
             />
             {formik.touched.email && formik.errors.email && (
               <div className="text-rose-500">{formik.errors.email}</div>
@@ -108,7 +108,7 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full p-2 text-white bg-gray-700 border rounded-md"
+              className="w-full p-2 text-white border rounded-md border-neutral-800 focus:border-neutral-500 focus:outline-none bg-background-main"
             />
             {formik.touched.password && formik.errors.password && (
               <div className="text-rose-500">{formik.errors.password}</div>
