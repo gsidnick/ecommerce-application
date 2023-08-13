@@ -10,6 +10,8 @@ import { LoginProps } from '../api/user/login';
 interface Props {
   savedEmail: string;
 }
+const MIN_PASSWORD_LENGTH = 8;
+
 // eslint-disable-next-line max-lines-per-function
 const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
   console.log(savedEmail);
@@ -27,7 +29,14 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
     },
     validationSchema: Yup.object({
       email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string().required('Required'),
+      password: Yup.string()
+      .required('Required')
+      .min(MIN_PASSWORD_LENGTH, 'Password must be at least 8 characters long')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+        'Password must meet the requirements'
+      )
+      .trim(),
     }),
     onSubmit: (values: LoginProps) => {
       console.log('Form submitted with values:', values);
@@ -73,8 +82,8 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-900">
-      <div className="w-96 rounded bg-gray-800 p-6 shadow-md">
+    <div className="flex items-center justify-center h-screen bg-gray-900">
+      <div className="p-6 rounded shadow-modal background-main w-96">
         <h1 className="mb-4 text-2xl font-semibold text-white">Login</h1>
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-4">
@@ -85,11 +94,11 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-md border bg-gray-700 p-2 text-white"
+              className="w-full p-2 text-white bg-gray-700 border rounded-md"
             />
-            {formik.touched.email && formik.errors.email ? (
-              <div className="text-red-500">{formik.errors.email}</div>
-            ) : null}
+            {formik.touched.email && formik.errors.email && (
+              <div className="text-rose-500">{formik.errors.email}</div>
+            )}
           </div>
           <div className="mb-4">
             <input
@@ -99,13 +108,13 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className="w-full rounded-md border bg-gray-700 p-2 text-white"
+              className="w-full p-2 text-white bg-gray-700 border rounded-md"
             />
-            {formik.touched.password && formik.errors.password ? (
-              <div className="text-red-500">{formik.errors.password}</div>
-            ) : null}
+            {formik.touched.password && formik.errors.password && (
+              <div className="text-rose-500">{formik.errors.password}</div>
+            )}
           </div>
-          <div className="mb-4 flex items-center">
+          <div className="flex items-center mb-4">
             <label className="text-white" htmlFor="rememberMe">
               <input
                 type="checkbox"
@@ -120,14 +129,14 @@ const LoginPage: NextPage<Props> = ({ savedEmail }: Props) => {
           </div>
           <button
             type="submit"
-            className="w-full rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600"
+            className="w-full py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
           >
             Sign In
           </button>
           <button
             type="button"
             onClick={handleRegistration}
-            className="mt-2 w-full rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
+            className="w-full py-2 mt-2 text-white bg-gray-600 rounded-md hover:bg-gray-700"
           >
             Sign up
           </button>
