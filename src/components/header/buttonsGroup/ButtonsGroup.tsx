@@ -31,7 +31,7 @@ function Search(): ReactElement {
             }
           }}
         >
-          {authState ? 'Logout' : 'Sign Out'}
+          {authState ? 'Sign Out' : 'Sign In'}
         </button>
       </div>
       <div
