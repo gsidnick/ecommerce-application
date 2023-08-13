@@ -1,4 +1,4 @@
-import { IMenuLink } from './menu-item/menuItemTypes'
+import { IMenuLink } from './menu-item/types'
 
 export const menu: IMenuLink[] = [
 	{

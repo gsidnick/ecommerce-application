@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ReactElement } from 'react';
 
-import { IMenuLink } from './menuItemTypes';
+import { IMenuLink } from './types';
 
 interface IMenuItem {
   item: IMenuLink;

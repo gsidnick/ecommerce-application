@@ -5,7 +5,7 @@ import type { MouseEvent } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 
-import { productsToSlide } from './slider-data';
+import { productsToSlide } from './data';
 import styles from './slider.module.css';
 
 import { ArrowProps } from './types';
