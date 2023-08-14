@@ -131,11 +131,16 @@ const LoginPage: NextPage = () => {
               placeholder="Email"
               name="email"
               value={formik.values.email}
-              onChange={formik.handleChange}
+              onChange={(e): void => {
+                formik
+                  .setFieldTouched('email')
+                  .catch((error) => console.log(error));
+                formik.handleChange(e);
+              }}
               onBlur={formik.handleBlur}
               className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
             />
-            {formik.errors.email && (
+            {formik.touched.email && formik.errors.email && (
               <div className="text-red-500">{formik.errors.email}</div>
             )}
           </div>
@@ -146,7 +151,12 @@ const LoginPage: NextPage = () => {
               name="password"
               ref={passwordRef}
               value={formik.values.password}
-              onChange={formik.handleChange}
+              onChange={(e): void => {
+                formik
+                  .setFieldTouched('password')
+                  .catch((error) => console.log(error));
+                formik.handleChange(e);
+              }}
               onBlur={formik.handleBlur}
               className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
             />
@@ -160,7 +170,7 @@ const LoginPage: NextPage = () => {
               {visionPass ? <EyePassVisible /> : <EyePass />}
             </button>
 
-            {formik.errors.password && (
+            {formik.touched.password && formik.errors.password && (
               <div className="text-red-500">
                 {' '}
                 {formik.errors.password}
