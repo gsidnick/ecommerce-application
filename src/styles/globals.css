@@ -13,12 +13,12 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-    --background-main: #242424;
+    --background-main: #131218;
   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  background-color: var(--background-main);
 }
 
 [class^='numberSlide'],
