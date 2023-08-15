@@ -172,6 +172,7 @@ const RegisterPage: NextPage = () => {
 
   const handleSelectCountry = (e: ChangeEvent<HTMLSelectElement>): void => {
     setCountry(e.target.value as PostcodeName);
+
     formik.resetForm({
       values: {
         ...formik.values,
@@ -182,6 +183,10 @@ const RegisterPage: NextPage = () => {
         shippingCity: '',
         shippingPostcode: '',
       },
+    });
+
+    formik.setFieldValue('country', e.target.value).catch(() => {
+      console.log('Error setting country field');
     });
   };
 
@@ -320,16 +325,20 @@ const RegisterPage: NextPage = () => {
             </div>
             <div className="mb-4">
               <select
+                id="country"
                 name="country"
+                defaultValue=""
                 placeholder="Select a country..."
                 onChange={handleSelectCountry}
                 className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
               >
-                <option value="" disabled selected hidden>
+                <option value="" disabled hidden>
                   Choose a country...
                 </option>
                 {postcodeKeys.map((key) => (
-                  <option value={key}>{postcodes[key].label}</option>
+                  <option key={key} value={key}>
+                    {postcodes[key].label}
+                  </option>
                 ))}
               </select>
               {formik.touched.country && formik.errors.country && (
