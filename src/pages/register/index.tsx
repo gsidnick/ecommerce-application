@@ -415,62 +415,64 @@ const RegisterPage: NextPage = () => {
             </label>
           </div>
 
-          {!billingDefault && (
-            <div className="mb-4 mt-8">
-              <h2 className="mb-2 font-bold text-white">Shipping Address:</h2>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Street Address*"
-                  name="shippingAddress"
-                  value={formik.values.shippingAddress}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
-                />
-                {formik.touched.shippingAddress &&
-                  formik.errors.shippingAddress && (
-                    <div className="text-rose-500">
-                      {formik.errors.shippingAddress}
-                    </div>
-                  )}
-              </div>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="City / Town*"
-                  name="shippingCity"
-                  value={formik.values.shippingCity}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
-                />
-                {formik.touched.shippingCity && formik.errors.shippingCity && (
+          <div className="mb-4 mt-8">
+            <h2 className="mb-2 font-bold text-white">Shipping Address:</h2>
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Street Address*"
+                name="shippingAddress"
+                value={formik.values.shippingAddress}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={billingDefault}
+                className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
+              />
+              {formik.touched.shippingAddress &&
+                formik.errors.shippingAddress && (
                   <div className="text-rose-500">
-                    {formik.errors.shippingCity}
+                    {formik.errors.shippingAddress}
                   </div>
                 )}
-              </div>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Postcode / ZIP*"
-                  name="shippingPostcode"
-                  id="shippingPostcode"
-                  value={formik.values.shippingPostcode}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
-                />
-                {formik.touched.shippingPostcode &&
-                  formik.errors.shippingPostcode && (
-                    <div className="text-rose-500">
-                      {formik.errors.shippingPostcode}
-                    </div>
-                  )}
-              </div>
             </div>
-          )}
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="City / Town*"
+                name="shippingCity"
+                value={formik.values.shippingCity}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={billingDefault}
+                className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
+              />
+              {formik.touched.shippingCity && formik.errors.shippingCity && (
+                <div className="text-rose-500">
+                  {formik.errors.shippingCity}
+                </div>
+              )}
+            </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Postcode / ZIP*"
+                name="shippingPostcode"
+                id="shippingPostcode"
+                value={formik.values.shippingPostcode}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={billingDefault}
+                className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
+              />
+              {formik.touched.shippingPostcode &&
+                formik.errors.shippingPostcode && (
+                  <div className="text-rose-500">
+                    {formik.errors.shippingPostcode}
+                  </div>
+                )}
+            </div>
+          </div>
+
           <button
             type="submit"
             className={`flex w-full items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
