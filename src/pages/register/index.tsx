@@ -127,6 +127,39 @@ const RegisterPage: NextPage = () => {
     });
   };
 
+  const handleOnChangeBillingAddress = (
+    e: ChangeEvent<HTMLInputElement>
+  ): void => {
+    if (billingDefault) {
+      formik.values.shippingAddress = formik.values.billingAddress;
+      // eslint-disable-next-line no-void
+      void formik.setFieldValue('shippingAddress', e.target.value);
+    }
+    formik.handleChange(e);
+  };
+
+  const handleOnChangeBillingCity = (
+    e: ChangeEvent<HTMLInputElement>
+  ): void => {
+    if (billingDefault) {
+      formik.values.shippingCity = formik.values.billingCity;
+      // eslint-disable-next-line no-void
+      void formik.setFieldValue('shippingCity', e.target.value);
+    }
+    formik.handleChange(e);
+  };
+
+  const handleOnChangeBillingPostcode = (
+    e: ChangeEvent<HTMLInputElement>
+  ): void => {
+    if (billingDefault) {
+      formik.values.shippingPostcode = formik.values.billingPostcode;
+      // eslint-disable-next-line no-void
+      void formik.setFieldValue('shippingPostcode', e.target.value);
+    }
+    formik.handleChange(e);
+  };
+
   return (
     <div className="flex items-center justify-center">
       <div className="w-96 rounded bg-background-main p-6 shadow-modal">
@@ -280,7 +313,7 @@ const RegisterPage: NextPage = () => {
                 placeholder="Street Address*"
                 name="billingAddress"
                 value={formik.values.billingAddress}
-                onChange={formik.handleChange}
+                onChange={handleOnChangeBillingAddress}
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
               />
@@ -297,7 +330,7 @@ const RegisterPage: NextPage = () => {
                 placeholder="City / Town*"
                 name="billingCity"
                 value={formik.values.billingCity}
-                onChange={formik.handleChange}
+                onChange={handleOnChangeBillingCity}
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
               />
@@ -311,7 +344,7 @@ const RegisterPage: NextPage = () => {
                 placeholder="Postcode / ZIP*"
                 name="billingPostcode"
                 value={formik.values.billingPostcode}
-                onChange={formik.handleChange}
+                onChange={handleOnChangeBillingPostcode}
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
               />
