@@ -9,13 +9,19 @@ import Loader from '@/components/ui/loader/Loader';
 
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_YEARS = 13;
-const DAYS = 365;
-const HOURS = 24;
-const MINUTES = 60;
-const SECONDS = 60;
-const MILLISECONDS = 1000;
+const DAYS_IN_YEARS = 365;
+const HOURS_IN_DAY = 24;
+const MINUTES_IN_HOUR = 60;
+const SECONDS_IN_MINUTE = 60;
+const MILLISECONDS_IN_SECOND = 1000;
 const MAX_DATE = new Date(
-  Date.now() - MAX_YEARS * DAYS * HOURS * MINUTES * SECONDS * MILLISECONDS
+  Date.now() -
+    MAX_YEARS *
+      DAYS_IN_YEARS *
+      HOURS_IN_DAY *
+      MINUTES_IN_HOUR *
+      SECONDS_IN_MINUTE *
+      MILLISECONDS_IN_SECOND
 );
 
 export interface RegisterProps {
@@ -152,7 +158,7 @@ const RegisterPage: NextPage = () => {
     </div>
   );
 
-  const handleRegistration = (): void => {
+  const handleLogin = (): void => {
     console.log('Login clicked');
 
     router.push('/login').catch(() => {
@@ -479,7 +485,7 @@ const RegisterPage: NextPage = () => {
           </button>
           <button
             type="button"
-            onClick={handleRegistration}
+            onClick={handleLogin}
             className="mt-2 w-full rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
           >
             Log In
