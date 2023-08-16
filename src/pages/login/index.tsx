@@ -73,7 +73,7 @@ const LoginPage: NextPage = () => {
   const handleRegistration = (): void => {
     console.log('Registration clicked');
 
-    router.push('/register').catch(() => {
+    router.push('/signup').catch(() => {
       console.log('Error while redirecting to registration page');
     });
   };
