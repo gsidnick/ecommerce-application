@@ -6,71 +6,21 @@ import { ChangeEvent, ReactElement, useRef, useState } from 'react';
 import EyePassVisible from '@/components/ui/icons/EyePassVisible';
 import EyePass from '@/components/ui/icons/EyePass';
 import Loader from '@/components/ui/loader/Loader';
+import { PostcodeName, RegisterProps } from '@/types';
+import { MIN_PASSWORD_LENGTH } from '@/constants';
+import { postcodes } from '@/validation/patterns';
+import {
+  addressSchema,
+  citySchema,
+  countrySchema,
+  dateSchema,
+  emailSchema,
+  getPostcodeSchema,
+  nameSchema,
+  passwordSchema,
+} from '@/validation/schemas';
 
-const MIN_PASSWORD_LENGTH = 8;
-const MAX_YEARS = 13;
-const DAYS_IN_YEARS = 365;
-const HOURS_IN_DAY = 24;
-const MINUTES_IN_HOUR = 60;
-const SECONDS_IN_MINUTE = 60;
-const MILLISECONDS_IN_SECOND = 1000;
-const MAX_DATE = new Date(
-  Date.now() -
-    MAX_YEARS *
-      DAYS_IN_YEARS *
-      HOURS_IN_DAY *
-      MINUTES_IN_HOUR *
-      SECONDS_IN_MINUTE *
-      MILLISECONDS_IN_SECOND
-);
-
-export interface RegisterProps {
-  email: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  date: string;
-  country: string;
-  billingAddress: string;
-  billingCity: string;
-  billingPostcode: string;
-  shippingAddress: string;
-  shippingCity: string;
-  shippingPostcode: string;
-}
-
-type PostcodeName = keyof typeof postcodes;
-
-const postcodes = {
-  USA: {
-    label: 'United States',
-    pattern: /(^(\d{5})$)|(^\d{5}-\d{4}$)/,
-    message: 'Postal code must be in 99999 or 99999-9999 format',
-  },
-  Canada: {
-    label: 'Canada',
-    pattern: /(^[A-Z]\d[A-Z][\s-]\d[A-Z]\d$)/,
-    message: 'Postal code must be in A9A 9A9 or A9A-9A9 format',
-  },
-  UK: {
-    label: 'United Kingdom',
-    pattern:
-      /(^[A-Z]{3}\s\d[A-Z]{2}$)|(^[A-Z]{2}\d{2}\s\d[A-Z]{2}$)|(^[A-Z]{2}\d\s\d[A-Z]{2}$)/,
-    message: 'Postal code must be in AAA 9AA or AA99 9AA or AA9 9AA format',
-  },
-  Argentina: {
-    label: 'Argentina',
-    pattern: /(^[A-Z]\d{4}[A-Z]{3}$)/,
-    message: 'Postal code must be in A9999AAA format',
-  },
-  Mexico: {
-    label: 'Mexico',
-    pattern: /(^\d{5}$)/,
-    message: 'Postal code must be in 99999 format',
-  },
-};
-
-const postcodeKeys = Object.keys(postcodes) as PostcodeName[];
+const postcodeKeys = Object.keys(postcodes);
 
 const initialValues: RegisterProps = {
   email: 'user@example.com',
@@ -98,49 +48,18 @@ const RegisterPage: NextPage = () => {
   const formik = useFormik({
     initialValues,
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string()
-        .required('Required')
-        .min(MIN_PASSWORD_LENGTH, 'Password must be at least 8 characters long')
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-          'Password must meet the requirements'
-        )
-        .trim(),
-      firstname: Yup.string()
-        .matches(/^[a-zA-Z]+$/, 'First name must contain at least 1 letters')
-        .required('Required'),
-      lastname: Yup.string()
-        .matches(/^[a-zA-Z]+$/, 'Last name must contain at least 1 letters')
-        .required('Required'),
-      date: Yup.date()
-        .max(MAX_DATE, 'Date of birth must be more than 13 years old')
-        .required('Required'),
-      country: Yup.string().required('Required'),
-      billingAddress: Yup.string()
-        .matches(
-          /^[a-zA-Z0-9\s]+$/,
-          'Street address must contain at least 1 letters'
-        )
-        .required('Required'),
-      billingCity: Yup.string()
-        .matches(/^[a-zA-Z\s]+$/, 'City must contain at least 1 letters')
-        .required('Required'),
-      billingPostcode: Yup.string()
-        .matches(postcodes[country].pattern, postcodes[country].message)
-        .required('Required'),
-      shippingAddress: Yup.string()
-        .matches(
-          /^[a-zA-Z0-9\s]+$/,
-          'Street address must contain at least 1 letters'
-        )
-        .required('Required'),
-      shippingCity: Yup.string()
-        .matches(/^[a-zA-Z\s]+$/, 'City must contain at least 1 letters')
-        .required('Required'),
-      shippingPostcode: Yup.string()
-        .matches(postcodes[country].pattern, postcodes[country].message)
-        .required('Required'),
+      email: emailSchema,
+      password: passwordSchema,
+      firstname: nameSchema,
+      lastname: nameSchema,
+      date: dateSchema,
+      country: countrySchema,
+      billingAddress: addressSchema,
+      billingCity: citySchema,
+      billingPostcode: getPostcodeSchema(country),
+      shippingAddress: addressSchema,
+      shippingCity: citySchema,
+      shippingPostcode: getPostcodeSchema(country),
     }),
     onSubmit: (values: RegisterProps) => {
       setIsLoading(true);
@@ -177,7 +96,7 @@ const RegisterPage: NextPage = () => {
   };
 
   const handleSelectCountry = (e: ChangeEvent<HTMLSelectElement>): void => {
-    setCountry(e.target.value as PostcodeName);
+    setCountry(e.target.value);
 
     formik.resetForm({
       values: {

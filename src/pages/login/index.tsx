@@ -9,8 +9,14 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import Loader from '../../components/ui/loader/Loader';
 import EyePassVisible from '../../components/ui/icons/EyePassVisible';
 import EyePass from '../../components/ui/icons/EyePass';
+import { emailSchema, passwordSchema } from '@/validation/schemas';
+import { MIN_PASSWORD_LENGTH } from '@/constants';
 
-const MIN_PASSWORD_LENGTH = 8;
+const initialValues: LoginProps = {
+  email: '',
+  password: '',
+  rememberMe: false,
+};
 
 // eslint-disable-next-line max-lines-per-function
 const LoginPage: NextPage = () => {
@@ -18,50 +24,12 @@ const LoginPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [visionPass, setVisionPass] = useState<boolean>(false);
-
   const passwordRef = useRef<HTMLInputElement>(null);
-
   const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-      rememberMe: false,
-    },
+    initialValues,
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string()
-        .required('Required')
-        .min(MIN_PASSWORD_LENGTH, 'Password must be at least 8 characters long')
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-          'Password must meet the requirements'
-        )
-        .test(
-          'special-characters',
-          'Password must contain at least one special character (e.g., !@#$%^&*)',
-          (value) => /[!@#$%^&*]/.test(value)
-        )
-        .test(
-          'no-whitespace',
-          'Password must not contain leading or trailing whitespace',
-          (value) => !/^\s|\s$/.test(value)
-        )
-        .test(
-          'has-uppercase',
-          'Password must contain at least one uppercase letter (A-Z)',
-          (value) => /[A-Z]/.test(value)
-        )
-        .test(
-          'has-lowercase',
-          'Password must contain at least one lowercase letter (a-z)',
-          (value) => /[a-z]/.test(value)
-        )
-        .test(
-          'has-digit',
-          'Password must contain at least one digit (0-9)',
-          (value) => /\d/.test(value)
-        )
-        .trim(),
+      email: emailSchema,
+      password: passwordSchema,
     }),
     onSubmit: (values: LoginProps) => {
       setIsLoading(true);
