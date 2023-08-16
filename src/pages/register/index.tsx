@@ -124,7 +124,7 @@ const RegisterPage: NextPage = () => {
         )
         .required('Required'),
       billingCity: Yup.string()
-        .matches(/^[a-zA-Z]+$/, 'City must contain at least 1 letters')
+        .matches(/^[a-zA-Z\s]+$/, 'City must contain at least 1 letters')
         .required('Required'),
       billingPostcode: Yup.string()
         .matches(postcodes[country].pattern, postcodes[country].message)
@@ -136,7 +136,7 @@ const RegisterPage: NextPage = () => {
         )
         .required('Required'),
       shippingCity: Yup.string()
-        .matches(/^[a-zA-Z]+$/, 'City must contain at least 1 letters')
+        .matches(/^[a-zA-Z\s]+$/, 'City must contain at least 1 letters')
         .required('Required'),
       shippingPostcode: Yup.string()
         .matches(postcodes[country].pattern, postcodes[country].message)
