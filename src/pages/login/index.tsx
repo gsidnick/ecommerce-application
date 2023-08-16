@@ -231,7 +231,7 @@ const LoginPage: NextPage = () => {
           >
             {isLoading ? <Loader /> : ''}
             <span className="mx-[4px]">
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {isLoading ? 'Logging In...' : 'Log In'}
             </span>
           </button>
           <button
@@ -239,7 +239,7 @@ const LoginPage: NextPage = () => {
             onClick={handleRegistration}
             className="mt-2 w-full rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
           >
-            Sign up
+            Sign Up
           </button>
         </form>
       </div>

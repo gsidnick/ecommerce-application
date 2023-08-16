@@ -211,7 +211,7 @@ const RegisterPage: NextPage = () => {
   return (
     <div className="flex items-center justify-center">
       <div className="w-96 rounded bg-background-main p-6 shadow-modal">
-        <h1 className="mb-4 text-2xl font-semibold text-white">Registration</h1>
+        <h1 className="mb-4 text-2xl font-semibold text-white">Sign Up</h1>
         <form onSubmit={formik.handleSubmit}>
           <div className="border-b border-gray-900/10">
             <div className="mb-4">
@@ -411,7 +411,7 @@ const RegisterPage: NextPage = () => {
                 onChange={handleBillingDefault}
                 className="mr-2"
               />
-              Set as address for billing and shipping
+              Shipping address same as billing address
             </label>
           </div>
 
