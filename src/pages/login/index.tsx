@@ -12,7 +12,7 @@ import EyePassVisible from '../../components/ui/icons/EyePassVisible';
 import EyePass from '../../components/ui/icons/EyePass';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput/CustomInput';
-import ValidationPrompt from '@/components/ValidationPropmpt/ValidationPrompt';
+// import ValidationPrompt from '@/components/ValidationPropmpt/ValidationPrompt';
 
 const initialValues: LoginProps = {
   email: '',
@@ -108,7 +108,7 @@ const LoginPage: NextPage = () => {
                 >
                   {visionPass ? <EyePassVisible /> : <EyePass />}
                 </button>
-                <ValidationPrompt validation={values.password} />
+                {/* <ValidationPrompt validation={values.password} /> */}
               </div>
               <div className="mb-4 flex items-center justify-start">
                 <label
@@ -121,7 +121,7 @@ const LoginPage: NextPage = () => {
                     type="checkbox"
                     checked={values.rememberMe}
                   />
-                  Remember Me
+                  <span className='ml-3'>Remember Me</span>
                 </label>
               </div>
               <button
