@@ -6,6 +6,8 @@ import { ChangeEvent, ReactElement, useRef, useState } from 'react';
 import EyePassVisible from '@/components/ui/icons/EyePassVisible';
 import EyePass from '@/components/ui/icons/EyePass';
 import Loader from '@/components/ui/loader/Loader';
+import CustomerController from '@/api/controllers/CustomerController';
+import { createCustomerDraft } from '@/api/helpers/customerDraft';
 import { PostcodeName, RegisterProps } from '@/types';
 import { MIN_PASSWORD_LENGTH } from '@/constants';
 import { postcodes } from '@/validation/patterns';
@@ -21,13 +23,12 @@ import {
 } from '@/validation/schemas';
 
 const postcodeKeys = Object.keys(postcodes);
-
 const initialValues: RegisterProps = {
   email: 'user@example.com',
   password: 'A!s2d3qwe',
-  firstname: 'John',
-  lastname: 'Doe',
-  date: '2000-01-01',
+  firstName: 'John',
+  lastName: 'Doe',
+  dateOfBirth: '2000-01-01',
   country: '',
   billingAddress: '1242 34th St NW',
   billingCity: 'Washington',
@@ -35,6 +36,9 @@ const initialValues: RegisterProps = {
   shippingAddress: '3752 Benton St NW',
   shippingCity: 'Washington',
   shippingPostcode: '20008',
+  sameBilling: false,
+  defaultBilling: false,
+  defaultShipping: false,
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -42,17 +46,31 @@ const RegisterPage: NextPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [visionPass, setVisionPass] = useState<boolean>(false);
-  const [country, setCountry] = useState<PostcodeName>('USA');
+  const [country, setCountry] = useState<PostcodeName>('US');
   const [billingDefault, setBillingDefault] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const customerController = new CustomerController();
+  const handleSubmit = async (data: RegisterProps): Promise<void> => {
+    try {
+      setIsLoading(true);
+      console.log('Form data:', data);
+      const customerDraft = createCustomerDraft(data);
+      console.log('Customer registration data:', customerDraft);
+      const response = await customerController.registerCustomer(customerDraft);
+      console.log('Response:', response);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const formik = useFormik({
     initialValues,
     validationSchema: Yup.object({
       email: emailSchema,
       password: passwordSchema,
-      firstname: nameSchema,
-      lastname: nameSchema,
-      date: dateSchema,
+      firstName: nameSchema,
+      lastName: nameSchema,
+      dateOfBirth: dateSchema,
       country: countrySchema,
       billingAddress: addressSchema,
       billingCity: citySchema,
@@ -61,10 +79,7 @@ const RegisterPage: NextPage = () => {
       shippingCity: citySchema,
       shippingPostcode: getPostcodeSchema(country),
     }),
-    onSubmit: (values: RegisterProps) => {
-      setIsLoading(true);
-      console.log('Form submitted with values:', values);
-    },
+    onSubmit: handleSubmit,
   });
 
   const renderValidationMessage = (
@@ -115,16 +130,12 @@ const RegisterPage: NextPage = () => {
     });
   };
 
-  const handleBillingDefault = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleSameBilling = (e: ChangeEvent<HTMLInputElement>): void => {
     setBillingDefault(e.target.checked);
-    formik.resetForm({
-      values: {
-        ...formik.values,
-        shippingAddress: formik.values.billingAddress,
-        shippingCity: formik.values.billingCity,
-        shippingPostcode: formik.values.billingPostcode,
-      },
-    });
+    formik.values.shippingAddress = formik.values.billingAddress;
+    formik.values.shippingCity = formik.values.billingCity;
+    formik.values.shippingPostcode = formik.values.billingPostcode;
+    formik.values.sameBilling = e.target.checked;
   };
 
   const handleOnChangeBillingAddress = (
@@ -244,41 +255,41 @@ const RegisterPage: NextPage = () => {
               <input
                 type="text"
                 placeholder="First Name*"
-                name="firstname"
-                value={formik.values.firstname}
+                name="firstName"
+                value={formik.values.firstName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
               />
-              {formik.touched.firstname && formik.errors.firstname && (
-                <div className="text-rose-500">{formik.errors.firstname}</div>
+              {formik.touched.firstName && formik.errors.firstName && (
+                <div className="text-rose-500">{formik.errors.firstName}</div>
               )}
             </div>
             <div className="mb-4">
               <input
                 type="text"
                 placeholder="Last Name*"
-                name="lastname"
-                value={formik.values.lastname}
+                name="lastName"
+                value={formik.values.lastName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
               />
-              {formik.touched.lastname && formik.errors.lastname && (
-                <div className="text-rose-500">{formik.errors.lastname}</div>
+              {formik.touched.lastName && formik.errors.lastName && (
+                <div className="text-rose-500">{formik.errors.lastName}</div>
               )}
             </div>
             <div className="mb-4">
               <input
                 type="date"
-                name="date"
-                value={formik.values.date}
+                name="dateOfBirth"
+                value={formik.values.dateOfBirth}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
               />
-              {formik.touched.date && formik.errors.date && (
-                <div className="text-rose-500">{formik.errors.date}</div>
+              {formik.touched.dateOfBirth && formik.errors.dateOfBirth && (
+                <div className="text-rose-500">{formik.errors.dateOfBirth}</div>
               )}
             </div>
             <div className="mb-4">
@@ -355,16 +366,30 @@ const RegisterPage: NextPage = () => {
                   </div>
                 )}
             </div>
-            <label className="text-white" htmlFor="billingDefaultAddress">
-              <input
-                type="checkbox"
-                name="billingDefaultAddress"
-                id="billingDefaultAddress"
-                onChange={handleBillingDefault}
-                className="mr-2"
-              />
-              Shipping address same as billing address
-            </label>
+            <div>
+              <label className="text-white" htmlFor="defaultBilling">
+                <input
+                  type="checkbox"
+                  name="defaultBilling"
+                  id="defaultBilling"
+                  onChange={formik.handleChange}
+                  className="mr-2"
+                />
+                Set this billing address as default
+              </label>
+            </div>
+            <div>
+              <label className="text-white" htmlFor="sameBilling">
+                <input
+                  type="checkbox"
+                  name="sameBilling"
+                  id="sameBilling"
+                  onChange={handleSameBilling}
+                  className="mr-2"
+                />
+                Shipping address same as billing address
+              </label>
+            </div>
           </div>
 
           <div className="mb-4 mt-8">
@@ -432,6 +457,18 @@ const RegisterPage: NextPage = () => {
                     {formik.errors.shippingPostcode}
                   </div>
                 )}
+            </div>
+            <div>
+              <label className="text-white" htmlFor="defaultShipping">
+                <input
+                  type="checkbox"
+                  name="defaultShipping"
+                  id="defaultShipping"
+                  onChange={formik.handleChange}
+                  className="mr-2"
+                />
+                Set this shipping address as default
+              </label>
             </div>
           </div>
 
