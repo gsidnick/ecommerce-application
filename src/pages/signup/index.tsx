@@ -10,6 +10,8 @@ import { ChangeEvent, useState, ReactNode } from 'react';
 import Loader from '@/components/ui/loader/Loader';
 import CustomerController from '@/api/controllers/CustomerController';
 import { createCustomerDraft } from '@/api/helpers/customerDraft';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { setAuthState } from '@/store/slices/authSlice';
 import { PostcodeName, RegisterProps } from '@/types';
 import { postcodes } from '@/validation/patterns';
 import {
@@ -48,6 +50,7 @@ const initialValues: RegisterProps = {
 // eslint-disable-next-line max-lines-per-function
 const RegisterPage: NextPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [country, setCountry] = useState<PostcodeName>('USA');
   const [billingDefault, setBillingDefault] = useState(false);
@@ -73,9 +76,19 @@ const RegisterPage: NextPage = () => {
       console.log('Form data:', values);
       const customerDraft = createCustomerDraft(values);
       console.log('Customer registration data:', customerDraft);
-      const response = await customerController.registerCustomer(customerDraft);
-      console.log('Response:', response);
+      const signupResponse = await customerController.registerCustomer(
+        customerDraft
+      );
+      console.log('Signup response:', signupResponse);
+      const { email, password } = data;
+      const loginResponse = await customerController.loginCustomer({
+        email,
+        password,
+      });
+      console.log('Login response:', loginResponse);
       setIsLoading(false);
+      dispatch(setAuthState(true));
+      router.back();
     } catch (error) {
       console.error(error);
     }
