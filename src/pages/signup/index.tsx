@@ -8,6 +8,8 @@ import EyePass from '@/components/ui/icons/EyePass';
 import Loader from '@/components/ui/loader/Loader';
 import CustomerController from '@/api/controllers/CustomerController';
 import { createCustomerDraft } from '@/api/helpers/customerDraft';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { setAuthState } from '@/store/slices/authSlice';
 import { PostcodeName, RegisterProps } from '@/types';
 import { MIN_PASSWORD_LENGTH } from '@/constants';
 import { postcodes } from '@/validation/patterns';
@@ -44,6 +46,7 @@ const initialValues: RegisterProps = {
 // eslint-disable-next-line max-lines-per-function
 const RegisterPage: NextPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [visionPass, setVisionPass] = useState<boolean>(false);
   const [country, setCountry] = useState<PostcodeName>('US');
@@ -56,9 +59,19 @@ const RegisterPage: NextPage = () => {
       console.log('Form data:', data);
       const customerDraft = createCustomerDraft(data);
       console.log('Customer registration data:', customerDraft);
-      const response = await customerController.registerCustomer(customerDraft);
-      console.log('Response:', response);
+      const signupResponse = await customerController.registerCustomer(
+        customerDraft
+      );
+      console.log('Signup response:', signupResponse);
+      const { email, password } = data;
+      const loginResponse = await customerController.loginCustomer({
+        email,
+        password,
+      });
+      console.log('Login response:', loginResponse);
       setIsLoading(false);
+      dispatch(setAuthState(true));
+      router.back();
     } catch (error) {
       console.error(error);
     }
