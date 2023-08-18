@@ -8,6 +8,8 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState, ReactNode } from 'react';
 import Loader from '@/components/ui/loader/Loader';
+import CustomerController from '@/api/controllers/CustomerController';
+import { createCustomerDraft } from '@/api/helpers/customerDraft';
 import { PostcodeName, RegisterProps } from '@/types';
 import { postcodes } from '@/validation/patterns';
 import {
@@ -28,9 +30,9 @@ const postcodeKeys = Object.keys(postcodes);
 const initialValues: RegisterProps = {
   email: '',
   password: '',
-  firstname: '',
-  lastname: '',
-  date: '',
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
   country: '',
   billingAddress: '',
   billingCity: '',
@@ -38,6 +40,9 @@ const initialValues: RegisterProps = {
   shippingAddress: '',
   shippingCity: '',
   shippingPostcode: '',
+  sameBilling: false,
+  defaultBilling: false,
+  defaultShipping: false,
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -46,7 +51,7 @@ const RegisterPage: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [country, setCountry] = useState<PostcodeName>('USA');
   const [billingDefault, setBillingDefault] = useState(false);
-
+  const customerController = new CustomerController();
   const validationSchema = Yup.object({
     email: emailSchema,
     password: passwordSchema,
@@ -62,9 +67,18 @@ const RegisterPage: NextPage = () => {
     shippingPostcode: getPostcodeSchema(country),
   });
 
-  const onSubmit = (values: RegisterProps): void => {
-    setIsLoading(true);
-    console.log('Form submitted with values:', values);
+  const onSubmit = async (values: RegisterProps): Promise<void> => {
+    try {
+      setIsLoading(true);
+      console.log('Form data:', values);
+      const customerDraft = createCustomerDraft(values);
+      console.log('Customer registration data:', customerDraft);
+      const response = await customerController.registerCustomer(customerDraft);
+      console.log('Response:', response);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleLogin = (): void => {
