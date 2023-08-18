@@ -6,13 +6,10 @@ import { postcodes } from '@/validation/patterns';
 export const emailSchema = Yup.string()
   .email('Invalid email address')
   .required('Required');
+
 export const passwordSchema = Yup.string()
   .required('Required')
   .min(MIN_PASSWORD_LENGTH, 'Password must be at least 8 characters long')
-  .matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-    'Password must meet the requirements'
-  )
   .test(
     'special-characters',
     'Password must contain at least one special character (e.g., !@#$%^&*)',
