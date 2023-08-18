@@ -379,7 +379,7 @@ const RegisterPage: NextPage = () => {
                 onBlur={formik.handleBlur}
                 disabled={billingDefault}
                 className={`w-full rounded-md border
-                  border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500
+                  border-neutral-800 bg-background-main p-2 focus:border-neutral-500
                 focus:outline-none ${
                   billingDefault ? 'text-gray-600' : 'text-white'
                 }`}
@@ -401,7 +401,7 @@ const RegisterPage: NextPage = () => {
                 onBlur={formik.handleBlur}
                 disabled={billingDefault}
                 className={`w-full rounded-md border
-                  border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500
+                  border-neutral-800 bg-background-main p-2 focus:border-neutral-500
                 focus:outline-none ${
                   billingDefault ? 'text-gray-600' : 'text-white'
                 }`}
