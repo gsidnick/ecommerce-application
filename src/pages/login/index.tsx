@@ -12,7 +12,7 @@ import EyePassVisible from '../../components/ui/icons/EyePassVisible';
 import EyePass from '../../components/ui/icons/EyePass';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput/CustomInput';
-// import ValidationPrompt from '@/components/ValidationPropmpt';
+// import ValidationPrompt from '@/components/ValidationPrompt';
 
 const initialValues: LoginProps = {
   email: '',
