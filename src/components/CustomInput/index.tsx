@@ -1,8 +1,12 @@
 import { FC } from 'react';
 import { useField, FieldHookConfig } from 'formik';
 
-const CustomInput: FC<FieldHookConfig<string>> = (props) => {
-  const { type, placeholder } = props;
+type InputProps = FieldHookConfig<string> & {
+  isSignUpPassInput?: boolean;
+};
+
+const CustomInput: FC<InputProps> = (props) => {
+  const { type, placeholder, isSignUpPassInput } = props;
 
   const [field, meta] = useField(props);
   const { error, touched } = meta;
@@ -18,9 +22,17 @@ const CustomInput: FC<FieldHookConfig<string>> = (props) => {
             : 'w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none'
         }
       />
-      {error ? <p className='text-red-500'>{touched && error}</p> : ''}
+      {!isSignUpPassInput && error ? (
+        <p className="text-red-500">{touched && error}</p>
+      ) : (
+        ''
+      )}
     </>
   );
+};
+
+CustomInput.defaultProps = {
+  isSignUpPassInput: false,
 };
 
 export default CustomInput;

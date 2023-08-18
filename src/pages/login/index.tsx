@@ -4,15 +4,14 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useState, ReactNode } from 'react';
-import { setAuthState } from '../../store/slices/authSlice';
-import { LoginProps } from '../api/user/login';
-import { useAppDispatch } from '../../hooks/useAppDispatch';
-import Loader from '../../components/ui/loader/Loader';
-import EyePassVisible from '../../components/ui/icons/EyePassVisible';
-import EyePass from '../../components/ui/icons/EyePass';
+import { setAuthState } from '@/store/slices/authSlice';
+import { LoginProps } from '@/pages/api/user/login';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import Loader from '@/components/ui/loader/Loader';
+import EyePassVisible from '@/components/ui/icons/EyePassVisible';
+import EyePass from '@/components/ui/icons/EyePass';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
-import ValidationPrompt from '@/components/ValidationPrompt';
 
 const initialValues: LoginProps = {
   email: '',
@@ -31,7 +30,6 @@ const LoginPage: NextPage = () => {
     { resetForm }: FormikHelpers<typeof initialValues>
   ): void => {
     setIsLoading(true);
-    console.log('values', values);
 
     const loginUser = async (data: LoginProps): Promise<void> => {
       const response = await fetch('/api/user/login', {
@@ -106,7 +104,7 @@ const LoginPage: NextPage = () => {
                 >
                   {visionPass ? <EyePassVisible /> : <EyePass />}
                 </button>
-                <ValidationPrompt validation={values.password} />
+
               </div>
               <div className="mb-4 flex items-center justify-start">
                 <label
@@ -118,8 +116,9 @@ const LoginPage: NextPage = () => {
                     name="rememberMe"
                     type="checkbox"
                     checked={values.rememberMe}
+                    isSignUpPassInput={false}
                   />
-                  <span className='ml-3'>Remember Me</span>
+                  <span className="ml-3">Remember Me</span>
                 </label>
               </div>
               <button
