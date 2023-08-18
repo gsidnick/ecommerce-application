@@ -11,8 +11,8 @@ import Loader from '../../components/ui/loader/Loader';
 import EyePassVisible from '../../components/ui/icons/EyePassVisible';
 import EyePass from '../../components/ui/icons/EyePass';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
-import CustomInput from '@/components/CustomInput/CustomInput';
-// import ValidationPrompt from '@/components/ValidationPrompt';
+import CustomInput from '@/components/CustomInput';
+import ValidationPrompt from '@/components/ValidationPrompt';
 
 const initialValues: LoginProps = {
   email: '',
@@ -74,8 +74,6 @@ const LoginPage: NextPage = () => {
   };
 
   const toggleVisionPass = (): void => {
-    console.log('Toggle vision pass', visionPass);
-
     setVisionPass(!visionPass);
   };
 
@@ -108,7 +106,7 @@ const LoginPage: NextPage = () => {
                 >
                   {visionPass ? <EyePassVisible /> : <EyePass />}
                 </button>
-                {/* <ValidationPrompt validation={values.password} /> */}
+                <ValidationPrompt validation={values.password} />
               </div>
               <div className="mb-4 flex items-center justify-start">
                 <label
