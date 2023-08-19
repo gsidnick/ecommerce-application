@@ -1,5 +1,9 @@
 import CustomerRepository from '@/api/repositories/CustomerRepository';
-import { UserCredentialData, UserRegistrationData } from '../types';
+import {
+  IApiLoginResult,
+  UserCredentialData,
+  UserRegistrationData,
+} from '../types';
 
 class CustomerController {
   private customerRepository: CustomerRepository;
@@ -13,9 +17,15 @@ class CustomerController {
     console.log('Registration Check', data);
   }
 
-  public async loginCustomer(userData: UserCredentialData): Promise<void> {
-    const data = await this.customerRepository.loginCustomer(userData);
+  public async loginCustomer(
+    userData: UserCredentialData
+  ): Promise<IApiLoginResult> {
+    const data: IApiLoginResult = await this.customerRepository.loginCustomer(
+      userData
+    );
     console.log('Login Check', data);
+
+    return data;
   }
 
   public logoutCustomer(): void {

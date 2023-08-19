@@ -1,17 +1,24 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Formik, Form, FormikHelpers, FormikState } from 'formik';
+import { Formik, Form, FormikState } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useState, ReactNode } from 'react';
 import { toast } from 'react-toastify';
-import ToastNotification from '@/components/ToastNotification';
-import { setAuthState } from '@/store/slices/authSlice';
+import {
+  setAuthState,
+  setExpirationTime,
+  setRefreshToken,
+  setToken,
+} from '@/store/slices/authSlice';
 import { LoginProps } from '@/pages/api/user/login';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import Loader from '@/components/ui/loader/Loader';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
+import CustomerController from '../../api/controllers/CustomerController';
+import { HttpStatus } from '../api/lib/types';
+import { IApiLoginResult } from '../../api/types';
 
 const initialValues: LoginProps = {
   email: '',
@@ -24,38 +31,35 @@ const LoginPage: NextPage = () => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (
-    values: LoginProps,
-    { resetForm }: FormikHelpers<typeof initialValues>
-  ): void => {
+  const onSubmit = (values: LoginProps): void => {
     setIsLoading(true);
 
-    const loginUser = async (data: LoginProps): Promise<void> => {
-      const response = await fetch('/api/user/login', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+    const customerController = new CustomerController();
 
-      if (response.ok) {
-        dispatch(setAuthState(true));
-          toast.success('Login successful'); // could be error, warning, info, success
-        resetForm();
-        router.push('/').catch(() => {
-          console.log('Error while redirecting to registration page');
-        });
-        return;
-      }
-      toast.error('Login failed'); // could be error, warning, info, success
-    };
+    customerController
+      .loginCustomer(values)
+      .then((response: IApiLoginResult) => {
+        console.log(response);
 
-    loginUser(values)
-      .then(() => {
-        setIsLoading(false);
+        if (
+          response.apiResult.statusCode === HttpStatus.OK &&
+          response.token?.token.length
+        ) {
+          if (response.token) {
+            const { token, refreshToken, expirationTime } = response.token;
+
+            dispatch(setAuthState(true));
+            dispatch(setToken(token));
+            dispatch(setRefreshToken(refreshToken ?? ''));
+            dispatch(setExpirationTime(expirationTime));
+
+            router.push('/').catch(() => {
+              console.log('Error while redirecting to home page');
+            });
+          }
+        }
       })
-      .catch(() => {
-        toast.error('Login failed');
-        setIsLoading(false);
-      });
+      .catch(() => {});
   };
 
   const validationSchema = Yup.object({
@@ -131,7 +135,6 @@ const LoginPage: NextPage = () => {
           )}
         </Formik>
       </div>
-      <ToastNotification />
     </div>
   );
 };
