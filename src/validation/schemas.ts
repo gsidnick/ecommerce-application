@@ -4,7 +4,10 @@ import { PostcodeName } from '@/types';
 import { postcodes } from '@/validation/patterns';
 
 export const emailSchema = Yup.string()
-  .email('Invalid email address')
+  .matches(
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    'Invalid email address'
+  )
   .required('Required');
 
 export const passwordSchema = Yup.string()
