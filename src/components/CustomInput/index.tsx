@@ -1,5 +1,6 @@
-import { FC } from 'react';
-import { useField, FieldHookConfig } from 'formik';
+import { FC, useEffect } from 'react';
+import { useField, FieldHookConfig, useFormikContext } from 'formik';
+import { EMPTY_PASSWORD_LENGTH } from '@/constants';
 
 type InputProps = FieldHookConfig<string> & {
   isSignUpPassInput?: boolean;
@@ -8,8 +9,21 @@ type InputProps = FieldHookConfig<string> & {
 const CustomInput: FC<InputProps> = (props) => {
   const { type, placeholder, isSignUpPassInput } = props;
 
+  const { setFieldTouched } = useFormikContext();
+
   const [field, meta] = useField(props);
   const { error, touched } = meta;
+
+  const { value, name } = field;
+
+  useEffect(() => {
+    if (value.length > EMPTY_PASSWORD_LENGTH && !touched) {
+      setFieldTouched(name, true, true).catch(() => {
+        console.log('Error while setting field touched');
+      });
+    }
+  }, [value]);
+
   return (
     <>
       <input

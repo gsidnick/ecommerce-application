@@ -104,7 +104,6 @@ const LoginPage: NextPage = () => {
                 >
                   {visionPass ? <EyePassVisible /> : <EyePass />}
                 </button>
-
               </div>
               <div className="mb-4 flex items-center justify-start">
                 <label
