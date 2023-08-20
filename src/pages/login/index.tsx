@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { ReactElement, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import ToastNotification from '@/components/ToastNotification';
 import { setAuthState } from '../../store/slices/authSlice';
 import { LoginProps } from '../api/user/login';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
@@ -33,6 +35,7 @@ const LoginPage: NextPage = () => {
     }),
     onSubmit: (values: LoginProps) => {
       setIsLoading(true);
+      toast.success('Onsubmit pressed!'); // could be error, warning, info, success
 
       const loginUser = async (data: LoginProps): Promise<void> => {
         const response = await fetch('/api/user/login', {
@@ -42,11 +45,12 @@ const LoginPage: NextPage = () => {
 
         if (response.ok) {
           dispatch(setAuthState(true));
+          toast.success('Login successful'); // could be error, warning, info, success
 
           return;
         }
 
-        console.log('Login failed');
+        toast.error('Login failed'); // could be error, warning, info, success
       };
 
       loginUser(values)
@@ -54,7 +58,7 @@ const LoginPage: NextPage = () => {
           setIsLoading(false);
         })
         .catch(() => {
-          console.log('Error while logging in');
+          toast.error('Login failed');
           setIsLoading(false);
         });
     },
@@ -211,6 +215,7 @@ const LoginPage: NextPage = () => {
           </button>
         </form>
       </div>
+      <ToastNotification />
     </div>
   );
 };
