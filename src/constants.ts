@@ -5,6 +5,7 @@ const MINUTES_IN_HOUR = 60;
 const SECONDS_IN_MINUTE = 60;
 const MILLISECONDS_IN_SECOND = 1000;
 export const MIN_PASSWORD_LENGTH = 8;
+export const EMPTY_PASSWORD_LENGTH = 0;
 export const MAX_DATE = new Date(
   Date.now() -
     MAX_YEARS *
