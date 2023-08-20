@@ -1,5 +1,9 @@
 import { CustomerSignInResult } from '@commercetools/platform-sdk';
-import { ClientResponse, TokenStore } from '@commercetools/sdk-client-v2';
+import {
+  ClientResponse,
+  ClientResult,
+  TokenStore,
+} from '@commercetools/sdk-client-v2';
 
 export interface UserCredentialData {
   email: string;
@@ -19,6 +23,6 @@ export interface ExistingTokenFlowOptions {
 }
 
 export interface IApiLoginResult {
-  apiResult: ClientResponse<CustomerSignInResult>;
+  apiResult: ClientResponse<CustomerSignInResult | ClientResult>;
   token: TokenStore | null;
 }

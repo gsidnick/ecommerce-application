@@ -4,7 +4,7 @@ import { RootState } from '@/store/store';
 
 const hydrateAction = createAction<SliceTypes>(HYDRATE);
 
-interface AuthState {
+export interface AuthState {
   authState: boolean;
   token: string;
   refreshToken: string;

@@ -11,8 +11,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
-  console.log(req.body);
-
   // TODO Change to real
   try {
     const response = await fetch('https://dummyjson.com/quotes/random');

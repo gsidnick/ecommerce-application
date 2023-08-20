@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { Formik, Form, FormikState } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useState, ReactNode } from 'react';
 import { toast } from 'react-toastify';
+import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import {
+  AuthState,
   setAuthState,
   setExpirationTime,
   setRefreshToken,
@@ -19,14 +21,14 @@ import CustomInput from '@/components/CustomInput';
 import CustomerController from '../../api/controllers/CustomerController';
 import { HttpStatus } from '../api/lib/types';
 import { IApiLoginResult } from '../../api/types';
+import { ERoute } from '../../data/routes';
 
 const initialValues: LoginProps = {
   email: '',
   password: '',
-  rememberMe: false,
 };
 
-const LoginPage: NextPage = () => {
+const LoginPage: NextPage<AuthState> = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -53,13 +55,30 @@ const LoginPage: NextPage = () => {
             dispatch(setRefreshToken(refreshToken ?? ''));
             dispatch(setExpirationTime(expirationTime));
 
-            router.push('/').catch(() => {
+            toast.success('Authenticated successfully');
+
+            router.push(ERoute.home).catch(() => {
               toast.error('Error while redirecting to home page');
             });
+
+            setIsLoading(false);
+
+            return;
           }
         }
+
+        setIsLoading(false);
+
+        const errorMessage: string = (response.apiResult as HttpErrorType).body
+          ?.message as string;
+
+        toast.error(errorMessage);
       })
-      .catch(() => {});
+      .catch(() => {
+        toast.error('General login error');
+
+        setIsLoading(false);
+      });
   };
 
   const validationSchema = Yup.object({
@@ -68,10 +87,8 @@ const LoginPage: NextPage = () => {
   });
 
   const handleRegistration = (): void => {
-    console.log('Registration clicked');
-
-    router.push('/signup').catch(() => {
-      console.log('Error while redirecting to registration page');
+    router.push(ERoute.signup).catch(() => {
+      toast.error('Error while redirecting to registration page');
     });
   };
 
@@ -84,7 +101,7 @@ const LoginPage: NextPage = () => {
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({ values }: FormikState<typeof initialValues>): ReactNode => (
+          {(): ReactNode => (
             <Form>
               <div className="mb-4">
                 <CustomInput name="email" type="text" placeholder="Email" />
@@ -96,21 +113,6 @@ const LoginPage: NextPage = () => {
                   placeholder="Password"
                   isWhiteSpacesAllowed={false}
                 />
-              </div>
-              <div className="mb-4 flex items-center justify-start">
-                <label
-                  className="flex items-center justify-start text-white"
-                  htmlFor="rememberMe"
-                >
-                  <CustomInput
-                    id="rememberMe"
-                    name="rememberMe"
-                    type="checkbox"
-                    checked={values.rememberMe}
-                    isSignUpPassInput={false}
-                  />
-                  <span className="ml-3">Remember Me</span>
-                </label>
               </div>
               <button
                 type="submit"

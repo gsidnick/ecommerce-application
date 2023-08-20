@@ -22,7 +22,6 @@ function Search(): ReactElement {
           className="rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white"
           onClick={(): void => {
             if (authState) {
-              console.log('Logging out');
               dispatch(resetAuthState());
             } else {
               router.push(ERoute.login).catch((error) => {

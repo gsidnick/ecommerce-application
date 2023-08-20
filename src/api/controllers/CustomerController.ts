@@ -23,7 +23,6 @@ class CustomerController {
     const data: IApiLoginResult = await this.customerRepository.loginCustomer(
       userData
     );
-    console.log('Login Check', data);
 
     return data;
   }
