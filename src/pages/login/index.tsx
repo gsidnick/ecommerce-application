@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useState, ReactNode } from 'react';
+import { toast } from 'react-toastify';
+import ToastNotification from '@/components/ToastNotification';
 import { setAuthState } from '@/store/slices/authSlice';
 import { LoginProps } from '@/pages/api/user/login';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
@@ -36,13 +38,14 @@ const LoginPage: NextPage = () => {
 
       if (response.ok) {
         dispatch(setAuthState(true));
+          toast.success('Login successful'); // could be error, warning, info, success
         resetForm();
         router.push('/').catch(() => {
           console.log('Error while redirecting to registration page');
         });
         return;
       }
-      console.log('Login failed');
+      toast.error('Login failed'); // could be error, warning, info, success
     };
 
     loginUser(values)
@@ -50,7 +53,7 @@ const LoginPage: NextPage = () => {
         setIsLoading(false);
       })
       .catch(() => {
-        console.log('Error while logging in');
+        toast.error('Login failed');
         setIsLoading(false);
       });
   };
@@ -128,6 +131,7 @@ const LoginPage: NextPage = () => {
           )}
         </Formik>
       </div>
+      <ToastNotification />
     </div>
   );
 };
