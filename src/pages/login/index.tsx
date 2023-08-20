@@ -8,8 +8,6 @@ import { setAuthState } from '@/store/slices/authSlice';
 import { LoginProps } from '@/pages/api/user/login';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import Loader from '@/components/ui/loader/Loader';
-import EyePassVisible from '@/components/ui/icons/EyePassVisible';
-import EyePass from '@/components/ui/icons/EyePass';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
 
@@ -23,7 +21,6 @@ const LoginPage: NextPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [visionPass, setVisionPass] = useState<boolean>(false);
 
   const onSubmit = (
     values: LoginProps,
@@ -71,10 +68,6 @@ const LoginPage: NextPage = () => {
     });
   };
 
-  const toggleVisionPass = (): void => {
-    setVisionPass(!visionPass);
-  };
-
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="w-96 rounded bg-background-main p-6 shadow-modal">
@@ -87,23 +80,15 @@ const LoginPage: NextPage = () => {
           {({ values }: FormikState<typeof initialValues>): ReactNode => (
             <Form>
               <div className="mb-4">
-                <CustomInput name="email" type="email" placeholder="Email" />
+                <CustomInput name="email" type="text" placeholder="Email" />
               </div>
               <div className="relative mb-4">
                 <CustomInput
                   name="password"
-                  type={visionPass ? 'text' : 'password'}
+                  type="password"
                   placeholder="Password"
+                  isWhiteSpacesAllowed={false}
                 />
-                <button
-                  type="button"
-                  className={`absolute right-3 top-3 text-white transition-transform ease-in-out ${
-                    visionPass ? 'rotate-0' : 'rotate-180'
-                  }`}
-                  onClick={toggleVisionPass}
-                >
-                  {visionPass ? <EyePassVisible /> : <EyePass />}
-                </button>
               </div>
               <div className="mb-4 flex items-center justify-start">
                 <label
