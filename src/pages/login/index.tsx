@@ -54,7 +54,7 @@ const LoginPage: NextPage = () => {
             dispatch(setExpirationTime(expirationTime));
 
             router.push('/').catch(() => {
-              console.log('Error while redirecting to home page');
+              toast.error('Error while redirecting to home page');
             });
           }
         }

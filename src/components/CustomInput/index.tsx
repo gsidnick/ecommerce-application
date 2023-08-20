@@ -1,8 +1,5 @@
-import { FC, useEffect } from 'react';
 import { useField, FieldHookConfig, useFormikContext } from 'formik';
-import { EMPTY_PASSWORD_LENGTH } from '@/constants';
 import { FC, useEffect, useState } from 'react';
-import { useField, FieldHookConfig, useFormikContext } from 'formik';
 import { EMPTY_PASSWORD_LENGTH } from '@/constants';
 import EyePassVisible from '@/components/ui/icons/EyePassVisible';
 import EyePass from '@/components/ui/icons/EyePass';
@@ -32,8 +29,6 @@ const CustomInput: FC<InputProps> = (props) => {
       });
     }
   }, [value]);
-
-  const { value, name } = field;
 
   useEffect(() => {
     if (value.length > EMPTY_PASSWORD_LENGTH && !touched) {
