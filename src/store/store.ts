@@ -19,10 +19,12 @@ import {
 
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
 import authReducer, { authSlice } from '@/store/slices/authSlice';
+import menuReducer, { menuSlice } from '@/store/slices/menuSlice';
 import storage from './helpers/storage';
 
 const rootReducer = combineReducers({
   [authSlice.name]: authReducer,
+  [menuSlice.name]: menuReducer,
 });
 
 export interface IPersistorStore {
