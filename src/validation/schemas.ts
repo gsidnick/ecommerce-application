@@ -4,12 +4,10 @@ import { PostcodeName } from '@/types';
 import { postcodes } from '@/validation/patterns';
 
 export const emailSchema = Yup.string()
-.required('Required')
-.test(
-  'no-whitespace',
-  'Email must not contain whitespace',
-  (value = '') => /^\S*$/.test(value)
-)
+  .required('Required')
+  .test('no-whitespace', 'Email must not contain whitespace', (value = '') =>
+    /^\S*$/.test(value)
+  )
   .matches(
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     'Invalid email address'
@@ -23,11 +21,9 @@ export const passwordSchema = Yup.string()
     'Password must contain at least one special character (e.g., !@#$%^&*)',
     (value) => /[!@#$%^&*]/.test(value)
   )
-  .test(
-    'no-whitespace',
-    'Password must not contain whitespace',
-    (value) => /^\S*$/.test(value)
-  ) 
+  .test('no-whitespace', 'Password must not contain whitespace', (value) =>
+    /^\S*$/.test(value)
+  )
   .test(
     'has-uppercase',
     'Password must contain at least one uppercase letter (A-Z)',

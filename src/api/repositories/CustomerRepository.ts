@@ -1,5 +1,11 @@
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import AuthClient from '@/api/client/AuthClient';
-import { UserCredentialData, UserRegistrationData } from '../types';
+import {
+  IApiLoginResult,
+  UserCredentialData,
+  UserRegistrationData,
+} from '../types';
 import { getProjectKey } from '@/api/helpers/options';
 import AnonymousClient from '@/api/client/AnonymousClient';
 import TokenService from '@/api/services/TokenService';
@@ -34,12 +40,16 @@ class CustomerRepository {
     }
   }
 
-  public async loginCustomer(userData: UserCredentialData): Promise<unknown> {
+  public async loginCustomer(
+    userData: UserCredentialData
+  ): Promise<IApiLoginResult> {
     const client = new AuthClient(userData);
     const apiRoot = client.getApiRoot();
+    
     try {
       const { email, password } = userData;
-      return await apiRoot
+
+      const apiResult = await apiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
@@ -52,8 +62,16 @@ class CustomerRepository {
           },
         })
         .execute();
+
+      return {
+        apiResult: apiResult as ClientResponse<CustomerSignInResult>,
+        token: this.tokenService.getToken(),
+      };
     } catch (error) {
-      return error;
+      return {
+        apiResult: error as ClientResponse<ClientResult>,
+        token: null,
+      };
     }
   }
 

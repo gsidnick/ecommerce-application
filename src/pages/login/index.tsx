@@ -1,59 +1,81 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import { Formik, Form, FormikHelpers, FormikState } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { useState, ReactNode } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
-import ToastNotification from '@/components/ToastNotification';
-import { setAuthState } from '@/store/slices/authSlice';
-import { LoginProps } from '@/pages/api/user/login';
+import { HttpErrorType } from '@commercetools/sdk-client-v2';
+import {
+  AuthState,
+  setAuthState,
+  setExpirationTime,
+  setRefreshToken,
+  setToken,
+} from '@/store/slices/authSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import Loader from '@/components/ui/loader/Loader';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
+import CustomerController from '@/api/controllers/CustomerController';
+import { HttpStatus, IApiLoginResult, LoginProps } from '@/api/types';
+import { ERoute } from '@/data/routes';
 
 const initialValues: LoginProps = {
   email: '',
   password: '',
-  rememberMe: false,
 };
 
-const LoginPage: NextPage = () => {
+const LoginPage: NextPage<AuthState> = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (
-    values: LoginProps,
-    { resetForm }: FormikHelpers<typeof initialValues>
-  ): void => {
+  const onSubmit = (values: LoginProps): void => {
     setIsLoading(true);
 
-    const loginUser = async (data: LoginProps): Promise<void> => {
-      const response = await fetch('/api/user/login', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+    const customerController = new CustomerController();
 
-      if (response.ok) {
-        dispatch(setAuthState(true));
-          toast.success('Login successful'); // could be error, warning, info, success
-        resetForm();
-        router.push('/').catch(() => {
-          console.log('Error while redirecting to registration page');
-        });
-        return;
-      }
-      toast.error('Login failed'); // could be error, warning, info, success
-    };
+    customerController
+      .loginCustomer(values)
+      .then((response: IApiLoginResult) => {
+        if (
+          response.apiResult.statusCode === HttpStatus.OK &&
+          response.token?.token.length
+        ) {
+          if (response.token) {
+            const { token, refreshToken, expirationTime } = response.token;
 
-    loginUser(values)
-      .then(() => {
+            dispatch(setAuthState(true));
+            dispatch(setToken(token));
+            dispatch(setRefreshToken(refreshToken ?? ''));
+            dispatch(setExpirationTime(expirationTime));
+
+            toast.success('Authenticated successfully');
+
+            router.push(ERoute.home).catch(() => {
+              toast.error('Error while redirecting to home page');
+            });
+
+            setIsLoading(false);
+
+            return;
+          }
+        }
+
         setIsLoading(false);
+
+        const errorResult = response.apiResult as HttpErrorType;
+
+        const errorMessage = (errorResult.body
+          ?.message as string || errorResult.message) ?? '';
+
+        if (errorMessage.length) {
+          toast.error(errorMessage);
+        }
       })
       .catch(() => {
-        toast.error('Login failed');
+        toast.error('General login error');
+
         setIsLoading(false);
       });
   };
@@ -64,12 +86,16 @@ const LoginPage: NextPage = () => {
   });
 
   const handleRegistration = (): void => {
-    console.log('Registration clicked');
-
-    router.push('/signup').catch(() => {
-      console.log('Error while redirecting to registration page');
+    router.push(ERoute.signup).catch(() => {
+      toast.error('Error while redirecting to registration page');
     });
   };
+
+  const handleBackToMain =(): void => {
+    router.push(ERoute.home).catch(() => {
+      toast.error('Error while redirecting to home page');
+    });
+  }
 
   return (
     <div className="flex h-screen items-center justify-center">
@@ -80,7 +106,6 @@ const LoginPage: NextPage = () => {
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({ values }: FormikState<typeof initialValues>): ReactNode => (
             <Form>
               <div className="mb-4">
                 <CustomInput name="email" type="text" placeholder="Email" />
@@ -93,45 +118,37 @@ const LoginPage: NextPage = () => {
                   isWhiteSpacesAllowed={false}
                 />
               </div>
-              <div className="mb-4 flex items-center justify-start">
-                <label
-                  className="flex items-center justify-start text-white"
-                  htmlFor="rememberMe"
+              <div className="flex mt-2 w-full">
+                <button
+                  type="submit"
+                  className={`flex items-center w-1/2 justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
+                    isLoading ? 'cursor-not-allowed' : ''
+                  }`}
+                  disabled={isLoading}
                 >
-                  <CustomInput
-                    id="rememberMe"
-                    name="rememberMe"
-                    type="checkbox"
-                    checked={values.rememberMe}
-                    isSignUpPassInput={false}
-                  />
-                  <span className="ml-3">Remember Me</span>
-                </label>
+                  {isLoading ? <Loader /> : ''}
+                  <span className="mx-[4px]">
+                    {isLoading ? 'Logging In...' : 'Log In'}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRegistration}
+                  className="ml-1 rounded-md w-1/2 bg-gray-600 py-2 text-white hover:bg-gray-700"
+                >
+                  Sign Up
+                </button>
               </div>
-              <button
-                type="submit"
-                className={`flex w-full items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
-                  isLoading ? 'cursor-not-allowed' : ''
-                }`}
-                disabled={isLoading}
-              >
-                {isLoading ? <Loader /> : ''}
-                <span className="mx-[4px]">
-                  {isLoading ? 'Logging In...' : 'Log In'}
-                </span>
-              </button>
-              <button
+              <button              
                 type="button"
-                onClick={handleRegistration}
-                className="mt-2 w-full rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
-              >
-                Sign Up
+                className="flex w-full mt-3 text-white justify-center"
+                onClick={handleBackToMain}
+                >
+                Return to main page
               </button>
             </Form>
-          )}
         </Formik>
       </div>
-      <ToastNotification />
     </div>
   );
 };

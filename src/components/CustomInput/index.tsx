@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react';
 import { useField, FieldHookConfig, useFormikContext } from 'formik';
+import { FC, useEffect, useState } from 'react';
 import { EMPTY_PASSWORD_LENGTH } from '@/constants';
 import EyePassVisible from '@/components/ui/icons/EyePassVisible';
 import EyePass from '@/components/ui/icons/EyePass';
@@ -19,6 +19,7 @@ const CustomInput: FC<InputProps> = (props) => {
 
   const { setValue } = helpers;
   const { error, touched } = meta;
+
   const { value, name } = field;
 
   useEffect(() => {
@@ -37,9 +38,11 @@ const CustomInput: FC<InputProps> = (props) => {
     if (e.target.value === ' ') return;
 
     const withoutSpaces = e.target.value.replace(/\s/g, '');
-    setValue(isWhiteSpacesAllowed ? e.target.value : withoutSpaces).catch(() => {
-      console.log('Error while setting value');
-    });
+    setValue(isWhiteSpacesAllowed ? e.target.value : withoutSpaces).catch(
+      () => {
+        console.log('Error while setting value');
+      }
+    );
   };
 
   return (

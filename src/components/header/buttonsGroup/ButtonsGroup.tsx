@@ -1,20 +1,17 @@
 import React, { ReactElement } from 'react';
 import Image from 'next/image';
-import type { GetServerSideProps } from 'next';
-import { wrapper } from '@/store/store';
-import { selectAuthState, setAuthState } from '@/store/slices/authSlice';
+import { useRouter } from 'next/router';
+import { resetAuthState, selectAuthState } from '@/store/slices/authSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
-
 import cart from '@/assets/images/cart-icon.png';
-
-interface AuthState {
-  authState: boolean;
-}
+import { ERoute } from '../../../data/routes';
 
 function Search(): ReactElement {
   const { authState } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
+
+  const router = useRouter();
 
   return (
     <div className="flex flex-col">
@@ -25,9 +22,11 @@ function Search(): ReactElement {
           className="rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white"
           onClick={(): void => {
             if (authState) {
-              dispatch(setAuthState(false));
+              dispatch(resetAuthState());
             } else {
-              dispatch(setAuthState(true));
+              router.push(ERoute.login).catch((error) => {
+                console.log(error);
+              });
             }
           }}
         >
@@ -43,18 +42,5 @@ function Search(): ReactElement {
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps<AuthState> =
-  wrapper.getServerSideProps(
-    (store) => async (): Promise<{ props: AuthState }> => {
-      await Promise.resolve();
-      store.dispatch(setAuthState(false));
-      return {
-        props: {
-          authState: false,
-        },
-      };
-    }
-  );
 
 export default Search;
