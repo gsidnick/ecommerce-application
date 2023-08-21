@@ -2,7 +2,6 @@ import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import {
   ClientResponse,
   ClientResult,
-  HttpErrorType,
   TokenStore,
 } from '@commercetools/sdk-client-v2';
 
@@ -24,7 +23,7 @@ export interface ExistingTokenFlowOptions {
 }
 
 export interface IApiLoginResult {
-  apiResult: ClientResponse<CustomerSignInResult | ClientResult | HttpErrorType>;
+  apiResult: ClientResponse<CustomerSignInResult> | ClientResponse<ClientResult>;
   token: TokenStore | null;
 }
 

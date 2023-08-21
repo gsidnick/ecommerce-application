@@ -1,3 +1,5 @@
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import AuthClient from '@/api/client/AuthClient';
 import {
   IApiLoginResult,
@@ -62,12 +64,12 @@ class CustomerRepository {
         .execute();
 
       return {
-        apiResult,
+        apiResult: apiResult as ClientResponse<CustomerSignInResult>,
         token: this.tokenService.getToken(),
       };
     } catch (error) {
       return {
-        apiResult: error,
+        apiResult: error as ClientResponse<ClientResult>,
         token: null,
       };
     }
