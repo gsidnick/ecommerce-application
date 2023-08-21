@@ -198,9 +198,6 @@ const RegisterPage: NextPage = () => {
                     name="billingPostcode"
                     type="text"
                     placeholder="Postcode / ZIP*"
-                    // onChange={(e: ChangeEvent<HTMLInputElement>): void =>
-                    //   handleOnChangeBillingPostcode(e, setFieldValue)
-                    // }
                     isBillingIdenticalAsShipping={billingDefault}
                   />
                 </div>
