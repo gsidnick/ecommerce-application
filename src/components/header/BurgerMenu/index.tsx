@@ -6,13 +6,13 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectAuthState, resetAuthState } from '@/store/slices/authSlice';
 import { menu as menuData } from '../menu/menuData';
 import { selectMenuState, setStateBurgerMenu } from '@/store/slices/menuSlice';
 import CustomerController from '@/api/controllers/CustomerController';
-
 import CloseIcon from '@/components/ui/icons/CloseIcon';
 import logo from '@/assets/images/logo/logo-orange.png';
 
@@ -42,6 +42,7 @@ const BurgerMenu: NextPage = () => {
     new CustomerController().logoutCustomer();
     dispatch(resetAuthState());
     closeMenu();
+    toast.success('You have successfully logged out');
   };
 
   return (

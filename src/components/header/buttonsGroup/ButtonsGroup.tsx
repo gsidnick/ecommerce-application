@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import { resetAuthState, selectAuthState } from '@/store/slices/authSlice';
 import { setStateBurgerMenu } from '@/store/slices/menuSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
@@ -37,9 +38,10 @@ function ButtonsGroup(): ReactElement {
             if (authState) {
               new CustomerController().logoutCustomer();
               dispatch(resetAuthState());
+              toast.success('You have successfully logged out');
             } else {
               router.push(ERoute.login).catch((error) => {
-                console.log(error);
+                toast.error(error as string);
               });
             }
           }}

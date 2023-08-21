@@ -23,8 +23,6 @@ export const menuSlice = createSlice({
   initialState,
   reducers: {
     setStateBurgerMenu(state: MenuState, action: PayloadAction<boolean>) {
-      console.log('action.payload', action.payload);
-
       return {
         ...state,
         isBurgerMenuOpen: action.payload,
