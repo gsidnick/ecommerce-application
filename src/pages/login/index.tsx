@@ -17,9 +17,9 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import Loader from '@/components/ui/loader/Loader';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
-import CustomerController from '../../api/controllers/CustomerController';
-import { HttpStatus, IApiLoginResult, LoginProps } from '../../api/types';
-import { ERoute } from '../../data/routes';
+import CustomerController from '@/api/controllers/CustomerController';
+import { HttpStatus, IApiLoginResult, LoginProps } from '@/api/types';
+import { ERoute } from '@/data/routes';
 
 const initialValues: LoginProps = {
   email: '',

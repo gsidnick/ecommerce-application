@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { ERoute } from '@/data/routes';
-import { useAppStore } from '../../hooks/useAppStore';
+import { useAppStore } from '@/hooks/useAppStore';
 
 export const AuthGate = ({
   children,
