@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState, ReactNode } from 'react';
+import { toast } from 'react-toastify';
 import Loader from '@/components/ui/loader/Loader';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setAuthState } from '@/store/slices/authSlice';
@@ -69,6 +70,7 @@ const RegisterPage: NextPage = () => {
   const handleSubmit = async (values: RegisterProps): Promise<void> => {
     try {
       setIsLoading(true);
+
       const customerDraft = createCustomerDraft(values);
       await customerController.registerCustomer(customerDraft);
       const { email, password } = values;
@@ -76,13 +78,18 @@ const RegisterPage: NextPage = () => {
         email,
         password,
       });
+
+      toast.success('Registration successfully');
       setIsLoading(false);
       dispatch(setAuthState(true));
+
       router
         .push('/')
         .catch(() => console.error('Error while redirecting to home page'));
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
