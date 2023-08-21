@@ -1,9 +1,8 @@
 import { ReactElement } from 'react';
 import { useRouter } from 'next/router';
-import { useStore } from 'react-redux';
 import { toast } from 'react-toastify';
 import { ERoute } from '@/data/routes';
-import { RootState } from '@/store/store';
+import { useAppStore } from '../../hooks/useAppStore';
 
 export const AuthGate = ({
   children,
@@ -11,7 +10,7 @@ export const AuthGate = ({
   children: ReactElement;
 }): ReactElement | null => {
   const router = useRouter();
-  const store = useStore<RootState>();
+  const store = useAppStore();
   const currentState = store.getState();
 
   const isAuth = currentState.auth.authState;
