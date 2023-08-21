@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
@@ -92,6 +91,12 @@ const LoginPage: NextPage<AuthState> = () => {
     });
   };
 
+  const handleBackToMain =(): void => {
+    router.push(ERoute.home).catch(() => {
+      toast.error('Error while redirecting to home page');
+    });
+  }
+
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="w-96 rounded bg-background-main p-6 shadow-modal">
@@ -113,24 +118,33 @@ const LoginPage: NextPage<AuthState> = () => {
                   isWhiteSpacesAllowed={false}
                 />
               </div>
-              <button
-                type="submit"
-                className={`flex w-full items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
-                  isLoading ? 'cursor-not-allowed' : ''
-                }`}
-                disabled={isLoading}
-              >
-                {isLoading ? <Loader /> : ''}
-                <span className="mx-[4px]">
-                  {isLoading ? 'Logging In...' : 'Log In'}
-                </span>
-              </button>
-              <button
+              <div className="flex mt-2 w-full">
+                <button
+                  type="submit"
+                  className={`flex items-center w-1/2 justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
+                    isLoading ? 'cursor-not-allowed' : ''
+                  }`}
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader /> : ''}
+                  <span className="mx-[4px]">
+                    {isLoading ? 'Logging In...' : 'Log In'}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRegistration}
+                  className="ml-1 rounded-md w-1/2 bg-gray-600 py-2 text-white hover:bg-gray-700"
+                >
+                  Sign Up
+                </button>
+              </div>
+              <button              
                 type="button"
-                onClick={handleRegistration}
-                className="mt-2 w-full rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
-              >
-                Sign Up
+                className="flex w-full mt-3 text-white justify-center"
+                onClick={handleBackToMain}
+                >
+                Return to main page
               </button>
             </Form>
         </Formik>
