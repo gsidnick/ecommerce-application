@@ -34,7 +34,6 @@ class TokenClient {
       .withProjectKey(projectKey)
       .withExistingTokenFlow(authorization, options)
       .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware()
       .build();
   }
 }

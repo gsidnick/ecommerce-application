@@ -32,7 +32,6 @@ class AuthClient {
       .withProjectKey(projectKey)
       .withPasswordFlow(authMiddlewareOptions)
       .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware()
       .build();
   }
 }
