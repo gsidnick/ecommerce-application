@@ -30,14 +30,6 @@ const CustomInput: FC<InputProps> = (props) => {
     }
   }, [value]);
 
-  useEffect(() => {
-    if (value.length > EMPTY_PASSWORD_LENGTH && !touched) {
-      setFieldTouched(name, true, true).catch(() => {
-        console.log('Error while setting field touched');
-      });
-    }
-  }, [value]);
-
   const toggleVisionPass = (): void => {
     setVisionPass(!visionPass);
   };
