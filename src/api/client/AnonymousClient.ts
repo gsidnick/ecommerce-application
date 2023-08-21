@@ -31,7 +31,6 @@ class AnonymousClient {
       .withProjectKey(projectKey)
       .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
       .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware()
       .build();
   }
 }
