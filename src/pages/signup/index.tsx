@@ -1,15 +1,16 @@
-import {
-  Formik,
-  Form,
-  FormikProps,
-} from 'formik';
+import { Formik, Form, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState, ReactNode } from 'react';
+import { toast } from 'react-toastify';
 import Loader from '@/components/ui/loader/Loader';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { setAuthState } from '@/store/slices/authSlice';
 import { PostcodeName, RegisterProps } from '@/types';
 import { postcodes } from '@/validation/patterns';
+import CustomerController from '@/api/controllers/CustomerController';
+import { createCustomerDraft } from '@/api/helpers/customerDraft';
 import {
   addressSchema,
   citySchema,
@@ -22,15 +23,16 @@ import {
 } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
 import CustomBillingInput from '@/components/CustomInput/CustomBillingInput';
+import { ERoute } from '@/data/routes';
 
 const postcodeKeys = Object.keys(postcodes);
 
 const initialValues: RegisterProps = {
   email: '',
   password: '',
-  firstname: '',
-  lastname: '',
-  date: '',
+  firstName: '',
+  lastName: '',
+  dateOfBirth: '',
   country: '',
   billingAddress: '',
   billingCity: '',
@@ -38,21 +40,25 @@ const initialValues: RegisterProps = {
   shippingAddress: '',
   shippingCity: '',
   shippingPostcode: '',
+  sameBilling: false,
+  defaultBilling: false,
+  defaultShipping: false,
 };
 
 // eslint-disable-next-line max-lines-per-function
 const RegisterPage: NextPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [country, setCountry] = useState<PostcodeName>('USA');
+  const [country, setCountry] = useState<PostcodeName>('US');
   const [billingDefault, setBillingDefault] = useState(false);
-
+  const customerController = new CustomerController();
   const validationSchema = Yup.object({
     email: emailSchema,
     password: passwordSchema,
-    firstname: nameSchema,
-    lastname: nameSchema,
-    date: dateSchema,
+    firstName: nameSchema,
+    lastName: nameSchema,
+    dateOfBirth: dateSchema,
     country: countrySchema,
     billingAddress: addressSchema,
     billingCity: citySchema,
@@ -62,23 +68,49 @@ const RegisterPage: NextPage = () => {
     shippingPostcode: getPostcodeSchema(country),
   });
 
-  const onSubmit = (values: RegisterProps): void => {
-    setIsLoading(true);
-    console.log('Form submitted with values:', values);
+  const handleSubmit = async (values: RegisterProps): Promise<void> => {
+    try {
+      setIsLoading(true);
+
+      const customerDraft = createCustomerDraft(values);
+      await customerController.registerCustomer(customerDraft);
+      const { email, password } = values;
+      await customerController.loginCustomer({
+        email,
+        password,
+      });
+
+      toast.success('Registration successfully');
+      setIsLoading(false);
+      dispatch(setAuthState(true));
+
+      router.push(ERoute.home).catch(() => {
+        toast.error('Error while redirecting to home page');
+      });
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogin = (): void => {
-    console.log('Login clicked');
+    router.push(ERoute.login).catch(() => {
+      toast.error('Error while redirecting to login page');
+    });
+  };
 
-    router.push('/login').catch(() => {
-      console.log('Error while redirecting to login page');
+  const handleBackToMain = (): void => {
+    router.push(ERoute.home).catch(() => {
+      toast.error('Error while redirecting to home page');
     });
   };
 
   const handleSelectCountry = (
     e: ChangeEvent<HTMLSelectElement>,
+    values: RegisterProps,
     resetForm: FormikProps<RegisterProps>['resetForm'],
-    values: RegisterProps
+    setFieldValue: FormikProps<RegisterProps>['setFieldValue']
   ): void => {
     setCountry(e.target.value);
     resetForm({
@@ -92,9 +124,11 @@ const RegisterPage: NextPage = () => {
         shippingPostcode: '',
       },
     });
+    // eslint-disable-next-line no-void
+    void setFieldValue('country', e.target.value);
   };
 
-  const handleBillingDefault = (
+  const handleSameBilling = (
     e: ChangeEvent<HTMLInputElement>,
     values: RegisterProps,
     resetForm: FormikProps<RegisterProps>['resetForm']
@@ -106,6 +140,7 @@ const RegisterPage: NextPage = () => {
         shippingAddress: values.billingAddress,
         shippingCity: values.billingCity,
         shippingPostcode: values.billingPostcode,
+        sameBilling: e.target.checked,
       },
     });
   };
@@ -116,10 +151,10 @@ const RegisterPage: NextPage = () => {
         <h1 className="mb-4 text-2xl font-semibold text-white">Sign Up</h1>
         <Formik
           initialValues={initialValues}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {({ values, resetForm }): ReactNode => (
+          {({ values, resetForm, setFieldValue, handleChange }): ReactNode => (
             <Form>
               <div className="border-b border-gray-900/10">
                 <div className="mb-4">
@@ -132,26 +167,30 @@ const RegisterPage: NextPage = () => {
                     placeholder="Password"
                     isSignUpPassInput
                   />
-                 </div>
+                </div>
 
                 <div className="mb-4">
                   <CustomInput
-                    name="firstname"
+                    name="firstName"
                     type="text"
-                    placeholder="First Name*"
-                    isWhiteSpacesAllowed
-                  />
-                 </div>
-                <div className="mb-4">
-                  <CustomInput
-                    name="lastname"
-                    type="text"
-                    placeholder="Last Name*"
+                    placeholder="First Name"
                     isWhiteSpacesAllowed
                   />
                 </div>
                 <div className="mb-4">
-                  <CustomInput name="date" type="date" isWhiteSpacesAllowed />
+                  <CustomInput
+                    name="lastName"
+                    type="text"
+                    placeholder="Last Name"
+                    isWhiteSpacesAllowed
+                  />
+                </div>
+                <div className="mb-4">
+                  <CustomInput
+                    name="dateOfBirth"
+                    type="date"
+                    isWhiteSpacesAllowed
+                  />
                 </div>
                 <div className="mb-4">
                   <select
@@ -160,7 +199,7 @@ const RegisterPage: NextPage = () => {
                     defaultValue=""
                     placeholder="Select a country..."
                     onChange={(e): void =>
-                      handleSelectCountry(e, resetForm, values)
+                      handleSelectCountry(e, values, resetForm, setFieldValue)
                     }
                     className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
                   >
@@ -181,7 +220,7 @@ const RegisterPage: NextPage = () => {
                   <CustomBillingInput
                     name="billingAddress"
                     type="text"
-                    placeholder="Street Address*"
+                    placeholder="Street Address"
                     isBillingIdenticalAsShipping={billingDefault}
                   />
                 </div>
@@ -189,7 +228,7 @@ const RegisterPage: NextPage = () => {
                   <CustomBillingInput
                     name="billingCity"
                     type="text"
-                    placeholder="City / Town*"
+                    placeholder="City / Town"
                     isBillingIdenticalAsShipping={billingDefault}
                   />
                 </div>
@@ -197,22 +236,36 @@ const RegisterPage: NextPage = () => {
                   <CustomBillingInput
                     name="billingPostcode"
                     type="text"
-                    placeholder="Postcode / ZIP*"
+                    placeholder="Postcode / ZIP"
                     isBillingIdenticalAsShipping={billingDefault}
                   />
                 </div>
-                <label className="text-white" htmlFor="billingDefaultAddress">
-                  <input
-                    type="checkbox"
-                    name="billingDefaultAddress"
-                    id="billingDefaultAddress"
-                    onChange={(e: ChangeEvent<HTMLInputElement>): void =>
-                      handleBillingDefault(e, values, resetForm)
-                    }
-                    className="mr-2"
-                  />
-                  Shipping address same as billing address
-                </label>
+                <div className="mb-4">
+                  <label className="text-white" htmlFor="defaultBilling">
+                    <input
+                      type="checkbox"
+                      name="defaultBilling"
+                      id="defaultBilling"
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    Set this billing address as default
+                  </label>
+                </div>
+                <div className="mb-4">
+                  <label className="text-white" htmlFor="sameBilling">
+                    <input
+                      type="checkbox"
+                      name="sameBilling"
+                      id="sameBilling"
+                      onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+                        handleSameBilling(e, values, resetForm)
+                      }
+                      className="mr-2"
+                    />
+                    Shipping address same as billing address
+                  </label>
+                </div>
               </div>
 
               <div className="mb-4 mt-8">
@@ -221,30 +274,41 @@ const RegisterPage: NextPage = () => {
                   <CustomInput
                     name="shippingAddress"
                     type="text"
-                    placeholder="Street Address*"
-                    isWhiteSpacesAllowed
+                    placeholder="Street Address"
                     disabled={billingDefault}
+                    isWhiteSpacesAllowed
                   />
-
                 </div>
                 <div className="mb-4">
                   <CustomInput
-                name="shippingCity"
-                type="text"
-                placeholder="City / Town*"
-                disabled={billingDefault}
-                isWhiteSpacesAllowed
-              />
+                    name="shippingCity"
+                    type="text"
+                    placeholder="City / Town"
+                    disabled={billingDefault}
+                    isWhiteSpacesAllowed
+                  />
                 </div>
                 <div className="mb-4">
                   <CustomInput
-                id="shippingPostcode"
-                name="shippingPostcode"
-                type="text"
-                placeholder="Postcode / ZIP*"
-                disabled={billingDefault}
-                isWhiteSpacesAllowed
-              />
+                    id="shippingPostcode"
+                    name="shippingPostcode"
+                    type="text"
+                    placeholder="Postcode / ZIP"
+                    disabled={billingDefault}
+                    isWhiteSpacesAllowed
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="text-white" htmlFor="defaultShipping">
+                    <input
+                      type="checkbox"
+                      name="defaultShipping"
+                      id="defaultShipping"
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    Set this shipping address as default
+                  </label>
                 </div>
               </div>
 
@@ -266,6 +330,13 @@ const RegisterPage: NextPage = () => {
                 className="mt-2 w-full rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
               >
                 Log In
+              </button>
+              <button
+                type="button"
+                className="mt-3 flex w-full justify-center text-white"
+                onClick={handleBackToMain}
+              >
+                Return to main page
               </button>
             </Form>
           )}

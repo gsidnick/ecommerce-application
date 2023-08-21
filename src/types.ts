@@ -10,9 +10,9 @@ export interface PostcodeData {
 export interface RegisterProps {
   email: string;
   password: string;
-  firstname: string;
-  lastname: string;
-  date: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
   country: string;
   billingAddress: string;
   billingCity: string;
@@ -20,4 +20,7 @@ export interface RegisterProps {
   shippingAddress: string;
   shippingCity: string;
   shippingPostcode: string;
+  sameBilling: boolean;
+  defaultBilling: boolean;
+  defaultShipping: boolean;
 }
