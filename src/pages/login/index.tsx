@@ -115,7 +115,6 @@ const LoginPage: NextPage<AuthState> = () => {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  isWhiteSpacesAllowed={false}
                 />
               </div>
               <div className="flex mt-2 w-full">
