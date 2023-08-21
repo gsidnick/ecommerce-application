@@ -63,15 +63,14 @@ function MainSlider(): ReactElement {
       <div
         ref={sliderRef}
         className="keen-slider w-full text-white"
-        style={{ height: '400px', position: 'relative' }}
+        style={{ minHeight: '100px', width: '100%', position: 'relative' }}
       >
         {productsToSlide.map((product) => (
-          <div className="keen-slider__slide">
+          <div className="keen-slider__slide w-full" key={product.id}>
             <Image
               src={product.imageSrc}
               alt={product.title}
-              layout="fill"
-              objectFit="contain"
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
         ))}

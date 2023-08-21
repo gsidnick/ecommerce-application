@@ -4,9 +4,9 @@ import search from '@/assets/images/search-icon.png';
 
 function Search(): ReactElement {
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="hidden items-center justify-center gap-2 md:flex">
       <Image src={search} alt="search" />
-      <span className='text-white'>ПОИСК</span>
+      <span className="text-white">ПОИСК</span>
     </div>
   );
 }
