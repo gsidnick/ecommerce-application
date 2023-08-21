@@ -15,3 +15,9 @@ export const MAX_DATE = new Date(
       SECONDS_IN_MINUTE *
       MILLISECONDS_IN_SECOND
 );
+
+
+export const SECONDS_TO_REDIRECT = 5;
+export const SECONDS_STEP_TO_REDIRECT = 1;
+export const MILLISECONDS_STEP_TO_REDIRECT = 1000;
+export const SECONDS_EDGE_TO_REDIRECT = 0;
