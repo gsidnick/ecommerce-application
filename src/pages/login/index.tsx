@@ -90,7 +90,6 @@ const LoginPage: NextPage = () => {
                   name="password"
                   type="password"
                   placeholder="Password"
-                  isWhiteSpacesAllowed={false}
                 />
               </div>
               <div className="mb-4 flex items-center justify-start">

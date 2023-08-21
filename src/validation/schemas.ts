@@ -4,12 +4,10 @@ import { PostcodeName } from '@/types';
 import { postcodes } from '@/validation/patterns';
 
 export const emailSchema = Yup.string()
-.required('Required')
-.test(
-  'no-whitespace',
-  'Email must not contain whitespace',
-  (value = '') => /^\S*$/.test(value)
-)
+  .required('Required')
+  .test('no-whitespace', 'Email must not contain whitespace', (value = '') =>
+    /^\S*$/.test(value)
+  )
   .matches(
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     'Invalid email address'
@@ -23,11 +21,9 @@ export const passwordSchema = Yup.string()
     'Password must contain at least one special character (e.g., !@#$%^&*)',
     (value) => /[!@#$%^&*]/.test(value)
   )
-  .test(
-    'no-whitespace',
-    'Password must not contain whitespace',
-    (value) => /^\S*$/.test(value)
-  ) 
+  .test('no-whitespace', 'Password must not contain whitespace', (value) =>
+    /^\S*$/.test(value)
+  )
   .test(
     'has-uppercase',
     'Password must contain at least one uppercase letter (A-Z)',
@@ -45,6 +41,7 @@ export const passwordSchema = Yup.string()
   )
   .trim();
 export const nameSchema = Yup.string()
+  .matches(/^[\w+ ]+$/, 'Only on latin letters')
   .matches(/^[a-zA-Z]+$/, 'First name must contain at least 1 letters')
   .required('Required');
 export const dateSchema = Yup.date()
@@ -52,9 +49,14 @@ export const dateSchema = Yup.date()
   .required('Required');
 export const countrySchema = Yup.string().required('Required');
 export const addressSchema = Yup.string()
-  .matches(/^[a-zA-Z0-9\s]+$/, 'Street address must contain at least 1 letters')
+  .matches(/^[\w+ ]+$/, 'Only on latin letters and numbers')
+  .matches(
+    /[a-zA-Z0-9\s]{3,}$/,
+    'Street address must contain at least 3 letters'
+  )
   .required('Required');
 export const citySchema = Yup.string()
+  .matches(/^[\w+ ]+$/, 'Only on latin letters and numbers')
   .matches(/^[a-zA-Z\s]+$/, 'City must contain at least 1 letters')
   .required('Required');
 export const getPostcodeSchema = (country: PostcodeName): Yup.StringSchema =>

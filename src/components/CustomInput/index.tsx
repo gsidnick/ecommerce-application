@@ -3,15 +3,23 @@ import { useField, FieldHookConfig, useFormikContext } from 'formik';
 import { EMPTY_PASSWORD_LENGTH } from '@/constants';
 import EyePassVisible from '@/components/ui/icons/EyePassVisible';
 import EyePass from '@/components/ui/icons/EyePass';
+import ValidationPrompt from '@/components/ValidationPrompt';
 
 type InputProps = FieldHookConfig<string> & {
   isSignUpPassInput?: boolean;
   isWhiteSpacesAllowed?: boolean;
+  disabled?: boolean;
 };
 
 const CustomInput: FC<InputProps> = (props) => {
   const [visionPass, setVisionPass] = useState<boolean>(false);
-  const { type, placeholder, isSignUpPassInput, isWhiteSpacesAllowed } = props;
+  const {
+    type,
+    placeholder,
+    isSignUpPassInput,
+    isWhiteSpacesAllowed,
+    disabled,
+  } = props;
 
   const { setFieldTouched } = useFormikContext();
 
@@ -22,7 +30,7 @@ const CustomInput: FC<InputProps> = (props) => {
   const { value, name } = field;
 
   useEffect(() => {
-    if (value.length > EMPTY_PASSWORD_LENGTH && !touched) {
+    if (value?.length > EMPTY_PASSWORD_LENGTH && !touched) {
       setFieldTouched(name, true, true).catch(() => {
         console.log('Error while setting field touched');
       });
@@ -37,23 +45,31 @@ const CustomInput: FC<InputProps> = (props) => {
     if (e.target.value === ' ') return;
 
     const withoutSpaces = e.target.value.replace(/\s/g, '');
-    setValue(isWhiteSpacesAllowed ? e.target.value : withoutSpaces).catch(() => {
-      console.log('Error while setting value');
-    });
+    setValue(isWhiteSpacesAllowed ? e.target.value : withoutSpaces).catch(
+      () => {
+        console.log('Error while setting value');
+      }
+    );
   };
 
+  const makeClassName = (): string => {
+    const result =
+      type === 'checkbox'
+        ? 'rounded-md border border-neutral-800 bg-background-main p-2 focus:border-neutral-500 focus:outline-none'
+        : 'w-full rounded-md border border-neutral-800 bg-background-main p-2 focus:border-neutral-500 focus:outline-none';
+    const disabledClass = disabled ? 'text-gray-600' : 'text-white';
+
+    return `${result} ${disabledClass}`;
+  };
   return (
     <>
       <input
         {...field}
         type={visionPass ? 'text' : type}
         placeholder={placeholder}
-        className={
-          type === 'checkbox'
-            ? 'rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none'
-            : 'w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none'
-        }
+        className={makeClassName()}
         onChange={handleChange}
+        disabled={disabled}
       />
       {type === 'password' && (
         <button
@@ -66,10 +82,13 @@ const CustomInput: FC<InputProps> = (props) => {
           {visionPass ? <EyePassVisible /> : <EyePass />}
         </button>
       )}
-      {!isSignUpPassInput && error ? (
+      {!isSignUpPassInput && error && !disabled ? (
         <p className="text-red-500">{touched && error}</p>
       ) : (
-        ''
+        ""
+      )}
+      {isSignUpPassInput && touched && (
+        <ValidationPrompt validation={value} />
       )}
     </>
   );
@@ -78,6 +97,7 @@ const CustomInput: FC<InputProps> = (props) => {
 CustomInput.defaultProps = {
   isSignUpPassInput: false,
   isWhiteSpacesAllowed: false,
+  disabled: false,
 };
 
 export default CustomInput;
