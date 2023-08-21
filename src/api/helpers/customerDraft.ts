@@ -1,11 +1,11 @@
 import { RegisterProps } from '@/types';
-import { UserRegistrationData } from '@/api/types';
 import {
   DOUBLE_LENGTH,
   INDEX_ONE,
   INDEX_ZERO,
   SINGLE_LENGTH,
 } from '@/api/constants';
+import { UserRegistrationData } from '@/api/types';
 
 export const createCustomerDraft = (
   data: RegisterProps
