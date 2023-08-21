@@ -1,30 +1,33 @@
 import { ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import { useStore } from 'react-redux';
-import { AuthState } from '../../store/slices/authSlice';
-import { ERoute } from '../../data/routes';
+import { toast } from 'react-toastify';
+import { ERoute } from '@/data/routes';
+import { RootState } from '@/store/store';
 
 export const AuthGate = ({
   children,
 }: {
   children: ReactElement;
-}): ReactElement => {
+}): ReactElement | null => {
   const router = useRouter();
-  const store = useStore();
-  const currentState: AuthState = store.getState().auth as AuthState;
+  const store = useStore<RootState>();
+  const currentState = store.getState();
 
-  console.log('inside gate', window.location.pathname);
+  const isAuth = currentState.auth.authState;
 
   if (
-    currentState.authState &&
+    isAuth &&
     window.location.pathname === (ERoute.login as string)
   ) {
-    router.push(ERoute.home).catch(() => {
-      console.log('Error while redirecting to home page');
+    router.push(ERoute.home).then(() => {
+      toast.info('Already logged in, redirect to main page');
+    })
+    .catch(() => {
+      toast.error('Error while redirecting to home page');
     });
 
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    return <></>;
+    return null;
   }
 
   return children;

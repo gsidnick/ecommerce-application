@@ -43,6 +43,7 @@ class CustomerRepository {
   ): Promise<IApiLoginResult> {
     const client = new AuthClient(userData);
     const apiRoot = client.getApiRoot();
+    
     try {
       const { email, password } = userData;
 

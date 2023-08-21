@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import { useState, ReactNode } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import {
@@ -13,14 +13,12 @@ import {
   setRefreshToken,
   setToken,
 } from '@/store/slices/authSlice';
-import { LoginProps } from '@/pages/api/user/login';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import Loader from '@/components/ui/loader/Loader';
 import { emailSchema, passwordSchema } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
 import CustomerController from '../../api/controllers/CustomerController';
-import { HttpStatus } from '../api/lib/types';
-import { IApiLoginResult } from '../../api/types';
+import { HttpStatus, IApiLoginResult, LoginProps } from '../../api/types';
 import { ERoute } from '../../data/routes';
 
 const initialValues: LoginProps = {
@@ -41,8 +39,6 @@ const LoginPage: NextPage<AuthState> = () => {
     customerController
       .loginCustomer(values)
       .then((response: IApiLoginResult) => {
-        console.log(response);
-
         if (
           response.apiResult.statusCode === HttpStatus.OK &&
           response.token?.token.length
@@ -69,10 +65,14 @@ const LoginPage: NextPage<AuthState> = () => {
 
         setIsLoading(false);
 
-        const errorMessage: string = (response.apiResult as HttpErrorType).body
-          ?.message as string;
+        const errorResult = response.apiResult as HttpErrorType;
 
-        toast.error(errorMessage);
+        const errorMessage = (errorResult.body
+          ?.message as string || errorResult.message) ?? '';
+
+        if (errorMessage.length) {
+          toast.error(errorMessage);
+        }
       })
       .catch(() => {
         toast.error('General login error');
@@ -101,7 +101,6 @@ const LoginPage: NextPage<AuthState> = () => {
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {(): ReactNode => (
             <Form>
               <div className="mb-4">
                 <CustomInput name="email" type="text" placeholder="Email" />
@@ -134,7 +133,6 @@ const LoginPage: NextPage<AuthState> = () => {
                 Sign Up
               </button>
             </Form>
-          )}
         </Formik>
       </div>
     </div>
