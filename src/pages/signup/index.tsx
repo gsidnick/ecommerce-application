@@ -23,6 +23,7 @@ import {
 } from '@/validation/schemas';
 import CustomInput from '@/components/CustomInput';
 import CustomBillingInput from '@/components/CustomInput/CustomBillingInput';
+import { ERoute } from '@/data/routes';
 
 const postcodeKeys = Object.keys(postcodes);
 
@@ -83,9 +84,9 @@ const RegisterPage: NextPage = () => {
       setIsLoading(false);
       dispatch(setAuthState(true));
 
-      router
-        .push('/')
-        .catch(() => console.error('Error while redirecting to home page'));
+      router.push(ERoute.home).catch(() => {
+        toast.error('Error while redirecting to home page');
+      });
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     } finally {
@@ -94,9 +95,14 @@ const RegisterPage: NextPage = () => {
   };
 
   const handleLogin = (): void => {
-    console.log('Login clicked');
-    router.push('/login').catch(() => {
-      console.log('Error while redirecting to login page');
+    router.push(ERoute.login).catch(() => {
+      toast.error('Error while redirecting to login page');
+    });
+  };
+
+  const handleBackToMain = (): void => {
+    router.push(ERoute.home).catch(() => {
+      toast.error('Error while redirecting to home page');
     });
   };
 
@@ -324,6 +330,13 @@ const RegisterPage: NextPage = () => {
                 className="mt-2 w-full rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
               >
                 Log In
+              </button>
+              <button
+                type="button"
+                className="mt-3 flex w-full justify-center text-white"
+                onClick={handleBackToMain}
+              >
+                Return to main page
               </button>
             </Form>
           )}

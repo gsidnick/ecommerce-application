@@ -17,14 +17,17 @@ export const AuthGate = ({
 
   if (
     isAuth &&
-    window.location.pathname === (ERoute.login as string)
+    (window.location.pathname === (ERoute.login as string) ||
+      window.location.pathname === (ERoute.signup as string))
   ) {
-    router.push(ERoute.home).then(() => {
-      toast.info('Already logged in, redirect to main page');
-    })
-    .catch(() => {
-      toast.error('Error while redirecting to home page');
-    });
+    router
+      .push(ERoute.home)
+      .then(() => {
+        toast.info('Already logged in, redirect to main page');
+      })
+      .catch(() => {
+        toast.error('Error while redirecting to home page');
+      });
 
     return null;
   }
