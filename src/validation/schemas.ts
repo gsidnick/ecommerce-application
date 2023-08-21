@@ -40,25 +40,31 @@ export const passwordSchema = Yup.string()
     (value) => /\d/.test(value)
   )
   .trim();
+
 export const nameSchema = Yup.string()
   .matches(/^[\w+ ]+$/, 'Only on latin letters')
   .matches(/^[a-zA-Z]+$/, 'First name must contain at least 1 letters')
   .required('Required');
+
 export const dateSchema = Yup.date()
   .max(MAX_DATE, 'Date of birth must be more than 13 years old')
   .required('Required');
+
 export const countrySchema = Yup.string().required('Required');
+
 export const addressSchema = Yup.string()
   .matches(/^[\w+ ]+$/, 'Only on latin letters and numbers')
   .matches(
-    /[a-zA-Z0-9\s]{3,}$/,
-    'Street address must contain at least 3 letters'
+    /[a-zA-Z0-9\s]{1,}$/,
+    'Street address must contain at least 1 letter'
   )
   .required('Required');
+
 export const citySchema = Yup.string()
   .matches(/^[\w+ ]+$/, 'Only on latin letters and numbers')
   .matches(/^[a-zA-Z\s]+$/, 'City must contain at least 1 letters')
   .required('Required');
+
 export const getPostcodeSchema = (country: PostcodeName): Yup.StringSchema =>
   Yup.string()
     .matches(postcodes[country].pattern, postcodes[country].message)

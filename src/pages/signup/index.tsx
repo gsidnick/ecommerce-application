@@ -4,9 +4,15 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState, ReactNode } from 'react';
 import { toast } from 'react-toastify';
+import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import Loader from '@/components/ui/loader/Loader';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { setAuthState } from '@/store/slices/authSlice';
+import {
+  setAuthState,
+  setExpirationTime,
+  setRefreshToken,
+  setToken,
+} from '@/store/slices/authSlice';
 import { PostcodeName, RegisterProps } from '@/types';
 import { postcodes } from '@/validation/patterns';
 import CustomerController from '@/api/controllers/CustomerController';
@@ -24,6 +30,7 @@ import {
 import CustomInput from '@/components/CustomInput';
 import CustomBillingInput from '@/components/CustomInput/CustomBillingInput';
 import { ERoute } from '@/data/routes';
+import { HttpStatus, IApiLoginResult } from '@/api/types';
 
 const postcodeKeys = Object.keys(postcodes);
 
@@ -68,27 +75,77 @@ const RegisterPage: NextPage = () => {
     shippingPostcode: getPostcodeSchema(country),
   });
 
-  const handleSubmit = async (values: RegisterProps): Promise<void> => {
+  const handleErrorApiResult = (apiResult: HttpErrorType): void => {
+    const errorMessage =
+      ((apiResult.body?.message as string) || apiResult.message) ?? '';
+
+    if (errorMessage.length) {
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleSubmit = (values: RegisterProps): void => {
     try {
       setIsLoading(true);
 
       const customerDraft = createCustomerDraft(values);
-      await customerController.registerCustomer(customerDraft);
-      const { email, password } = values;
-      await customerController.loginCustomer({
-        email,
-        password,
-      });
 
-      toast.success('Registration successfully');
-      setIsLoading(false);
-      dispatch(setAuthState(true));
+      customerController
+        .registerCustomer(customerDraft)
+        .then((response) => {
+          if (
+            response.apiResult.statusCode === HttpStatus.CREATED &&
+            !response.apiResult.error
+          ) {
+            toast.success('Registration successful');
 
-      router.push(ERoute.home).catch(() => {
-        toast.error('Error while redirecting to home page');
-      });
+            const { email, password } = values;
+
+            customerController
+              .loginCustomer({
+                email,
+                password,
+              })
+              .then((loginResponse: IApiLoginResult) => {
+                if (
+                  loginResponse.apiResult.statusCode === HttpStatus.OK &&
+                  loginResponse.token?.token.length
+                ) {
+                  if (loginResponse.token) {
+                    const { token, refreshToken, expirationTime } =
+                      loginResponse.token;
+
+                    dispatch(setAuthState(true));
+                    dispatch(setToken(token));
+                    dispatch(setRefreshToken(refreshToken ?? ''));
+                    dispatch(setExpirationTime(expirationTime));
+
+                    toast.success('Authenticated successfully');
+
+                    router.push(ERoute.home).catch(() => {
+                      toast.error('Error while redirecting to home page');
+                    });
+
+                    return;
+                  }
+                }
+
+                handleErrorApiResult(loginResponse.apiResult as HttpErrorType);
+              })
+              .catch(() => {
+                toast.error('General login error');
+              });
+          }
+
+          handleErrorApiResult(response.apiResult as HttpErrorType);
+        })
+        .catch(() => {
+          toast.error('General registration error, try later');
+        });
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -345,4 +402,5 @@ const RegisterPage: NextPage = () => {
     </div>
   );
 };
+
 export default RegisterPage;

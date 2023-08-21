@@ -22,11 +22,11 @@ class CustomerRepository {
 
   public async registerCustomer(
     userData: UserRegistrationData
-  ): Promise<unknown> {
+  ): Promise<IApiLoginResult> {
     const client = new AnonymousClient();
     const apiRoot = client.getApiRoot();
     try {
-      return await apiRoot
+      const apiResult = await apiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
@@ -35,8 +35,16 @@ class CustomerRepository {
           body: userData,
         })
         .execute();
+
+      return {
+        apiResult: apiResult as ClientResponse<CustomerSignInResult>,
+        token: null,
+      };
     } catch (error) {
-      return error;
+      return {
+        apiResult: error as ClientResponse<ClientResult>,
+        token: null,
+      };
     }
   }
 
@@ -45,7 +53,7 @@ class CustomerRepository {
   ): Promise<IApiLoginResult> {
     const client = new AuthClient(userData);
     const apiRoot = client.getApiRoot();
-    
+
     try {
       const { email, password } = userData;
 

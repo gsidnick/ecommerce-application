@@ -12,9 +12,12 @@ class CustomerController {
     this.customerRepository = new CustomerRepository();
   }
 
-  public async registerCustomer(userData: UserRegistrationData): Promise<void> {
+  public async registerCustomer(
+    userData: UserRegistrationData
+  ): Promise<IApiLoginResult> {
     const data = await this.customerRepository.registerCustomer(userData);
-    console.log('Registration Check', data);
+
+    return data;
   }
 
   public async loginCustomer(
