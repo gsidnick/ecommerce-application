@@ -1,8 +1,6 @@
 import { ReactElement } from 'react';
 import Link from 'next/link';
-
 import Image from 'next/image';
-import HeaderBrow from './headerBrow/HeaderBrow';
 import Search from './search/Search';
 import ButtonsGroup from './buttonsGroup/ButtonsGroup';
 import NavMenu from './menu/NavMenu';
@@ -16,10 +14,10 @@ function Header(): ReactElement {
 
   return (
     <header className="bg-gray-dark">
-      <HeaderBrow />
+      {/* eslint-disable-next-line react/jsx-no-undef */}
       <div className="h-167 container mx-auto flex max-w-screen-xl items-center justify-around px-4 py-6">
         <Search />
-        <div className='w-40 md:w-72'>
+        <div className="w-40 md:w-72">
           <Link href="/">
             <Image src={logo} alt="logo" />
           </Link>
