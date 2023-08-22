@@ -62,6 +62,7 @@ const RegisterPage: NextPage = () => {
   const [shippingCountry, setShippingCountry] = useState<PostcodeName>('US');
   const [billingDefault, setBillingDefault] = useState(false);
   const shippingCountryRef = useRef<HTMLSelectElement>(null);
+  const defaultShippingRef = useRef<HTMLInputElement>(null);
   const customerController = new CustomerController();
   const validationSchema = Yup.object({
     email: emailSchema,
@@ -207,6 +208,21 @@ const RegisterPage: NextPage = () => {
     void setFieldValue('shippingCountry', e.target.value);
   };
 
+  const handleDefaultBilling = (
+    e: ChangeEvent<HTMLInputElement>,
+    handleChange: FormikProps<RegisterProps>['handleChange'],
+    setFieldValue: FormikProps<RegisterProps>['setFieldValue']
+  ): void => {
+    handleChange(e);
+    if (billingDefault) {
+      // eslint-disable-next-line no-void
+      void setFieldValue('defaultShipping', e.target.checked);
+      if (defaultShippingRef.current) {
+        defaultShippingRef.current.checked = e.target.checked;
+      }
+    }
+  };
+
   const handleSameBilling = (
     e: ChangeEvent<HTMLInputElement>,
     values: RegisterProps,
@@ -344,7 +360,9 @@ const RegisterPage: NextPage = () => {
                       type="checkbox"
                       name="defaultBilling"
                       id="defaultBilling"
-                      onChange={handleChange}
+                      onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+                        handleDefaultBilling(e, handleChange, setFieldValue)
+                      }
                       className="mr-2"
                     />
                     Set this billing address as default
@@ -435,6 +453,7 @@ const RegisterPage: NextPage = () => {
                       type="checkbox"
                       name="defaultShipping"
                       id="defaultShipping"
+                      ref={defaultShippingRef}
                       onChange={handleChange}
                       disabled={billingDefault}
                       className="mr-2"
