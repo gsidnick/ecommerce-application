@@ -79,26 +79,35 @@ const BurgerMenu: NextPage = () => {
                 </div>
               </li>
             ))}
-            <li
-              key="sign-in"
-              className="w-full opacity-75 hover:bg-indigo-500"
-              onClick={authState ? handleLogOut : handleNavigate('/login')}
-            >
-              <div className="p-3">
-                <p>{authState ? 'Sign Out' : 'Sign In'}</p>
-              </div>
-            </li>
-            {!authState && (
+            {authState && (
               <li
-                key="sign-up"
+                key="sign-in"
                 className="w-full opacity-75 hover:bg-indigo-500"
-                onClick={handleNavigate('/signup')}
+                onClick={handleLogOut}
               >
                 <div className="p-3">
-                  <p>Sign Up</p>
+                  <p>Log Out</p>
                 </div>
               </li>
             )}
+            <li
+              key="sign-in"
+              className="w-full opacity-75 hover:bg-indigo-500"
+              onClick={handleNavigate('/login')}
+            >
+              <div className="p-3">
+                <p>Log In</p>
+              </div>
+            </li>
+            <li
+              key="sign-up"
+              className="w-full opacity-75 hover:bg-indigo-500"
+              onClick={handleNavigate('/signup')}
+            >
+              <div className="p-3">
+                <p>Sign Up</p>
+              </div>
+            </li>
           </ul>
         </div>
       </div>

@@ -31,32 +31,37 @@ function ButtonsGroup(): ReactElement {
     <div className="flex flex-col">
       <div className="flex items-center justify-center">
         <Image src={cart} alt="cart" className="mr-8" />
+        {authState && (
+          <button
+            type="button"
+            className="hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
+            onClick={(): void => {
+              new CustomerController().logoutCustomer();
+              dispatch(resetAuthState());
+              toast.success('You have successfully logged out');
+            }}
+          >
+            Log out
+          </button>
+        )}
         <button
           type="button"
           className="hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
           onClick={(): void => {
-            if (authState) {
-              new CustomerController().logoutCustomer();
-              dispatch(resetAuthState());
-              toast.success('You have successfully logged out');
-            } else {
-              router.push(ERoute.login).catch((error) => {
-                toast.error(error as string);
-              });
-            }
+            router.push(ERoute.login).catch((error) => {
+              toast.error(error as string);
+            });
           }}
         >
-          {authState ? 'Sign Out' : 'Sign In'}
+          Log In
         </button>
-        {!authState && (
-          <button
-            type="button"
-            onClick={handleRedirectToSignUp}
-            className="ml-1 hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
-          >
-            Sign Up
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleRedirectToSignUp}
+          className="ml-1 hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
+        >
+          Sign Up
+        </button>
         <div
           className={styles.burgerButton}
           role="button"
