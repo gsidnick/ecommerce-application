@@ -230,8 +230,15 @@ const RegisterPage: NextPage = () => {
   ): void => {
     setBillingDefault(e.target.checked);
     setShippingCountry(values.billingCountry);
-    if (shippingCountryRef.current)
+
+    if (shippingCountryRef.current) {
       shippingCountryRef.current.value = values.billingCountry;
+    }
+
+    if (defaultShippingRef.current) {
+      defaultShippingRef.current.checked = values.defaultBilling;
+    }
+
     resetForm({
       values: {
         ...values,
@@ -239,6 +246,7 @@ const RegisterPage: NextPage = () => {
         shippingAddress: values.billingAddress,
         shippingCity: values.billingCity,
         shippingPostcode: values.billingPostcode,
+        defaultShipping: values.defaultBilling,
         sameBilling: e.target.checked,
       },
     });
