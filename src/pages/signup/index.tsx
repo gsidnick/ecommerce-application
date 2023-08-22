@@ -40,11 +40,11 @@ const initialValues: RegisterProps = {
   firstName: '',
   lastName: '',
   dateOfBirth: '',
-  billingCountry: '',
+  billingCountry: 'US',
   billingAddress: '',
   billingCity: '',
   billingPostcode: '',
-  shippingCountry: '',
+  shippingCountry: 'US',
   shippingAddress: '',
   shippingCity: '',
   shippingPostcode: '',
@@ -289,7 +289,7 @@ const RegisterPage: NextPage = () => {
                   <select
                     id="billingCountry"
                     name="billingCountry"
-                    defaultValue=""
+                    defaultValue="US"
                     placeholder="Select a country..."
                     onChange={(e): void =>
                       handleSelectBillingCountry(
@@ -372,7 +372,7 @@ const RegisterPage: NextPage = () => {
                   <select
                     id="shippingCountry"
                     name="shippingCountry"
-                    defaultValue=""
+                    defaultValue="US"
                     ref={shippingCountryRef}
                     placeholder="Select a country..."
                     disabled={billingDefault}
