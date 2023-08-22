@@ -66,8 +66,8 @@ const LoginPage: NextPage<AuthState> = () => {
 
         const errorResult = response.apiResult as HttpErrorType;
 
-        const errorMessage = (errorResult.body
-          ?.message as string || errorResult.message) ?? '';
+        const errorMessage =
+          ((errorResult.body?.message as string) || errorResult.message) ?? '';
 
         if (errorMessage.length) {
           toast.error(errorMessage);
@@ -91,61 +91,61 @@ const LoginPage: NextPage<AuthState> = () => {
     });
   };
 
-  const handleBackToMain =(): void => {
+  const handleBackToMain = (): void => {
     router.push(ERoute.home).catch(() => {
       toast.error('Error while redirecting to home page');
     });
-  }
+  };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="w-96 rounded bg-background-main p-6 shadow-modal">
+    <div className="flex h-full items-center justify-center">
+      <div className="my-20 w-96 rounded bg-background-main p-6 shadow-modal">
         <h1 className="mb-4 text-2xl font-semibold text-white">Login</h1>
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-            <Form>
-              <div className="mb-4">
-                <CustomInput name="email" type="text" placeholder="Email" />
-              </div>
-              <div className="relative mb-4">
-                <CustomInput
-                  name="password"
-                  type="password"
-                  placeholder="Password"
-                />
-              </div>
-              <div className="flex mt-2 w-full">
-                <button
-                  type="submit"
-                  className={`flex items-center w-1/2 justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
-                    isLoading ? 'cursor-not-allowed' : ''
-                  }`}
-                  disabled={isLoading}
-                >
-                  {isLoading ? <Loader /> : ''}
-                  <span className="mx-[4px]">
-                    {isLoading ? 'Logging In...' : 'Log In'}
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleRegistration}
-                  className="ml-1 rounded-md w-1/2 bg-gray-600 py-2 text-white hover:bg-gray-700"
-                >
-                  Sign Up
-                </button>
-              </div>
-              <button              
-                type="button"
-                className="flex w-full mt-3 text-white justify-center"
-                onClick={handleBackToMain}
-                >
-                Return to main page
+          <Form>
+            <div className="mb-4">
+              <CustomInput name="email" type="text" placeholder="Email" />
+            </div>
+            <div className="relative mb-4">
+              <CustomInput
+                name="password"
+                type="password"
+                placeholder="Password"
+              />
+            </div>
+            <div className="mt-2 flex w-full">
+              <button
+                type="submit"
+                className={`flex w-1/2 items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
+                  isLoading ? 'cursor-not-allowed' : ''
+                }`}
+                disabled={isLoading}
+              >
+                {isLoading ? <Loader /> : ''}
+                <span className="mx-[4px]">
+                  {isLoading ? 'Logging In...' : 'Log In'}
+                </span>
               </button>
-            </Form>
+              <button
+                type="button"
+                onClick={handleRegistration}
+                className="ml-1 w-1/2 rounded-md bg-gray-600 py-2 text-white hover:bg-gray-700"
+              >
+                Sign Up
+              </button>
+            </div>
+            <button
+              type="button"
+              className="mt-3 flex w-full justify-center text-white"
+              onClick={handleBackToMain}
+            >
+              Return to main page
+            </button>
+          </Form>
         </Formik>
       </div>
     </div>

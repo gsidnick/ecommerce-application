@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { wrapper } from '@/store/store';
 import ToastNotification from '../components/ToastNotification';
 import { AuthGate } from '../components/AuthGate';
+import Container from '../components/Containter/Container';
 
 function App({ Component, ...rest }: AppProps): ReactElement {
   const { store } = wrapper.useWrappedStore(rest);
@@ -16,7 +17,9 @@ function App({ Component, ...rest }: AppProps): ReactElement {
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={<div>Loading</div>}>
         <AuthGate>
-          <Component {...rest} />
+          <Container>
+            <Component {...rest} />
+          </Container>
         </AuthGate>
         <ToastNotification />
       </PersistGate>
