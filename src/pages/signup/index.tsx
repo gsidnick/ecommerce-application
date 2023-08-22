@@ -89,72 +89,65 @@ const RegisterPage: NextPage = () => {
   };
 
   const handleSubmit = (values: RegisterProps): void => {
-    try {
-      setIsLoading(true);
+    setIsLoading(true);
 
-      const customerDraft = createCustomerDraft(values);
+    const customerDraft = createCustomerDraft(values);
 
-      console.log(customerDraft);
+    customerController
+      .registerCustomer(customerDraft)
+      .then((response) => {
+        if (
+          response.apiResult.statusCode === HttpStatus.CREATED &&
+          !response.apiResult.error
+        ) {
+          toast.success('Registration successful');
 
-      customerController
-        .registerCustomer(customerDraft)
-        .then((response) => {
-          if (
-            response.apiResult.statusCode === HttpStatus.CREATED &&
-            !response.apiResult.error
-          ) {
-            toast.success('Registration successful');
+          const { email, password } = values;
 
-            const { email, password } = values;
+          customerController
+            .loginCustomer({
+              email,
+              password,
+            })
+            .then((loginResponse: IApiLoginResult) => {
+              if (
+                loginResponse.apiResult.statusCode === HttpStatus.OK &&
+                loginResponse.token?.token.length
+              ) {
+                if (loginResponse.token) {
+                  const { token, refreshToken, expirationTime } =
+                    loginResponse.token;
 
-            customerController
-              .loginCustomer({
-                email,
-                password,
-              })
-              .then((loginResponse: IApiLoginResult) => {
-                if (
-                  loginResponse.apiResult.statusCode === HttpStatus.OK &&
-                  loginResponse.token?.token.length
-                ) {
-                  if (loginResponse.token) {
-                    const { token, refreshToken, expirationTime } =
-                      loginResponse.token;
+                  dispatch(setAuthState(true));
+                  dispatch(setToken(token));
+                  dispatch(setRefreshToken(refreshToken ?? ''));
+                  dispatch(setExpirationTime(expirationTime));
 
-                    dispatch(setAuthState(true));
-                    dispatch(setToken(token));
-                    dispatch(setRefreshToken(refreshToken ?? ''));
-                    dispatch(setExpirationTime(expirationTime));
+                  toast.success('Authenticated successfully');
 
-                    toast.success('Authenticated successfully');
+                  router.push(ERoute.home).catch(() => {
+                    toast.error('Error while redirecting to home page');
+                  });
 
-                    router.push(ERoute.home).catch(() => {
-                      toast.error('Error while redirecting to home page');
-                    });
-
-                    return;
-                  }
+                  return;
                 }
+              }
 
-                handleErrorApiResult(loginResponse.apiResult as HttpErrorType);
-              })
-              .catch(() => {
-                toast.error('General login error');
-              });
-          }
+              handleErrorApiResult(loginResponse.apiResult as HttpErrorType);
+            })
+            .catch(() => {
+              toast.error('General login error');
+            });
+        }
 
-          handleErrorApiResult(response.apiResult as HttpErrorType);
-        })
-        .catch(() => {
-          toast.error('General registration error, try later');
-        });
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
-      setIsLoading(false);
-    }
+        handleErrorApiResult(response.apiResult as HttpErrorType);
+      })
+      .catch(() => {
+        toast.error('General registration error, try later');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleLogin = (): void => {
