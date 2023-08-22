@@ -40,10 +40,11 @@ const initialValues: RegisterProps = {
   firstName: '',
   lastName: '',
   dateOfBirth: '',
-  country: '',
+  billingCountry: '',
   billingAddress: '',
   billingCity: '',
   billingPostcode: '',
+  shippingCountry: '',
   shippingAddress: '',
   shippingCity: '',
   shippingPostcode: '',
@@ -57,7 +58,8 @@ const RegisterPage: NextPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [country, setCountry] = useState<PostcodeName>('US');
+  const [billingCountry, setBillingCountry] = useState<PostcodeName>('US');
+  const [shippingCountry, setShippingCountry] = useState<PostcodeName>('US');
   const [billingDefault, setBillingDefault] = useState(false);
   const customerController = new CustomerController();
   const validationSchema = Yup.object({
@@ -66,13 +68,14 @@ const RegisterPage: NextPage = () => {
     firstName: nameSchema,
     lastName: nameSchema,
     dateOfBirth: dateSchema,
-    country: countrySchema,
+    billingCountry: countrySchema,
     billingAddress: addressSchema,
     billingCity: citySchema,
-    billingPostcode: getPostcodeSchema(country),
+    billingPostcode: getPostcodeSchema(billingCountry),
+    shippingCountry: countrySchema,
     shippingAddress: addressSchema,
     shippingCity: citySchema,
-    shippingPostcode: getPostcodeSchema(country),
+    shippingPostcode: getPostcodeSchema(shippingCountry),
   });
 
   const handleErrorApiResult = (apiResult: HttpErrorType): void => {
@@ -89,7 +92,6 @@ const RegisterPage: NextPage = () => {
       setIsLoading(true);
 
       const customerDraft = createCustomerDraft(values);
-
       customerController
         .registerCustomer(customerDraft)
         .then((response) => {
@@ -163,26 +165,42 @@ const RegisterPage: NextPage = () => {
     });
   };
 
-  const handleSelectCountry = (
+  const handleSelectBillingCountry = (
     e: ChangeEvent<HTMLSelectElement>,
     values: RegisterProps,
     resetForm: FormikProps<RegisterProps>['resetForm'],
     setFieldValue: FormikProps<RegisterProps>['setFieldValue']
   ): void => {
-    setCountry(e.target.value);
+    setBillingCountry(e.target.value);
     resetForm({
       values: {
         ...values,
         billingAddress: '',
         billingCity: '',
         billingPostcode: '',
+      },
+    });
+    // eslint-disable-next-line no-void
+    void setFieldValue('billingCountry', e.target.value);
+  };
+
+  const handleSelectShippingCountry = (
+    e: ChangeEvent<HTMLSelectElement>,
+    values: RegisterProps,
+    resetForm: FormikProps<RegisterProps>['resetForm'],
+    setFieldValue: FormikProps<RegisterProps>['setFieldValue']
+  ): void => {
+    setShippingCountry(e.target.value);
+    resetForm({
+      values: {
+        ...values,
         shippingAddress: '',
         shippingCity: '',
         shippingPostcode: '',
       },
     });
     // eslint-disable-next-line no-void
-    void setFieldValue('country', e.target.value);
+    void setFieldValue('shippingCountry', e.target.value);
   };
 
   const handleSameBilling = (
@@ -249,14 +267,22 @@ const RegisterPage: NextPage = () => {
                     isWhiteSpacesAllowed
                   />
                 </div>
+              </div>
+              <div className="mb-4 mt-8">
+                <h2 className="mb-2 font-bold text-white">Billing Address:</h2>
                 <div className="mb-4">
                   <select
-                    id="country"
-                    name="country"
+                    id="billingCountry"
+                    name="billingCountry"
                     defaultValue=""
                     placeholder="Select a country..."
                     onChange={(e): void =>
-                      handleSelectCountry(e, values, resetForm, setFieldValue)
+                      handleSelectBillingCountry(
+                        e,
+                        values,
+                        resetForm,
+                        setFieldValue
+                      )
                     }
                     className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
                   >
@@ -270,9 +296,6 @@ const RegisterPage: NextPage = () => {
                     ))}
                   </select>
                 </div>
-              </div>
-              <div className="mb-4 mt-8">
-                <h2 className="mb-2 font-bold text-white">Billing Address:</h2>
                 <div className="mb-4">
                   <CustomBillingInput
                     name="billingAddress"
@@ -327,6 +350,33 @@ const RegisterPage: NextPage = () => {
 
               <div className="mb-4 mt-8">
                 <h2 className="mb-2 font-bold text-white">Shipping Address:</h2>
+                <div className="mb-4">
+                  <select
+                    id="shippingCountry"
+                    name="shippingCountry"
+                    defaultValue=""
+                    placeholder="Select a country..."
+                    disabled={billingDefault}
+                    onChange={(e): void =>
+                      handleSelectShippingCountry(
+                        e,
+                        values,
+                        resetForm,
+                        setFieldValue
+                      )
+                    }
+                    className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
+                  >
+                    <option value="" disabled hidden>
+                      Choose a country...
+                    </option>
+                    {postcodeKeys.map((key) => (
+                      <option key={key} value={key}>
+                        {postcodes[key].label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <div className="mb-4">
                   <CustomInput
                     name="shippingAddress"
