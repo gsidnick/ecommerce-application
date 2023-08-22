@@ -2,7 +2,7 @@ import { Formik, Form, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { ChangeEvent, useState, ReactNode } from 'react';
+import { ChangeEvent, useState, ReactNode, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import Loader from '@/components/ui/loader/Loader';
@@ -39,11 +39,12 @@ const initialValues: RegisterProps = {
   password: '',
   firstName: '',
   lastName: '',
-  dateOfBirth: '',
-  country: '',
+  dateOfBirth: '2010-01-01',
+  billingCountry: 'US',
   billingAddress: '',
   billingCity: '',
   billingPostcode: '',
+  shippingCountry: 'US',
   shippingAddress: '',
   shippingCity: '',
   shippingPostcode: '',
@@ -57,8 +58,11 @@ const RegisterPage: NextPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const [country, setCountry] = useState<PostcodeName>('US');
+  const [billingCountry, setBillingCountry] = useState<PostcodeName>('US');
+  const [shippingCountry, setShippingCountry] = useState<PostcodeName>('US');
   const [billingDefault, setBillingDefault] = useState(false);
+  const shippingCountryRef = useRef<HTMLSelectElement>(null);
+  const defaultShippingRef = useRef<HTMLInputElement>(null);
   const customerController = new CustomerController();
   const validationSchema = Yup.object({
     email: emailSchema,
@@ -66,13 +70,14 @@ const RegisterPage: NextPage = () => {
     firstName: nameSchema,
     lastName: nameSchema,
     dateOfBirth: dateSchema,
-    country: countrySchema,
+    billingCountry: countrySchema,
     billingAddress: addressSchema,
     billingCity: citySchema,
-    billingPostcode: getPostcodeSchema(country),
+    billingPostcode: getPostcodeSchema(billingCountry),
+    shippingCountry: countrySchema,
     shippingAddress: addressSchema,
     shippingCity: citySchema,
-    shippingPostcode: getPostcodeSchema(country),
+    shippingPostcode: getPostcodeSchema(shippingCountry),
   });
 
   const handleErrorApiResult = (apiResult: HttpErrorType): void => {
@@ -85,70 +90,65 @@ const RegisterPage: NextPage = () => {
   };
 
   const handleSubmit = (values: RegisterProps): void => {
-    try {
-      setIsLoading(true);
+    setIsLoading(true);
 
-      const customerDraft = createCustomerDraft(values);
+    const customerDraft = createCustomerDraft(values);
 
-      customerController
-        .registerCustomer(customerDraft)
-        .then((response) => {
-          if (
-            response.apiResult.statusCode === HttpStatus.CREATED &&
-            !response.apiResult.error
-          ) {
-            toast.success('Registration successful');
+    customerController
+      .registerCustomer(customerDraft)
+      .then((response) => {
+        if (
+          response.apiResult.statusCode === HttpStatus.CREATED &&
+          !response.apiResult.error
+        ) {
+          toast.success('Registration successful');
 
-            const { email, password } = values;
+          const { email, password } = values;
 
-            customerController
-              .loginCustomer({
-                email,
-                password,
-              })
-              .then((loginResponse: IApiLoginResult) => {
-                if (
-                  loginResponse.apiResult.statusCode === HttpStatus.OK &&
-                  loginResponse.token?.token.length
-                ) {
-                  if (loginResponse.token) {
-                    const { token, refreshToken, expirationTime } =
-                      loginResponse.token;
+          customerController
+            .loginCustomer({
+              email,
+              password,
+            })
+            .then((loginResponse: IApiLoginResult) => {
+              if (
+                loginResponse.apiResult.statusCode === HttpStatus.OK &&
+                loginResponse.token?.token.length
+              ) {
+                if (loginResponse.token) {
+                  const { token, refreshToken, expirationTime } =
+                    loginResponse.token;
 
-                    dispatch(setAuthState(true));
-                    dispatch(setToken(token));
-                    dispatch(setRefreshToken(refreshToken ?? ''));
-                    dispatch(setExpirationTime(expirationTime));
+                  dispatch(setAuthState(true));
+                  dispatch(setToken(token));
+                  dispatch(setRefreshToken(refreshToken ?? ''));
+                  dispatch(setExpirationTime(expirationTime));
 
-                    toast.success('Authenticated successfully');
+                  toast.success('Authenticated successfully');
 
-                    router.push(ERoute.home).catch(() => {
-                      toast.error('Error while redirecting to home page');
-                    });
+                  router.push(ERoute.home).catch(() => {
+                    toast.error('Error while redirecting to home page');
+                  });
 
-                    return;
-                  }
+                  return;
                 }
+              }
 
-                handleErrorApiResult(loginResponse.apiResult as HttpErrorType);
-              })
-              .catch(() => {
-                toast.error('General login error');
-              });
-          }
+              handleErrorApiResult(loginResponse.apiResult as HttpErrorType);
+            })
+            .catch(() => {
+              toast.error('General login error');
+            });
+        }
 
-          handleErrorApiResult(response.apiResult as HttpErrorType);
-        })
-        .catch(() => {
-          toast.error('General registration error, try later');
-        });
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    } finally {
-      setIsLoading(false);
-    }
+        handleErrorApiResult(response.apiResult as HttpErrorType);
+      })
+      .catch(() => {
+        toast.error('General registration error, try later');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const handleLogin = (): void => {
@@ -163,26 +163,64 @@ const RegisterPage: NextPage = () => {
     });
   };
 
-  const handleSelectCountry = (
+  const handleSelectBillingCountry = (
     e: ChangeEvent<HTMLSelectElement>,
     values: RegisterProps,
     resetForm: FormikProps<RegisterProps>['resetForm'],
     setFieldValue: FormikProps<RegisterProps>['setFieldValue']
   ): void => {
-    setCountry(e.target.value);
+    setBillingCountry(e.target.value);
     resetForm({
       values: {
         ...values,
         billingAddress: '',
         billingCity: '',
         billingPostcode: '',
+      },
+    });
+    // eslint-disable-next-line no-void
+    void setFieldValue('billingCountry', e.target.value);
+
+    if (billingDefault) {
+      // eslint-disable-next-line no-void
+      void setFieldValue('shippingCountry', e.target.value);
+      if (shippingCountryRef.current)
+        shippingCountryRef.current.value = e.target.value;
+    }
+  };
+
+  const handleSelectShippingCountry = (
+    e: ChangeEvent<HTMLSelectElement>,
+    values: RegisterProps,
+    resetForm: FormikProps<RegisterProps>['resetForm'],
+    setFieldValue: FormikProps<RegisterProps>['setFieldValue']
+  ): void => {
+    setShippingCountry(e.target.value);
+    resetForm({
+      values: {
+        ...values,
         shippingAddress: '',
         shippingCity: '',
         shippingPostcode: '',
       },
     });
     // eslint-disable-next-line no-void
-    void setFieldValue('country', e.target.value);
+    void setFieldValue('shippingCountry', e.target.value);
+  };
+
+  const handleDefaultBilling = (
+    e: ChangeEvent<HTMLInputElement>,
+    handleChange: FormikProps<RegisterProps>['handleChange'],
+    setFieldValue: FormikProps<RegisterProps>['setFieldValue']
+  ): void => {
+    handleChange(e);
+    if (billingDefault) {
+      // eslint-disable-next-line no-void
+      void setFieldValue('defaultShipping', e.target.checked);
+      if (defaultShippingRef.current) {
+        defaultShippingRef.current.checked = e.target.checked;
+      }
+    }
   };
 
   const handleSameBilling = (
@@ -191,12 +229,24 @@ const RegisterPage: NextPage = () => {
     resetForm: FormikProps<RegisterProps>['resetForm']
   ): void => {
     setBillingDefault(e.target.checked);
+    setShippingCountry(values.billingCountry);
+
+    if (shippingCountryRef.current) {
+      shippingCountryRef.current.value = values.billingCountry;
+    }
+
+    if (defaultShippingRef.current) {
+      defaultShippingRef.current.checked = values.defaultBilling;
+    }
+
     resetForm({
       values: {
         ...values,
+        shippingCountry: values.billingCountry,
         shippingAddress: values.billingAddress,
         shippingCity: values.billingCity,
         shippingPostcode: values.billingPostcode,
+        defaultShipping: values.defaultBilling,
         sameBilling: e.target.checked,
       },
     });
@@ -211,7 +261,14 @@ const RegisterPage: NextPage = () => {
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {({ values, resetForm, setFieldValue, handleChange }): ReactNode => (
+          {({
+            values,
+            resetForm,
+            setFieldValue,
+            handleChange,
+            touched,
+            errors,
+          }): ReactNode => (
             <Form>
               <div className="border-b border-gray-900/10">
                 <div className="mb-4">
@@ -249,14 +306,22 @@ const RegisterPage: NextPage = () => {
                     isWhiteSpacesAllowed
                   />
                 </div>
+              </div>
+              <div className="mb-4 mt-8">
+                <h2 className="mb-2 font-bold text-white">Billing Address:</h2>
                 <div className="mb-4">
                   <select
-                    id="country"
-                    name="country"
-                    defaultValue=""
+                    id="billingCountry"
+                    name="billingCountry"
+                    defaultValue="US"
                     placeholder="Select a country..."
                     onChange={(e): void =>
-                      handleSelectCountry(e, values, resetForm, setFieldValue)
+                      handleSelectBillingCountry(
+                        e,
+                        values,
+                        resetForm,
+                        setFieldValue
+                      )
                     }
                     className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
                   >
@@ -269,10 +334,10 @@ const RegisterPage: NextPage = () => {
                       </option>
                     ))}
                   </select>
+                  {touched.billingCountry && errors.billingCountry && (
+                    <div className="text-rose-500">{errors.billingCountry}</div>
+                  )}
                 </div>
-              </div>
-              <div className="mb-4 mt-8">
-                <h2 className="mb-2 font-bold text-white">Billing Address:</h2>
                 <div className="mb-4">
                   <CustomBillingInput
                     name="billingAddress"
@@ -303,7 +368,9 @@ const RegisterPage: NextPage = () => {
                       type="checkbox"
                       name="defaultBilling"
                       id="defaultBilling"
-                      onChange={handleChange}
+                      onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+                        handleDefaultBilling(e, handleChange, setFieldValue)
+                      }
                       className="mr-2"
                     />
                     Set this billing address as default
@@ -327,6 +394,39 @@ const RegisterPage: NextPage = () => {
 
               <div className="mb-4 mt-8">
                 <h2 className="mb-2 font-bold text-white">Shipping Address:</h2>
+                <div className="mb-4">
+                  <select
+                    id="shippingCountry"
+                    name="shippingCountry"
+                    defaultValue="US"
+                    ref={shippingCountryRef}
+                    placeholder="Select a country..."
+                    disabled={billingDefault}
+                    onChange={(e): void =>
+                      handleSelectShippingCountry(
+                        e,
+                        values,
+                        resetForm,
+                        setFieldValue
+                      )
+                    }
+                    className="w-full rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none"
+                  >
+                    <option value="" disabled hidden>
+                      Choose a country...
+                    </option>
+                    {postcodeKeys.map((key) => (
+                      <option key={key} value={key}>
+                        {postcodes[key].label}
+                      </option>
+                    ))}
+                  </select>
+                  {touched.shippingCountry && errors.shippingCountry && (
+                    <div className="text-rose-500">
+                      {errors.shippingCountry}
+                    </div>
+                  )}
+                </div>
                 <div className="mb-4">
                   <CustomInput
                     name="shippingAddress"
@@ -361,7 +461,9 @@ const RegisterPage: NextPage = () => {
                       type="checkbox"
                       name="defaultShipping"
                       id="defaultShipping"
+                      ref={defaultShippingRef}
                       onChange={handleChange}
+                      disabled={billingDefault}
                       className="mr-2"
                     />
                     Set this shipping address as default

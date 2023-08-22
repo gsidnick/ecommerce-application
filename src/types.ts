@@ -13,10 +13,11 @@ export interface RegisterProps {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  country: string;
+  billingCountry: string;
   billingAddress: string;
   billingCity: string;
   billingPostcode: string;
+  shippingCountry: string;
   shippingAddress: string;
   shippingCity: string;
   shippingPostcode: string;
