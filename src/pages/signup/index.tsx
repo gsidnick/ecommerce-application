@@ -39,7 +39,7 @@ const initialValues: RegisterProps = {
   password: '',
   firstName: '',
   lastName: '',
-  dateOfBirth: '',
+  dateOfBirth: '2010-01-01',
   billingCountry: 'US',
   billingAddress: '',
   billingCity: '',
