@@ -203,8 +203,8 @@ const RegisterPage: NextPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <div className="w-96 rounded bg-background-main p-6 shadow-modal">
+    <div className="flex h-full items-center justify-center">
+      <div className="my-20 w-96 rounded bg-background-main p-6 shadow-modal">
         <h1 className="mb-4 text-2xl font-semibold text-white">Sign Up</h1>
         <Formik
           initialValues={initialValues}
