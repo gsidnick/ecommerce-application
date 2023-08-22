@@ -1,14 +1,12 @@
 import { ReactElement } from 'react';
-
-import Header from '@/components/header/Header';
 import MainSlider from '@/components/slider/MainSlider';
+import Layout from '@/components/Layout';
 
 function Home(): ReactElement {
   return (
-    <div>
-      <Header />
+    <Layout>
       <MainSlider />
-    </div>
+    </Layout>
   );
 }
 

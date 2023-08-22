@@ -5,8 +5,8 @@ import type { AppProps } from 'next/app';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { wrapper } from '@/store/store';
-import ToastNotification from '../components/ToastNotification';
-import { AuthGate } from '../components/AuthGate';
+import ToastNotification from '@/components/ToastNotification';
+import { AuthGate } from '@/components/AuthGate';
 
 function App({ Component, ...rest }: AppProps): ReactElement {
   const { store } = wrapper.useWrappedStore(rest);
