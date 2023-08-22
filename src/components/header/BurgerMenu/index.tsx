@@ -17,6 +17,7 @@ import CloseIcon from '@/components/ui/icons/CloseIcon';
 import logo from '@/assets/images/logo/logo-orange.png';
 
 import styles from './BurgerMenu.module.css';
+import { ERoute } from '@/data/routes';
 
 const BurgerMenu: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -93,7 +94,7 @@ const BurgerMenu: NextPage = () => {
             <li
               key="log-in"
               className="w-full opacity-75 hover:bg-indigo-500"
-              onClick={handleNavigate('/login')}
+              onClick={handleNavigate(ERoute.login)}
             >
               <div className="p-3">
                 <p>Log In</p>
@@ -102,7 +103,7 @@ const BurgerMenu: NextPage = () => {
             <li
               key="sign-up"
               className="w-full opacity-75 hover:bg-indigo-500"
-              onClick={handleNavigate('/signup')}
+              onClick={handleNavigate(ERoute.signup)}
             >
               <div className="p-3">
                 <p>Sign Up</p>
