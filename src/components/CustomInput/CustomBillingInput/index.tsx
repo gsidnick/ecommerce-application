@@ -1,5 +1,5 @@
+import { FieldHookConfig, useField, useFormikContext } from 'formik';
 import { FC, useEffect } from 'react';
-import { useField, FieldHookConfig, useFormikContext } from 'formik';
 import { EMPTY_PASSWORD_LENGTH } from '@/constants';
 
 type InputProps = FieldHookConfig<string> & {
@@ -29,6 +29,26 @@ const CustomBillingInput: FC<InputProps> = (props) => {
         console.log('Error while setting field touched');
       });
     }
+    if (isBillingIdenticalAsShipping) {
+      switch (name) {
+        case 'billingAddress':
+          // eslint-disable-next-line no-void
+          void setFieldValue('shippingAddress', value);
+          break;
+        case 'billingCity':
+          setFieldValue('shippingCity', value).catch(() => {
+            console.log('Error while setting value');
+          });
+          break;
+        case 'billingPostcode':
+          setFieldValue('shippingPostcode', value).catch(() => {
+            console.log('Error while setting value');
+          });
+          break;
+        default:
+          break;
+      }
+    }
   }, [value]);
 
   const handleOnChangeBillingAddress = (
@@ -40,27 +60,6 @@ const CustomBillingInput: FC<InputProps> = (props) => {
         console.log('Error while setting value');
       }
     );
-    if (isBillingIdenticalAsShipping) {
-      switch (name) {
-        case 'billingAddress':
-          setFieldValue('shippingAddress', e.target.value).catch(() => {
-            console.log('Error while setting value');
-          });
-          break;
-        case 'billingCity':
-          setFieldValue('shippingCity', e.target.value).catch(() => {
-            console.log('Error while setting value');
-          });
-          break;
-        case 'billingPostcode':
-          setFieldValue('shippingPostcode', e.target.value).catch(() => {
-            console.log('Error while setting value');
-          });
-          break;
-        default:
-          break;
-      }
-    }
   };
 
   return (
