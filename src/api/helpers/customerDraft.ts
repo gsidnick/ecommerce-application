@@ -20,7 +20,7 @@ export const createCustomerDraft = (
 
   userData.addresses = [
     {
-      country: data.country,
+      country: data.billingCountry,
       city: data.billingCity,
       postalCode: data.billingPostcode,
       streetName: data.billingAddress,
@@ -29,7 +29,7 @@ export const createCustomerDraft = (
 
   if (!data.sameBilling) {
     userData.addresses.push({
-      country: data.country,
+      country: data.shippingCountry,
       city: data.shippingCity,
       postalCode: data.shippingPostcode,
       streetName: data.shippingAddress,

@@ -2,7 +2,7 @@ import { Formik, Form, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { ChangeEvent, useState, ReactNode } from 'react';
+import { ChangeEvent, useState, ReactNode, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
 import Loader from '@/components/ui/loader/Loader';
@@ -61,6 +61,7 @@ const RegisterPage: NextPage = () => {
   const [billingCountry, setBillingCountry] = useState<PostcodeName>('US');
   const [shippingCountry, setShippingCountry] = useState<PostcodeName>('US');
   const [billingDefault, setBillingDefault] = useState(false);
+  const shippingCountryRef = useRef<HTMLSelectElement>(null);
   const customerController = new CustomerController();
   const validationSchema = Yup.object({
     email: emailSchema,
@@ -92,6 +93,9 @@ const RegisterPage: NextPage = () => {
       setIsLoading(true);
 
       const customerDraft = createCustomerDraft(values);
+
+      console.log(customerDraft);
+
       customerController
         .registerCustomer(customerDraft)
         .then((response) => {
@@ -182,6 +186,13 @@ const RegisterPage: NextPage = () => {
     });
     // eslint-disable-next-line no-void
     void setFieldValue('billingCountry', e.target.value);
+
+    if (billingDefault) {
+      // eslint-disable-next-line no-void
+      void setFieldValue('shippingCountry', e.target.value);
+      if (shippingCountryRef.current)
+        shippingCountryRef.current.value = e.target.value;
+    }
   };
 
   const handleSelectShippingCountry = (
@@ -209,9 +220,13 @@ const RegisterPage: NextPage = () => {
     resetForm: FormikProps<RegisterProps>['resetForm']
   ): void => {
     setBillingDefault(e.target.checked);
+    setShippingCountry(values.billingCountry);
+    if (shippingCountryRef.current)
+      shippingCountryRef.current.value = values.billingCountry;
     resetForm({
       values: {
         ...values,
+        shippingCountry: values.billingCountry,
         shippingAddress: values.billingAddress,
         shippingCity: values.billingCity,
         shippingPostcode: values.billingPostcode,
@@ -365,6 +380,7 @@ const RegisterPage: NextPage = () => {
                     id="shippingCountry"
                     name="shippingCountry"
                     defaultValue=""
+                    ref={shippingCountryRef}
                     placeholder="Select a country..."
                     disabled={billingDefault}
                     onChange={(e): void =>
@@ -427,6 +443,7 @@ const RegisterPage: NextPage = () => {
                       name="defaultShipping"
                       id="defaultShipping"
                       onChange={handleChange}
+                      disabled={billingDefault}
                       className="mr-2"
                     />
                     Set this shipping address as default
