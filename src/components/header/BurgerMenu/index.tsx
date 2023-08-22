@@ -81,7 +81,7 @@ const BurgerMenu: NextPage = () => {
             ))}
             {authState && (
               <li
-                key="sign-in"
+                key="log-out"
                 className="w-full opacity-75 hover:bg-indigo-500"
                 onClick={handleLogOut}
               >
@@ -91,7 +91,7 @@ const BurgerMenu: NextPage = () => {
               </li>
             )}
             <li
-              key="sign-in"
+              key="log-in"
               className="w-full opacity-75 hover:bg-indigo-500"
               onClick={handleNavigate('/login')}
             >
