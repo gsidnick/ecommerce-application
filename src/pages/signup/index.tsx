@@ -229,7 +229,14 @@ const RegisterPage: NextPage = () => {
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          {({ values, resetForm, setFieldValue, handleChange }): ReactNode => (
+          {({
+            values,
+            resetForm,
+            setFieldValue,
+            handleChange,
+            touched,
+            errors,
+          }): ReactNode => (
             <Form>
               <div className="border-b border-gray-900/10">
                 <div className="mb-4">
@@ -295,6 +302,9 @@ const RegisterPage: NextPage = () => {
                       </option>
                     ))}
                   </select>
+                  {touched.billingCountry && errors.billingCountry && (
+                    <div className="text-rose-500">{errors.billingCountry}</div>
+                  )}
                 </div>
                 <div className="mb-4">
                   <CustomBillingInput
@@ -376,6 +386,11 @@ const RegisterPage: NextPage = () => {
                       </option>
                     ))}
                   </select>
+                  {touched.shippingCountry && errors.shippingCountry && (
+                    <div className="text-rose-500">
+                      {errors.shippingCountry}
+                    </div>
+                  )}
                 </div>
                 <div className="mb-4">
                   <CustomInput
