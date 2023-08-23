@@ -280,8 +280,6 @@ const RegisterPage: NextPage = () => {
                     type="password"
                     placeholder="Password"
                     isSignUpPassInput
-                    isWhiteSpacesAllowed
-                    isTrailingWhiteSpacesAllowed
                   />
                 </div>
 
