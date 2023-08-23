@@ -37,7 +37,7 @@ export const passwordSchema = Yup.string()
   .trim();
 
 export const nameSchema = Yup.string()
-  .matches(/^[a-zA-Z\s]+$/, 'Must contain only latin letters or whitespaces')
+  .matches(/^[a-zA-ZА-ЯЁа-яё\s]+$/, 'Must contain only letters or whitespaces')
   .required('Required');
 
 export const dateSchema = Yup.date()
@@ -49,7 +49,7 @@ export const countrySchema = Yup.string().required('Required');
 export const addressSchema = Yup.string().required('Required');
 
 export const citySchema = Yup.string()
-  .matches(/^[a-zA-Z\s]+$/, 'Must contain only latin letters or whitespaces')
+  .matches(/^[a-zA-ZА-ЯЁа-яё\s]+$/, 'Must contain only letters or whitespaces')
   .required('Required');
 
 export const getPostcodeSchema = (country: PostcodeName): Yup.StringSchema =>
