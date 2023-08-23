@@ -19,19 +19,19 @@ export const passwordSchema = Yup.string()
   .test(
     'special-characters',
     'Must contain at least one special character (e.g., !@#$%^&*)',
-    (value) => /[!@#$%^&*]/.test(value)
+    (value) => /[`~@#$%^&*()_+!"№?<>;:,./[\]{}]/.test(value)
   )
   .test(
     'has-uppercase',
-    'Must contain at least one uppercase letter (A-Z)',
-    (value) => /[A-Z]/.test(value)
+    'Must contain at least one uppercase letter',
+    (value) => /[A-ZА-ЯЁ]/.test(value)
   )
   .test(
     'has-lowercase',
-    'Must contain at least one lowercase letter (a-z)',
-    (value) => /[a-z]/.test(value)
+    'Must contain at least one lowercase letter',
+    (value) => /[a-zа-яё]/.test(value)
   )
-  .test('has-digit', 'Must contain at least one digit (0-9)', (value) =>
+  .test('has-digit', 'Must contain at least one digit', (value) =>
     /\d/.test(value)
   )
   .trim();
