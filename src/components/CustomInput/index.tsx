@@ -55,10 +55,23 @@ const CustomInput: FC<InputProps> = (props) => {
   };
 
   const makeClassName = (): string => {
-    const result =
-      type === 'checkbox'
-        ? 'rounded-md border border-neutral-800 bg-background-main p-2 focus:border-neutral-500 focus:outline-none'
-        : 'w-full rounded-md border border-neutral-800 bg-background-main p-2 focus:border-neutral-500 focus:outline-none';
+    let result = '';
+
+    switch (type) {
+      case 'checkbox':
+        result =
+          'rounded-md border border-neutral-800 bg-background-main p-2 focus:border-neutral-500 focus:outline-none';
+        break;
+      case 'password':
+        result =
+          'w-full rounded-md border border-neutral-800 bg-background-main p-2 focus:border-neutral-500 focus:outline-none pr-11 pl-3';
+        break;
+      default:
+        result =
+          'w-full rounded-md border border-neutral-800 bg-background-main p-2 focus:border-neutral-500 focus:outline-none pr-3 pl-3';
+        break;
+    }
+
     const disabledClass = disabled ? 'text-gray-600' : 'text-white';
 
     return `${result} ${disabledClass}`;
