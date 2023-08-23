@@ -8,6 +8,7 @@ import ValidationPrompt from '@/components/ValidationPrompt';
 type InputProps = FieldHookConfig<string> & {
   isSignUpPassInput?: boolean;
   isWhiteSpacesAllowed?: boolean;
+  isTrailingWhiteSpacesAllowed?: boolean;
   disabled?: boolean;
 };
 
@@ -18,6 +19,7 @@ const CustomInput: FC<InputProps> = (props) => {
     placeholder,
     isSignUpPassInput,
     isWhiteSpacesAllowed,
+    isTrailingWhiteSpacesAllowed,
     disabled,
   } = props;
 
@@ -43,14 +45,13 @@ const CustomInput: FC<InputProps> = (props) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (e.target.value === ' ') return;
+    if (e.target.value === ' ' && !isTrailingWhiteSpacesAllowed) return;
 
     const withoutSpaces = e.target.value.replace(/\s/g, '');
-    setValue(isWhiteSpacesAllowed ? e.target.value : withoutSpaces).catch(
-      () => {
-        console.log('Error while setting value');
-      }
-    );
+    const resultValue = isWhiteSpacesAllowed ? e.target.value : withoutSpaces;
+    setValue(resultValue).catch(() => {
+      console.log('Error while setting value');
+    });
   };
 
   const makeClassName = (): string => {
@@ -86,11 +87,9 @@ const CustomInput: FC<InputProps> = (props) => {
       {!isSignUpPassInput && error && !disabled ? (
         <p className="text-red-500">{touched && error}</p>
       ) : (
-        ""
+        ''
       )}
-      {isSignUpPassInput && touched && (
-        <ValidationPrompt validation={value} />
-      )}
+      {isSignUpPassInput && touched && <ValidationPrompt validation={value} />}
     </>
   );
 };
@@ -98,6 +97,7 @@ const CustomInput: FC<InputProps> = (props) => {
 CustomInput.defaultProps = {
   isSignUpPassInput: false,
   isWhiteSpacesAllowed: false,
+  isTrailingWhiteSpacesAllowed: false,
   disabled: false,
 };
 

@@ -5,6 +5,7 @@ import { EMPTY_PASSWORD_LENGTH } from '@/constants';
 type InputProps = FieldHookConfig<string> & {
   isBillingIdenticalAsShipping?: boolean;
   isWhiteSpacesAllowed?: boolean;
+  isTrailingWhiteSpacesAllowed?: boolean;
 };
 
 const CustomBillingInput: FC<InputProps> = (props) => {
@@ -12,6 +13,7 @@ const CustomBillingInput: FC<InputProps> = (props) => {
     type,
     placeholder,
     isWhiteSpacesAllowed,
+    isTrailingWhiteSpacesAllowed,
     isBillingIdenticalAsShipping,
   } = props;
 
@@ -54,6 +56,8 @@ const CustomBillingInput: FC<InputProps> = (props) => {
   const handleOnChangeBillingAddress = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
+    if (e.target.value === ' ' && !isTrailingWhiteSpacesAllowed) return;
+
     const withoutSpaces = e.target.value.replace(/\s/g, '');
     setValue(isWhiteSpacesAllowed ? e.target.value : withoutSpaces).catch(
       () => {
@@ -83,6 +87,7 @@ const CustomBillingInput: FC<InputProps> = (props) => {
 CustomBillingInput.defaultProps = {
   isBillingIdenticalAsShipping: false,
   isWhiteSpacesAllowed: true,
+  isTrailingWhiteSpacesAllowed: false,
 };
 
 export default CustomBillingInput;
