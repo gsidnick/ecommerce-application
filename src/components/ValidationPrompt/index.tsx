@@ -8,10 +8,10 @@ interface ValidationProps {
   validation: string;
 }
 
-const regExpLowerCase = /(?=.*[a-z])/;
-const regExpUpperCase = /^(?=.*[A-Z])/;
+const regExpLowerCase = /(?=.*[a-zа-яё])/;
+const regExpUpperCase = /^(?=.*[A-ZА-ЯЁ])/;
 const regExpNumber = /^(?=.*[0-9])/;
-const regExpSymbol = /^(?=.*[^A-Za-z0-9])/;
+const regExpSymbol = /^(?=.*[^A-Za-zА-ЯЁа-яё0-9])/;
 
 const ValidationPrompt: NextPage<ValidationProps> = ({
   validation,

@@ -344,6 +344,7 @@ const RegisterPage: NextPage = () => {
                     type="text"
                     placeholder="Street Address"
                     isBillingIdenticalAsShipping={billingDefault}
+                    isWhiteSpacesAllowed
                   />
                 </div>
                 <div className="mb-4">
@@ -352,6 +353,7 @@ const RegisterPage: NextPage = () => {
                     type="text"
                     placeholder="City / Town"
                     isBillingIdenticalAsShipping={billingDefault}
+                    isWhiteSpacesAllowed
                   />
                 </div>
                 <div className="mb-4">
@@ -360,6 +362,7 @@ const RegisterPage: NextPage = () => {
                     type="text"
                     placeholder="Postcode / ZIP"
                     isBillingIdenticalAsShipping={billingDefault}
+                    isWhiteSpacesAllowed
                   />
                 </div>
                 <div className="mb-4">
