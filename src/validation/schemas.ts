@@ -5,7 +5,7 @@ import { postcodes } from '@/validation/patterns';
 
 export const emailSchema = Yup.string()
   .required('Required')
-  .test('no-whitespace', 'Email must not contain whitespace', (value = '') =>
+  .test('no-whitespace', 'Must not contain whitespace', (value = '') =>
     /^\S*$/.test(value)
   )
   .matches(
@@ -15,35 +15,32 @@ export const emailSchema = Yup.string()
 
 export const passwordSchema = Yup.string()
   .required('Required')
-  .min(MIN_PASSWORD_LENGTH, 'Password must be at least 8 characters long')
+  .min(MIN_PASSWORD_LENGTH, 'Must be at least 8 characters long')
   .test(
     'special-characters',
-    'Password must contain at least one special character (e.g., !@#$%^&*)',
+    'Must contain at least one special character (e.g., !@#$%^&*)',
     (value) => /[!@#$%^&*]/.test(value)
   )
-  .test('no-whitespace', 'Password must not contain whitespace', (value) =>
+  .test('no-whitespace', 'Must not contain whitespace', (value) =>
     /^\S*$/.test(value)
   )
   .test(
     'has-uppercase',
-    'Password must contain at least one uppercase letter (A-Z)',
+    'Must contain at least one uppercase letter (A-Z)',
     (value) => /[A-Z]/.test(value)
   )
   .test(
     'has-lowercase',
-    'Password must contain at least one lowercase letter (a-z)',
+    'Must contain at least one lowercase letter (a-z)',
     (value) => /[a-z]/.test(value)
   )
-  .test(
-    'has-digit',
-    'Password must contain at least one digit (0-9)',
-    (value) => /\d/.test(value)
+  .test('has-digit', 'Must contain at least one digit (0-9)', (value) =>
+    /\d/.test(value)
   )
   .trim();
 
 export const nameSchema = Yup.string()
-  .matches(/^[\w+ ]+$/, 'Only on latin letters')
-  .matches(/^[a-zA-Z]+$/, 'First name must contain at least 1 letters')
+  .matches(/^[a-zA-Z]+$/, 'Must contain only latin letters')
   .required('Required');
 
 export const dateSchema = Yup.date()
@@ -52,17 +49,10 @@ export const dateSchema = Yup.date()
 
 export const countrySchema = Yup.string().required('Required');
 
-export const addressSchema = Yup.string()
-  .matches(/^[\w+ ]+$/, 'Only on latin letters and numbers')
-  .matches(
-    /[a-zA-Z0-9\s]{1,}$/,
-    'Street address must contain at least 1 letter'
-  )
-  .required('Required');
+export const addressSchema = Yup.string().required('Required');
 
 export const citySchema = Yup.string()
-  .matches(/^[\w+ ]+$/, 'Only on latin letters and numbers')
-  .matches(/^[a-zA-Z\s]+$/, 'City must contain at least 1 letters')
+  .matches(/^[a-zA-Z]+$/, 'Must contain only latin letters')
   .required('Required');
 
 export const getPostcodeSchema = (country: PostcodeName): Yup.StringSchema =>
