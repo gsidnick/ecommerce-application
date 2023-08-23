@@ -45,7 +45,9 @@ const CustomInput: FC<InputProps> = (props) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (e.target.value === ' ' && !isTrailingWhiteSpacesAllowed) return;
+    if (e.target.value === ' ' && !isTrailingWhiteSpacesAllowed) {
+      return;
+    }
 
     const withoutSpaces = e.target.value.replace(/\s/g, '');
     const resultValue = isWhiteSpacesAllowed ? e.target.value : withoutSpaces;

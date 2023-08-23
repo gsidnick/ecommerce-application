@@ -56,7 +56,9 @@ const CustomBillingInput: FC<InputProps> = (props) => {
   const handleOnChangeBillingAddress = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    if (e.target.value === ' ' && !isTrailingWhiteSpacesAllowed) return;
+    if (e.target.value === ' ' && !isTrailingWhiteSpacesAllowed) {
+      return;
+    }
 
     const withoutSpaces = e.target.value.replace(/\s/g, '');
     setValue(isWhiteSpacesAllowed ? e.target.value : withoutSpaces).catch(
