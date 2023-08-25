@@ -18,15 +18,17 @@ import {
 } from 'redux-persist';
 
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
-import { authSlice } from '@/store/slices/authSlice';
+import authReducer, { authSlice } from '@/store/slices/authSlice';
+import menuReducer, { menuSlice } from '@/store/slices/menuSlice';
 import storage from './helpers/storage';
 
 const rootReducer = combineReducers({
-  [authSlice.name]: authSlice.reducer,
+  [authSlice.name]: authReducer,
+  [menuSlice.name]: menuReducer,
 });
 
 export interface IPersistorStore {
-  __persistor: Persistor;
+  persistor: Persistor;
 }
 
 const setupStore = (): ToolkitStore =>
@@ -44,7 +46,7 @@ const setupStore = (): ToolkitStore =>
 export const makeStore = (): ToolkitStore & IPersistorStore => {
   const isServer = typeof window === 'undefined';
   if (isServer) {
-    return { ...setupStore(), __persistor: persistStore(setupStore()) };
+    return { ...setupStore(), persistor: persistStore(setupStore()) };
   }
 
   const persistConfig = {
@@ -64,7 +66,7 @@ export const makeStore = (): ToolkitStore & IPersistorStore => {
       }),
   });
 
-  return { ...store, __persistor: persistStore(store) };
+  return { ...store, persistor: persistStore(store) };
 };
 
 export type RootState = ReturnType<typeof rootReducer>;

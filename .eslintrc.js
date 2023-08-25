@@ -52,14 +52,6 @@ module.exports = {
         },
       },
     ],
-    'max-lines-per-function': [
-      'error',
-      {
-        max: 60,
-        skipComments: true,
-        skipBlankLines: true,
-      },
-    ],
     '@typescript-eslint/explicit-function-return-type': 'error',
     '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/no-non-null-assertion': 'error',
@@ -68,5 +60,6 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-uses-react': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'react/function-component-definition': 'off',
   },
 };

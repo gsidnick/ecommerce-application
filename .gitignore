@@ -2,9 +2,6 @@
 .idea
 .vscode
 
-# testing
-/coverage
-
 # dependencies
 /node_modules
 /.pnp
