@@ -97,7 +97,7 @@ class CustomerRepository {
     this.tokenService.removeToken();
   }
 
-  public async getCustomer(): Promise<ClientResponse<Customer>> {
+  public async getCustomer(): Promise<ClientResponse<Customer> | undefined> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
 <<<<<<< HEAD
@@ -147,6 +147,7 @@ class CustomerRepository {
     } catch (error) {
       if (error instanceof Error) {
         console.error(`${error.name} ${error.message}`);
+        return undefined;
       }
       throw error;
     }
