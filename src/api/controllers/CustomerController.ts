@@ -1,9 +1,5 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import {
-  Customer,
-  MyCustomerChangePassword,
-} from '@commercetools/platform-sdk';
-import { MyCustomerUpdate } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/me';
+import { Customer } from '@commercetools/platform-sdk';
 import CustomerRepository from '@/api/repositories/CustomerRepository';
 import {
   IApiLoginResult,
@@ -34,20 +30,8 @@ class CustomerController {
     this.customerRepository.logoutCustomer();
   }
 
-  public async getCustomer(): Promise<ClientResponse<Customer>> {
+  public getCustomer(): Promise<ClientResponse<Customer>> {
     return this.customerRepository.getCustomer();
-  }
-
-  public async updateCustomer(
-    data: MyCustomerUpdate
-  ): Promise<ClientResponse<Customer>> {
-    return this.customerRepository.updateCustomer(data);
-  }
-
-  public async changeCustomerPassword(
-    data: MyCustomerChangePassword
-  ): Promise<ClientResponse<Customer>> {
-    return this.customerRepository.changeCustomerPassword(data);
   }
 }
 

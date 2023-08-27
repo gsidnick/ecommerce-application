@@ -1,10 +1,14 @@
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+<<<<<<< HEAD
 import {
   Customer,
   CustomerSignInResult,
   MyCustomerChangePassword,
 } from '@commercetools/platform-sdk';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/me';
+=======
+import { Customer, CustomerSignInResult } from '@commercetools/platform-sdk';
+>>>>>>> 2d904ab (feat: add getCustomer method)
 import AuthClient from '@/api/client/AuthClient';
 import {
   IApiLoginResult,
@@ -96,6 +100,7 @@ class CustomerRepository {
   public async getCustomer(): Promise<ClientResponse<Customer>> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
+<<<<<<< HEAD
     const result = await apiRoot
       .withProjectKey({ projectKey: this.projectKey })
       .me()
@@ -131,6 +136,21 @@ class CustomerRepository {
       .post({ body: data })
       .execute();
     return result as ClientResponse<Customer>;
+=======
+    try {
+      const result = await apiRoot
+        .withProjectKey({ projectKey: this.projectKey })
+        .me()
+        .get()
+        .execute();
+      return result as ClientResponse<Customer>;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`${error.name} ${error.message}`);
+      }
+      throw error;
+    }
+>>>>>>> 2d904ab (feat: add getCustomer method)
   }
 }
 
