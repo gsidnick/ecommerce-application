@@ -1,3 +1,5 @@
+import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { Customer } from '@commercetools/platform-sdk';
 import CustomerRepository from '@/api/repositories/CustomerRepository';
 import {
   IApiLoginResult,
@@ -26,6 +28,10 @@ class CustomerController {
 
   public logoutCustomer(): void {
     this.customerRepository.logoutCustomer();
+  }
+
+  public getCustomer(): Promise<ClientResponse<Customer>> {
+    return this.customerRepository.getCustomer();
   }
 }
 
