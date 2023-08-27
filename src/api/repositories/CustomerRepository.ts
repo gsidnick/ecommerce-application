@@ -1,5 +1,5 @@
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { Customer, CustomerSignInResult } from '@commercetools/platform-sdk';
 import AuthClient from '@/api/client/AuthClient';
 import {
   IApiLoginResult,
@@ -9,6 +9,7 @@ import {
 import { getProjectKey } from '@/api/helpers/options';
 import AnonymousClient from '@/api/client/AnonymousClient';
 import TokenService from '@/api/services/TokenService';
+import TokenClient from '@/api/client/TokenClient';
 
 class CustomerRepository {
   private readonly projectKey: string;
@@ -85,6 +86,24 @@ class CustomerRepository {
 
   public logoutCustomer(): void {
     this.tokenService.removeToken();
+  }
+
+  public async getCustomer(): Promise<ClientResponse<Customer>> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    try {
+      const result = await apiRoot
+        .withProjectKey({ projectKey: this.projectKey })
+        .me()
+        .get()
+        .execute();
+      return result as ClientResponse<Customer>;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`${error.name} ${error.message}`);
+      }
+      throw error;
+    }
   }
 }
 
