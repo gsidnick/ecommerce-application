@@ -1,5 +1,6 @@
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { Customer, CustomerSignInResult } from '@commercetools/platform-sdk';
+import { MyCustomerUpdate } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/me';
 import AuthClient from '@/api/client/AuthClient';
 import {
   IApiLoginResult,
@@ -105,6 +106,21 @@ class CustomerRepository {
       }
       throw error;
     }
+  }
+
+  public async updateCustomer(
+    data: MyCustomerUpdate
+  ): Promise<ClientResponse<Customer>> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .me()
+      .post({
+        body: data,
+      })
+      .execute();
+    return result as ClientResponse<Customer>;
   }
 }
 
