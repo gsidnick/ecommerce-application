@@ -30,7 +30,7 @@ class CustomerController {
     this.customerRepository.logoutCustomer();
   }
 
-  public getCustomer(): Promise<ClientResponse<Customer>> {
+  public async getCustomer(): Promise<ClientResponse<Customer> | undefined> {
     return this.customerRepository.getCustomer();
   }
 }
