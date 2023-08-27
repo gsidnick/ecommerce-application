@@ -15,19 +15,13 @@ class CustomerController {
   public async registerCustomer(
     userData: UserRegistrationData
   ): Promise<IApiLoginResult> {
-    const data = await this.customerRepository.registerCustomer(userData);
-
-    return data;
+    return this.customerRepository.registerCustomer(userData);
   }
 
   public async loginCustomer(
     userData: UserCredentialData
   ): Promise<IApiLoginResult> {
-    const data: IApiLoginResult = await this.customerRepository.loginCustomer(
-      userData
-    );
-
-    return data;
+    return this.customerRepository.loginCustomer(userData);
   }
 
   public logoutCustomer(): void {
