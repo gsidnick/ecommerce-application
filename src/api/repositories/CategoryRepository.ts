@@ -10,24 +10,19 @@ class CategoryRepository {
     this.projectKey = getProjectKey();
   }
 
-  public async getCategories(): Promise<ClientResponse<CategoryPagedQueryResponse> | void> {
+  public async getCategories(): Promise<
+    ClientResponse<CategoryPagedQueryResponse>
+  > {
     const client = new AnonymousClient();
     const apiRoot = client.getApiRoot();
-    try {
-      const result = await apiRoot
-        .withProjectKey({
-          projectKey: this.projectKey,
-        })
-        .categories()
-        .get()
-        .execute();
-      return result as ClientResponse<CategoryPagedQueryResponse>;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`${error.name} ${error.message}`);
-      }
-      throw error;
-    }
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .categories()
+      .get()
+      .execute();
+    return result as ClientResponse<CategoryPagedQueryResponse>;
   }
 }
 

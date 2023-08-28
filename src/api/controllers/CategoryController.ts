@@ -13,7 +13,7 @@ class CategoryController {
   > {
     const response = await this.categoryRepository.getCategories();
     const categories = [] as ICategoryWithSubcategories[];
-    if (response && response.body) {
+    if (response?.body) {
       const { results } = response.body;
       results.forEach((item) => {
         categories.push({
