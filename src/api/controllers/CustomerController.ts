@@ -31,7 +31,7 @@ class CustomerController {
     this.customerRepository.logoutCustomer();
   }
 
-  public async getCustomer(): Promise<ClientResponse<Customer> | undefined> {
+  public async getCustomer(): Promise<ClientResponse<Customer>> {
     return this.customerRepository.getCustomer();
   }
 

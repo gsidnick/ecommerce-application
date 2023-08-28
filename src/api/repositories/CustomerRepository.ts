@@ -89,23 +89,15 @@ class CustomerRepository {
     this.tokenService.removeToken();
   }
 
-  public async getCustomer(): Promise<ClientResponse<Customer> | undefined> {
+  public async getCustomer(): Promise<ClientResponse<Customer>> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
-    try {
-      const result = await apiRoot
-        .withProjectKey({ projectKey: this.projectKey })
-        .me()
-        .get()
-        .execute();
-      return result as ClientResponse<Customer>;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`${error.name} ${error.message}`);
-        return undefined;
-      }
-      throw error;
-    }
+    const result = await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .me()
+      .get()
+      .execute();
+    return result as ClientResponse<Customer>;
   }
 
   public async updateCustomer(
