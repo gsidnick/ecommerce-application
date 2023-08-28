@@ -1,5 +1,8 @@
 import { ClientResponse } from '@commercetools/sdk-client-v2';
-import { Customer } from '@commercetools/platform-sdk';
+import {
+  Customer,
+  MyCustomerChangePassword,
+} from '@commercetools/platform-sdk';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/me';
 import CustomerRepository from '@/api/repositories/CustomerRepository';
 import {
@@ -39,6 +42,12 @@ class CustomerController {
     data: MyCustomerUpdate
   ): Promise<ClientResponse<Customer>> {
     return this.customerRepository.updateCustomer(data);
+  }
+
+  public async changeCustomerPassword(
+    data: MyCustomerChangePassword
+  ): Promise<ClientResponse<Customer>> {
+    return this.customerRepository.changeCustomerPassword(data);
   }
 }
 
