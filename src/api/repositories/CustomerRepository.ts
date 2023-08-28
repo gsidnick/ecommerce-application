@@ -93,7 +93,7 @@ class CustomerRepository {
     this.tokenService.removeToken();
   }
 
-  public async getCustomer(): Promise<ClientResponse<Customer> | undefined> {
+  public async getCustomer(): Promise<ClientResponse<Customer>> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
 
