@@ -132,21 +132,6 @@ class CustomerRepository {
       .post({ body: data })
       .execute();
     return result as ClientResponse<Customer>;
-
-    try {
-      const result = await apiRoot
-        .withProjectKey({ projectKey: this.projectKey })
-        .me()
-        .get()
-        .execute();
-      return result as ClientResponse<Customer>;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`${error.name} ${error.message}`);
-        return undefined;
-      }
-      throw error;
-    }
   }
 }
 
