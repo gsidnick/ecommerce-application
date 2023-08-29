@@ -11,3 +11,5 @@ export const INDEX_ZERO = 0;
 export const INDEX_ONE = 1;
 export const SINGLE_LENGTH = 1;
 export const DOUBLE_LENGTH = 2;
+export const DEFAULT_LIMIT = 20;
+export const DEFAULT_OFFSET = 0;
