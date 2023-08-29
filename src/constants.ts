@@ -17,6 +17,7 @@ export const MAX_DATE = new Date(
 );
 
 
+export const EMPTY_DATA = 0;
 export const SECONDS_TO_REDIRECT = 5;
 export const SECONDS_STEP_TO_REDIRECT = 1;
 export const MILLISECONDS_STEP_TO_REDIRECT = 1000;

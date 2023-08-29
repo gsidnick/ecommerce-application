@@ -1,7 +1,8 @@
 import { ReactElement } from 'react';
-import Link from 'next/link';
-import ProductCard from '@/components/ProductCard';
+import ProductCard from '../../components/ProductCard';
 import image from './1.png';
+import { categoriesList } from './categoriesData';
+import SideBar from '../../components/SideBar';
 
 const products = [
   {
@@ -54,12 +55,9 @@ const products = [
 
 function Catalog(): ReactElement {
   return (
-    <>
-      <h1 className="text-white">Catalog Page</h1>;
-      <Link href="/" className="border-2 text-white">
-        To Home
-      </Link>
-      <div className="mb-8 flex flex-wrap justify-center gap-2">
+    <div className="flex justify-between ">
+      <SideBar categoriesList={categoriesList} className="w-72 flex-none" />
+      <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 px-5">
         {products.map((product) => (
           <ProductCard
             key={product.id}
@@ -74,7 +72,7 @@ function Catalog(): ReactElement {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
