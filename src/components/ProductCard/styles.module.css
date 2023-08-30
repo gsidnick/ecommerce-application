@@ -1,6 +1,6 @@
 .cardWrapper {
   max-width: 220px;
-  height: 500px;
+  height: 600px;
   background: #3b3a40;
   border-radius: 8px;
   transition:
@@ -46,8 +46,10 @@
 
 .image {
   width: 100%;
-  height: 300px;
+  /* height: 300px; */
+  height: 100%;
   border-radius: 8px 8px 0px 0px;
+  object-fit: contain;
 }
 
 .infoWrapper {
