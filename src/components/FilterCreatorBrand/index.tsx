@@ -1,11 +1,14 @@
-import React, { ReactElement, memo, useState } from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
-import styles from './styles.module.css';
+import React, { ReactElement, memo } from 'react';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 import { IFilteredBrands } from '../FilterPanelContainer/data';
-// import {
-//   filterBrand,
-// } from '../../store/actionCreators/filterAC';
+import {
+  selectFilterState,
+  updateFilterBrands,
+} from '@/store/slices/filterSlice';
+
+import styles from './styles.module.css';
 
 interface IFilterCreatorBrand {
   brandsFiltered: IFilteredBrands;
@@ -13,23 +16,19 @@ interface IFilterCreatorBrand {
 
 const FilterCreatorBrand = (props: IFilterCreatorBrand): ReactElement => {
   const { brandsFiltered } = props;
-  const [filterByBrand, setFilterByBrand] = useState<string[]>(['Adidas']);
-  //   const dispatch = useDispatch();
-  //   const filterByBrand = useSelector((state) => state.filter.filterByBrand);
+
+  const dispatch = useAppDispatch();
+  const { filterByBrand } = useAppSelector(selectFilterState);
+
   const toggleBrandToRedux = (brand: string): void => {
-    if (!filterByBrand.includes(brand)) {
-      setFilterByBrand([...filterByBrand, brand]);
+    const newFilterByBrand = [...filterByBrand];
+    if (!newFilterByBrand.includes(brand)) {
+      dispatch(updateFilterBrands([...newFilterByBrand, brand]));
     } else {
-      setFilterByBrand(filterByBrand.filter((item) => item !== brand));
+      dispatch(
+        updateFilterBrands(newFilterByBrand.filter((item) => item !== brand))
+      );
     }
-    //   const selectedBrands = [...filterByBrand];
-    //   if (!selectedBrands.includes(brand)) {
-    //     selectedBrands.push(brand);
-    //   } else {
-    //     const index = selectedBrands.findIndex((item) => item === brand);
-    //     selectedBrands.splice(index, 1);
-    //   }
-    //   dispatch(filterBrand(selectedBrands));
   };
 
   return (

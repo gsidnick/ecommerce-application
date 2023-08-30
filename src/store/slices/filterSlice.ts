@@ -7,7 +7,7 @@ const hydrateAction = createAction<SliceTypes>(HYDRATE);
 export interface FilterState {
   filteredProducts: [];
   filterByColor: [];
-  filterByBrand: [];
+  filterByBrand: string[];
   filterCategory: [] | null;
   priceSliderValues: {
     min: number;
@@ -54,6 +54,14 @@ export const filterSlice = createSlice({
         priceSliderValues: { ...state.priceSliderValues, max: action.payload },
       };
     },
+    updateFilterBrands(state: FilterState, action: PayloadAction<string[]>) {
+      console.log('action.payload', action.payload);
+      
+      return {
+        ...state,
+        filterByBrand: action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -70,6 +78,7 @@ export const {
   setStateFilteredProducts,
   setMinSliderValue,
   setMaxSliderValue,
+  updateFilterBrands,
 } = filterSlice.actions;
 export const selectFilterState = (state: RootState): FilterState =>
   state.filter;

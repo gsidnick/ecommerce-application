@@ -24,7 +24,6 @@ const FilterPanelContainer = (): ReactElement => {
       <div>
         {filterPrice && (
           <FilterPriceSlider productsItems={data.body.results} />
-          // <FilterPriceSlider productsItems={filterCategoryProducts} />
         )}
       </div>
     </div>
