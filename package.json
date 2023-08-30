@@ -29,6 +29,7 @@
     "next": "13.4.12",
     "next-redux-wrapper": "^8.1.0",
     "postcss": "8.4.27",
+    "rc-slider": "^10.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.1.2",
@@ -36,6 +37,7 @@
     "redux-persist": "^6.0.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.1.6",
+    "use-debounce": "^9.0.4",
     "yup": "^1.2.0"
   },
   "devDependencies": {
