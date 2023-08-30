@@ -23,7 +23,7 @@ const FilterPanelContainer = (): ReactElement => {
       </div>
       <div>
         {filterPrice && (
-          <FilterPriceSlider productsItems={data.body.results} />
+          <FilterPriceSlider productsItems={data.results} />
         )}
       </div>
     </div>

@@ -6,6 +6,8 @@ import FilteredProductContainer from '@/components/FilteredProductContainer';
 // import { setStateFilteredProducts } from '@/store/slices/filterSlice';
 import styles from './styles.module.css';
 
+import { data } from './dataProducts';
+
 const Products = (): ReactElement => {
   // const dispatch = useAppDispatch();
 
@@ -17,12 +19,15 @@ const Products = (): ReactElement => {
     <section>
       <div className={styles.container}>
         <div className="flex">
-          <div className={`${styles.filterPanelWrapper} bg-amber-200`}>
+          <div className={`${styles.filterPanelWrapper} text-white`}>
             <FilterPanelContainer />
           </div>
           <div className="flex-1">
             <div className="bg-fuchsia-200">Sort buttons</div>
-            <FilteredProductContainer />
+            <FilteredProductContainer
+              filteredProducts={data.results}
+              itemsPerPage={15}
+            />
           </div>
         </div>
       </div>

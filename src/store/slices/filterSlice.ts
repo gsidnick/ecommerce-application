@@ -1,8 +1,27 @@
-import { createSlice, PayloadAction, createAction } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  PayloadAction,
+  createAction,
+  createAsyncThunk,
+} from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { RootState } from '@/store/store';
+import ProductController from '@/api/controllers/ProductController';
 
 const hydrateAction = createAction<SliceTypes>(HYDRATE);
+
+export const getFilteredProducts = createAsyncThunk(
+  'filter/fetchFilteredProducts',
+  async () => {
+    const productController = new ProductController();
+    console.log('getFilteredProducts in slice');
+    const response = await productController.getProducts(); // change to getFilteredProducts
+    console.log('response', response);
+
+    // return response;
+    // return response.data;
+  }
+);
 
 export interface FilterState {
   filteredProducts: [];
@@ -13,6 +32,7 @@ export interface FilterState {
     min: number;
     max: number;
   };
+  filterPaginationPage: number;
 }
 
 const initialState: FilterState = {
@@ -24,6 +44,7 @@ const initialState: FilterState = {
     min: 0,
     max: 0,
   },
+  filterPaginationPage: 0,
 };
 
 enum ESlices {
@@ -55,11 +76,15 @@ export const filterSlice = createSlice({
       };
     },
     updateFilterBrands(state: FilterState, action: PayloadAction<string[]>) {
-      console.log('action.payload', action.payload);
-      
       return {
         ...state,
         filterByBrand: action.payload,
+      };
+    },
+    setFilterPaginationPage(state: FilterState, action: PayloadAction<number>) {
+      return {
+        ...state,
+        filterPaginationPage: action.payload,
       };
     },
   },
@@ -71,6 +96,12 @@ export const filterSlice = createSlice({
         ...action.payload.filter,
       })
     );
+    // builder.addCase(
+    //   getFilteredProducts.fulfilled,
+    //   (state: FilterState, action: PayloadAction<unknown>): void => {
+    //     state.filteredProducts = action.payload as [];
+    //   }
+    // );
   },
 });
 
@@ -79,6 +110,7 @@ export const {
   setMinSliderValue,
   setMaxSliderValue,
   updateFilterBrands,
+  setFilterPaginationPage,
 } = filterSlice.actions;
 export const selectFilterState = (state: RootState): FilterState =>
   state.filter;

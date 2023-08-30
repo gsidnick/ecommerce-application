@@ -7,7 +7,8 @@ import {
   setMinSliderValue,
   setMaxSliderValue,
 } from '@/store/slices/filterSlice';
-import { extractAllPrices, IProduct } from '../../helpers/productsHelpers';
+import { extractAllPrices } from '../../helpers/productsHelpers';
+import { IProduct } from '../../pages/products/typesProduct';
 
 import 'rc-slider/assets/index.css';
 import styles from './styles.module.css';
