@@ -6,13 +6,15 @@ import {
   PRODUCT_DESCRIPTION_SLICE_FROM,
   PRODUCT_DESCRIPTION_SLICE_TO,
 } from '@/constants';
-// import { Variant, Attribute } from '../../pages/products/typesProduct';
 import { colors, Color } from '../../assets/colors/colors';
 import {
-  INITIAL_VARIANT_ID,
+  MAIN_VARIANT_ID,
   DEFAULT_VARIANT_PRICE,
   FIRST_IMAGE_INDEX,
   PRICE_ARRAY_DEFAULT_LENGTH,
+  DEFAULT_PRICE,
+  FRACTION_DIGIT,
+  FRACTION_DIGITS_COUNT_DEFAULT,
 } from './constants';
 
 import styles from './styles.module.css';
@@ -24,6 +26,7 @@ interface ProductCardProps {
   model: string;
   description: string;
   price: number | undefined;
+  fractionDigits: number;
   oldPrice: number;
   currency: string | undefined;
   attributes: Attribute[] | undefined;
@@ -38,6 +41,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     model,
     description,
     price,
+    fractionDigits,
     oldPrice,
     currency,
     attributes,
@@ -45,7 +49,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
   } = props;
 
   const [activeVariantId, setActiveVariantId] =
-    useState<number>(INITIAL_VARIANT_ID);
+    useState<number>(MAIN_VARIANT_ID);
 
   const briefDescription = `${description
     .slice(PRODUCT_DESCRIPTION_SLICE_FROM, PRODUCT_DESCRIPTION_SLICE_TO)
@@ -94,7 +98,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
   };
 
   const getActiveVariantImage = (): string => {
-    if (activeVariantId === INITIAL_VARIANT_ID) {
+    if (activeVariantId === MAIN_VARIANT_ID) {
       return img;
     }
     const activeVariant = variants.find(
@@ -107,34 +111,52 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     return activeVariantImage;
   };
 
-  const getActiveVariantDiscountPrice = (): number | undefined => {
-    if (activeVariantId === INITIAL_VARIANT_ID) {
-      return price ?? DEFAULT_VARIANT_PRICE;
+  const cutCentAmount = (
+    priceToCut = DEFAULT_PRICE,
+    fractionDigitsProp = FRACTION_DIGITS_COUNT_DEFAULT
+  ): number | string => {
+    const fractionNumber = FRACTION_DIGIT ** fractionDigitsProp;
+    const result = (priceToCut / fractionNumber).toFixed(fractionDigits);
+
+    return result;
+  };
+
+  const getActiveVariantDiscountPrice = (): number => {
+    if (activeVariantId === MAIN_VARIANT_ID) {
+      return Number(cutCentAmount(price ?? DEFAULT_PRICE, fractionDigits));
     }
     const activeProductVariant = variants.find(
       (variant) => variant.id === activeVariantId
     );
     const activeVariantDiscountPrice = activeProductVariant?.prices?.length
-      ? activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].discounted
-          ?.value.centAmount
+      ? cutCentAmount(
+          activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].discounted
+            ?.value.centAmount,
+          activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].discounted
+            ?.value.fractionDigits
+        )
       : DEFAULT_VARIANT_PRICE;
 
-    return activeVariantDiscountPrice ?? DEFAULT_VARIANT_PRICE;
+    return Number(activeVariantDiscountPrice) ?? DEFAULT_VARIANT_PRICE;
   };
 
-  const getActiveVariantPrice = (): number => {
-    if (activeVariantId === INITIAL_VARIANT_ID) {
-      return oldPrice;
+  const getActiveVariantPrice = (): number | string => {
+    if (activeVariantId === MAIN_VARIANT_ID) {
+      return cutCentAmount(oldPrice, FRACTION_DIGITS_COUNT_DEFAULT);
     }
     const activeProductVariant = variants.find(
       (variant) => variant.id === activeVariantId
     );
     const activeVariantOldPrice = activeProductVariant?.prices?.length
-      ? activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].value
-          .centAmount
-      : DEFAULT_VARIANT_PRICE;
+      ? cutCentAmount(
+          activeProductVariant.prices[PRICE_ARRAY_DEFAULT_LENGTH].value
+            .centAmount,
+          activeProductVariant.prices[PRICE_ARRAY_DEFAULT_LENGTH].value
+            .fractionDigits
+        )
+      : Number(DEFAULT_VARIANT_PRICE.toFixed(FRACTION_DIGITS_COUNT_DEFAULT));
 
-    return activeVariantOldPrice ?? DEFAULT_VARIANT_PRICE;
+    return activeVariantOldPrice;
   };
 
   return (

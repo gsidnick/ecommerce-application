@@ -114,7 +114,7 @@ export const filterSlice = createSlice({
         action: PayloadAction<ProductProjectionPagedQueryResponse>
       ): FilterState => {
         const { results, total } = action.payload;
-        const newFilteredProducts = [...state.filteredProducts, ...results];
+        const newFilteredProducts = [...results];
         return {
           ...state,
           filteredProducts: newFilteredProducts,

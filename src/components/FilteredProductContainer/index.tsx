@@ -5,7 +5,7 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { setFilterPaginationPage } from '@/store/slices/filterSlice';
 import ProductCard from '@/components/ProductCard';
-import { DEFAULT_VARIANT_PRICE } from './constants';
+import { DEFAULT_VARIANT_PRICE, FRACTION_DIGITS_COUNT_DEFAULT } from './constants';
 
 import styles from './styles.module.css';
 
@@ -79,6 +79,11 @@ const FilteredProductContainer = (
                       ? masterVariant.prices[ZERO_INDEX].discounted?.value
                           .currencyCode
                       : 'USD'
+                  }
+                  fractionDigits={
+                    masterVariant.prices?.length
+                      ? masterVariant.prices[ZERO_INDEX].value.fractionDigits
+                      : FRACTION_DIGITS_COUNT_DEFAULT
                   }
                   attributes={masterVariant.attributes}
                   variants={variants}
