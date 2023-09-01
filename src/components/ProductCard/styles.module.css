@@ -52,6 +52,22 @@
   object-fit: contain;
 }
 
+.colorVariantElem {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 0px 5px;
+}
+
+.colorVariantElem:hover {
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+.colorVariantElem[data-active='true'] {
+  border: 2px solid #fff;
+}
+
 .infoWrapper {
   padding: 11px 13px;
   position: relative;

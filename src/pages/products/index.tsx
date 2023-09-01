@@ -1,17 +1,21 @@
 import { ReactElement, useEffect } from 'react';
 import FilterPanelContainer from '@/components/FilterPanelContainer';
+import SortButtonsPanel from '@/components/SortButtonsPanel';
 import FilteredProductContainer from '@/components/FilteredProductContainer';
-// import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
 // import { useAppSelector } from '@/hooks/useAppSelector';
-// import { setStateFilteredProducts } from '@/store/slices/filterSlice';
+import { getFilteredProducts } from '@/store/slices/filterSlice';
 import styles from './styles.module.css';
 
 import { data } from './dataProducts';
 
 const Products = (): ReactElement => {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
+    // console.log('getFilteredProducts working');
+
+    dispatch(getFilteredProducts());
     // dispatch(setStateFilteredProducts(data.body.results));
   }, []);
 
@@ -23,7 +27,7 @@ const Products = (): ReactElement => {
             <FilterPanelContainer />
           </div>
           <div className="flex-1">
-            <div className="bg-fuchsia-200">Sort buttons</div>
+            <SortButtonsPanel productsCount={data.total} />
             <FilteredProductContainer
               filteredProducts={data.results}
               itemsPerPage={15}
