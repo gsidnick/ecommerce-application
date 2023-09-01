@@ -63,7 +63,7 @@ const SideBar = ({
 
   console.log('categoriesList', categoriesList);
 
-  const toggleCategory = (categoryId: string): void => {
+  const toggleOpenCategory = (categoryId: string): void => {
     if (openCategoryIds.includes(categoryId)) {
       setOpenCategoryIds(openCategoryIds.filter((id) => id !== categoryId));
     } else {
@@ -96,7 +96,7 @@ const SideBar = ({
               <button
                 type="button"
                 className="arrow"
-                onClick={(): void => toggleCategory(menuItem.id)}
+                onClick={(): void => toggleOpenCategory(menuItem.id)}
               >
                 {openCategoryIds.includes(menuItem.id) ? '▼' : '►'}
               </button>

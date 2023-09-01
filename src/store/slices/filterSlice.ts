@@ -5,6 +5,7 @@ import {
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { RootState } from '@/store/store';
 import ProductController from '@/api/controllers/ProductController';
 
@@ -18,13 +19,12 @@ export const getFilteredProducts = createAsyncThunk(
     const response = await productController.getProducts(); // change to getFilteredProducts
     console.log('response', response);
 
-    // return response;
-    // return response.data;
+    return response.body?.results ?? [];
   }
 );
 
 export interface FilterState {
-  filteredProducts: [];
+  filteredProducts: ProductProjection[];
   filterByColor: [];
   filterByBrand: string[];
   filterCategory: [] | null;
@@ -96,12 +96,15 @@ export const filterSlice = createSlice({
         ...action.payload.filter,
       })
     );
-    // builder.addCase(
-    //   getFilteredProducts.fulfilled,
-    //   (state: FilterState, action: PayloadAction<unknown>): void => {
-    //     state.filteredProducts = action.payload as [];
-    //   }
-    // );
+    builder.addCase(
+      getFilteredProducts.fulfilled,
+      (
+        state: FilterState,
+        action: PayloadAction<ProductProjection[]>
+      ): void => {
+        state.filteredProducts.push(...action.payload);
+      }
+    );
   },
 });
 

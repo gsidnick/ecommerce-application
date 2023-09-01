@@ -37,12 +37,12 @@ interface AttributeValue {
   label: string;
 }
 
-interface Attribute {
+export interface Attribute {
   name: string;
   value: AttributeValue;
 }
 
-interface Variant {
+export interface Variant {
   id: number;
   sku: string;
   key: string;

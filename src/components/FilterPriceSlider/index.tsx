@@ -67,7 +67,7 @@ const FilterPriceSlider = ({
 
   return (
     <div className={styles.priceFilterWrapper}>
-      <div className="flex h-16 items-center justify-around text-xl font-bold text-gray-700">
+      <div className="flex h-16 items-center justify-around text-xl font-bold text-white-200">
         <p>{priceValue[INDEX_BEGIN]}</p>
         <p>-</p>
         <p>{priceValue[INDEX_END]}</p>

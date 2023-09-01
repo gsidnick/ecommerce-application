@@ -72,6 +72,8 @@ const FilteredProductContainer = (
                     current.masterVariant.prices[ZERO_INDEX].discounted?.value
                       .currencyCode
                   }
+                  attributes={current.masterVariant.attributes}
+                  variants={current.variants}
                 />
               </div>
             );
