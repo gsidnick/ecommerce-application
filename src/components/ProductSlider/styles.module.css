@@ -1,0 +1,18 @@
+.slider {
+  width: 600px;
+  height: 600px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.slide {
+  width: inherit;
+  height: inherit;
+  padding: 20px;
+}
+
+.image {
+  width: 560px;
+  height: 560px;
+  object-fit: contain;
+}
