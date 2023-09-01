@@ -13,7 +13,7 @@ const hydrateAction = createAction<SliceTypes>(HYDRATE);
 
 export const getFilteredProducts = createAsyncThunk(
   'filter/fetchFilteredProducts',
-  async () => {
+  async (): Promise<ProductProjection[]> => {
     const productController = new ProductController();
     console.log('getFilteredProducts in slice');
     const response = await productController.getProducts(); // change to getFilteredProducts
