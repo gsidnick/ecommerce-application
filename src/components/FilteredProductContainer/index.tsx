@@ -1,15 +1,16 @@
 import { ReactElement, useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { setFilterPaginationPage } from '@/store/slices/filterSlice';
 import ProductCard from '@/components/ProductCard';
-import { IProduct } from '../../pages/products/typesProduct';
+import { DEFAULT_VARIANT_PRICE } from './constants';
 
 import styles from './styles.module.css';
 
 interface IFilteredProductContainer {
-  filteredProducts: IProduct[];
+  filteredProducts: ProductProjection[];
   itemsPerPage: number;
 }
 const ZERO_INDEX = 0;
@@ -43,37 +44,44 @@ const FilteredProductContainer = (
   return (
     <div>
       <div
-        key={filteredProducts[ZERO_INDEX].id}
+        // key={filteredProducts[ZERO_INDEX].id}
         className={`${styles.gridItemContainer} grid grid-cols-5 gap-4`}
       >
         {filteredProducts.length &&
           filteredProducts.map((product) => {
-            const { current } = product.masterData;
+            const { id, name, description, masterVariant, variants } = product;
 
             return (
-              <div key={product.id} className={styles.gridItemContainer}>
+              <div key={id} className={styles.gridItemContainer}>
                 <ProductCard
-                  key={product.id}
-                  id={product.id}
-                  img={current.masterVariant.images[ZERO_INDEX].url}
-                  name={current.name['en-US']}
-                  model={current.name['en-US']}
-                  description={
-                    current.description ? current.description['en-US'] : ''
+                  id={id}
+                  img={
+                    masterVariant.images?.length
+                      ? masterVariant.images[ZERO_INDEX].url
+                      : ''
                   }
+                  name={name['en-US']}
+                  model={name['en-US']}
+                  description={description ? description['en-US'] : ''}
                   price={
-                    current.masterVariant.prices[ZERO_INDEX].discounted?.value
-                      .centAmount
+                    masterVariant.prices?.length
+                      ? masterVariant.prices[ZERO_INDEX].discounted?.value
+                          .centAmount
+                      : DEFAULT_VARIANT_PRICE
                   }
                   oldPrice={
-                    current.masterVariant.prices[ZERO_INDEX].value.centAmount
+                    masterVariant.prices?.length
+                      ? masterVariant.prices[ZERO_INDEX].value.centAmount
+                      : DEFAULT_VARIANT_PRICE
                   }
                   currency={
-                    current.masterVariant.prices[ZERO_INDEX].discounted?.value
-                      .currencyCode
+                    masterVariant.prices?.length
+                      ? masterVariant.prices[ZERO_INDEX].discounted?.value
+                          .currencyCode
+                      : 'USD'
                   }
-                  attributes={current.masterVariant.attributes}
-                  variants={current.variants}
+                  attributes={masterVariant.attributes}
+                  variants={variants}
                 />
               </div>
             );

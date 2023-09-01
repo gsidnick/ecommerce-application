@@ -1,11 +1,12 @@
 import { FC, useState, MouseEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ProductVariant, Attribute } from '@commercetools/platform-sdk';
 import {
   PRODUCT_DESCRIPTION_SLICE_FROM,
   PRODUCT_DESCRIPTION_SLICE_TO,
 } from '@/constants';
-import { Variant, Attribute } from '../../pages/products/typesProduct';
+// import { Variant, Attribute } from '../../pages/products/typesProduct';
 import { colors, Color } from '../../assets/colors/colors';
 import {
   INITIAL_VARIANT_ID,
@@ -22,11 +23,11 @@ interface ProductCardProps {
   name: string;
   model: string;
   description: string;
-  price: number;
+  price: number | undefined;
   oldPrice: number;
-  currency: string;
-  attributes: Attribute[];
-  variants: Variant[];
+  currency: string | undefined;
+  attributes: Attribute[] | undefined;
+  variants: ProductVariant[];
 }
 
 const ProductCard: FC<ProductCardProps> = (props) => {
@@ -57,21 +58,23 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     const availableColors: { variantId: number; color: string | undefined }[] =
       [];
 
-    const mainColorName = attributes.find(
+    const mainColorName: Attribute | undefined = attributes?.find(
       (attribute: Attribute) => attribute.name === 'finish'
-    )?.value.key;
+    );
+    const { key: keyColor } = (mainColorName?.value as string) ?? '';
+
     const mainColor: string | undefined = colors.find(
-      (color: Color) => color.name === mainColorName
+      (color: Color) => color.name === keyColor
     )?.hex;
     availableColors.push({ variantId: 1, color: mainColor });
 
-    variants.forEach((variant) => {
-      const colorProps =
-        variant.attributes.find(
-          (attribute: Attribute) => attribute.name === 'finish'
-        )?.value.key ?? '';
+    variants.forEach((variant: ProductVariant): void => {
+      const colorProps: Attribute | undefined = variant.attributes?.find(
+        (attribute: Attribute) => attribute.name === 'finish'
+      );
+      const { key: keyColorProp } = (colorProps?.value as string) ?? '';
       const colorHex: string =
-        colors.find((color: Color) => color.name === colorProps)?.hex ?? '';
+        colors.find((color: Color) => color.name === keyColorProp)?.hex ?? '';
 
       if (!availableColors.some((color) => color.color === colorHex)) {
         availableColors.push({ color: colorHex, variantId: variant.id });
@@ -97,20 +100,24 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     const activeVariant = variants.find(
       (variant) => variant.id === activeVariantId
     );
-    const activeVariantImage = activeVariant?.images[FIRST_IMAGE_INDEX].url;
+    const activeVariantImage = activeVariant?.images?.length
+      ? activeVariant?.images[FIRST_IMAGE_INDEX].url
+      : '';
 
-    return activeVariantImage ?? '';
+    return activeVariantImage;
   };
 
-  const getActiveVariantDiscountPrice = (): number => {
+  const getActiveVariantDiscountPrice = (): number | undefined => {
     if (activeVariantId === INITIAL_VARIANT_ID) {
-      return price;
+      return price ?? DEFAULT_VARIANT_PRICE;
     }
     const activeProductVariant = variants.find(
       (variant) => variant.id === activeVariantId
     );
-    const activeVariantDiscountPrice =
-      activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].discounted.value.centAmount;
+    const activeVariantDiscountPrice = activeProductVariant?.prices?.length
+      ? activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].discounted
+          ?.value.centAmount
+      : DEFAULT_VARIANT_PRICE;
 
     return activeVariantDiscountPrice ?? DEFAULT_VARIANT_PRICE;
   };
@@ -122,8 +129,10 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     const activeProductVariant = variants.find(
       (variant) => variant.id === activeVariantId
     );
-    const activeVariantOldPrice =
-      activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].value.centAmount;
+    const activeVariantOldPrice = activeProductVariant?.prices?.length
+      ? activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].value
+          .centAmount
+      : DEFAULT_VARIANT_PRICE;
 
     return activeVariantOldPrice ?? DEFAULT_VARIANT_PRICE;
   };

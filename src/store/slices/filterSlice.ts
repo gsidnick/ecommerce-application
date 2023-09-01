@@ -11,15 +11,24 @@ import ProductController from '@/api/controllers/ProductController';
 
 const hydrateAction = createAction<SliceTypes>(HYDRATE);
 
+interface ProductProjectionPagedQueryResponse {
+  results: ProductProjection[];
+  total: number;
+}
+
+const NO_PRODUCTS_COUNT = 0;
+
 export const getFilteredProducts = createAsyncThunk(
   'filter/fetchFilteredProducts',
-  async (): Promise<ProductProjection[]> => {
+  async (): Promise<ProductProjectionPagedQueryResponse> => {
     const productController = new ProductController();
-    console.log('getFilteredProducts in slice');
     const response = await productController.getProducts(); // change to getFilteredProducts
     console.log('response', response);
 
-    return response.body?.results ?? [];
+    return {
+      results: response.body?.results ?? [],
+      total: response.body?.total ?? NO_PRODUCTS_COUNT,
+    };
   }
 );
 
@@ -33,6 +42,7 @@ export interface FilterState {
     max: number;
   };
   filterPaginationPage: number;
+  totalFilteredProducts: number;
 }
 
 const initialState: FilterState = {
@@ -45,6 +55,7 @@ const initialState: FilterState = {
     max: 0,
   },
   filterPaginationPage: 0,
+  totalFilteredProducts: 0,
 };
 
 enum ESlices {
@@ -100,9 +111,15 @@ export const filterSlice = createSlice({
       getFilteredProducts.fulfilled,
       (
         state: FilterState,
-        action: PayloadAction<ProductProjection[]>
-      ): void => {
-        state.filteredProducts.push(...action.payload);
+        action: PayloadAction<ProductProjectionPagedQueryResponse>
+      ): FilterState => {
+        const { results, total } = action.payload;
+        const newFilteredProducts = [...state.filteredProducts, ...results];
+        return {
+          ...state,
+          filteredProducts: newFilteredProducts,
+          totalFilteredProducts: total,
+        };
       }
     );
   },

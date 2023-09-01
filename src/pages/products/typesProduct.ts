@@ -44,12 +44,12 @@ export interface Attribute {
 
 export interface Variant {
   id: number;
-  sku: string;
-  key: string;
-  prices: Price[];
+  prices?: Price[];
   images: Image[];
   attributes: Attribute[];
   assets: []; // Adjust this type if you have more information about the 'assets' structure
+  key?: string;
+  sku?: string;
 }
 
 interface MasterData {
