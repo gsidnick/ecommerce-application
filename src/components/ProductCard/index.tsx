@@ -90,8 +90,6 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       const colorHex: string | null =
         colors.find((color: Color) => color.name === keyColorProp)?.hex ?? null;
 
-      console.log('colorHex', colorHex);
-
       if (!availableColors.some((color) => color.color === colorHex)) {
         if (colorHex)
           availableColors.push({ color: colorHex, variantId: variant.id });
@@ -179,7 +177,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
           <Image
             src={getActiveVariantImage()}
             alt={name}
-            className={styles.image}
+            // className={styles.image}
             width={220}
             height={500}
           />
@@ -225,16 +223,5 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     </Link>
   );
 };
-
-// ProductCard.defaultProps = {
-//   id: '1',
-//   img: '/images/placeholder.png',
-//   name: 'Product name',
-//   model: 'Product model',
-//   description: 'Product description',
-//   price: '100',
-//   oldPrice: '200',
-//   currency: 'USD',
-// };
 
 export default ProductCard;
