@@ -65,18 +65,24 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     const mainColorName: Attribute | undefined = attributes?.find(
       (attribute: Attribute) => attribute.name === 'finish'
     );
-    const { key: keyColor } = (mainColorName?.value as string) ?? '';
+    const { key: keyColor } = (mainColorName?.value as {
+      key: string;
+      label: string;
+    }) ?? { key: '', label: '' };
 
     const mainColor: string | undefined = colors.find(
       (color: Color) => color.name === keyColor
     )?.hex;
     availableColors.push({ variantId: 1, color: mainColor });
 
-    variants.forEach((variant: ProductVariant): void => {
+    variants?.forEach((variant: ProductVariant): void => {
       const colorProps: Attribute | undefined = variant.attributes?.find(
         (attribute: Attribute) => attribute.name === 'finish'
       );
-      const { key: keyColorProp } = (colorProps?.value as string) ?? '';
+      const { key: keyColorProp } = (colorProps?.value as {
+        key: string;
+        label: string;
+      }) ?? { key: '', label: '' };
       const colorHex: string =
         colors.find((color: Color) => color.name === keyColorProp)?.hex ?? '';
 
