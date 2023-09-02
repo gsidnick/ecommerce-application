@@ -4,9 +4,16 @@ import ReactPaginate from 'react-paginate';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
-import { setFilterPaginationPage } from '@/store/slices/filterSlice';
+import {
+  setFilterPaginationPage,
+  selectFilterState,
+  getFilteredProducts,
+} from '@/store/slices/filterSlice';
 import ProductCard from '@/components/ProductCard';
-import { DEFAULT_VARIANT_PRICE, FRACTION_DIGITS_COUNT_DEFAULT } from './constants';
+import {
+  DEFAULT_VARIANT_PRICE,
+  FRACTION_DIGITS_COUNT_DEFAULT,
+} from './constants';
 
 import styles from './styles.module.css';
 
@@ -21,14 +28,13 @@ const FilteredProductContainer = (
 ): ReactElement => {
   const { filteredProducts, itemsPerPage } = props;
   // const [itemOffset, setItemOffset] = useState(ZERO_INDEX);
-  const [pageCount, setPageCount] = useState(ZERO_INDEX);
+  const [pagesTotalCount, setPagesTotalCount] = useState(ZERO_INDEX);
+
+  const { totalFilteredProducts, filterPaginationPage } =
+    useAppSelector(selectFilterState);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
-
-  const filterPaginationPage = useAppSelector(
-    (state) => state.filter.filterPaginationPage
-  );
 
   const handlePageChange = (selectedItem: { selected: number }): void => {
     console.log('event', selectedItem.selected);
@@ -40,11 +46,20 @@ const FilteredProductContainer = (
   };
 
   useEffect(() => {
-    setPageCount(Math.ceil(filteredProducts.length / itemsPerPage));
-  }, []);
+    setPagesTotalCount(Math.ceil(totalFilteredProducts / itemsPerPage));
+  }, [totalFilteredProducts]);
+
+  useEffect(() => {
+    dispatch(
+      getFilteredProducts({
+        offset: filterPaginationPage * itemsPerPage,
+        limit: itemsPerPage,
+      })
+    );
+  }, [filterPaginationPage]);
 
   if (router.isFallback) {
-    return <div className='text-white'>Loading...</div>;
+    return <div className="text-white">Loading...</div>;
   }
 
   return (
@@ -107,7 +122,7 @@ const FilteredProductContainer = (
         nextLabel="›"
         previousLabel="‹"
         onPageChange={handlePageChange}
-        pageCount={pageCount}
+        pageCount={pagesTotalCount}
         renderOnZeroPageCount={null}
         pageRangeDisplayed={5}
         containerClassName={styles.paginateContainer}

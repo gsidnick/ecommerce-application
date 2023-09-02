@@ -12,6 +12,7 @@ import {
 } from '@/store/slices/filterSlice';
 import { getAllCategories } from '@/store/slices/productsSlice';
 import styles from './styles.module.css';
+import { DEFAULT_LIMIT } from '@/api/constants';
 
 // import { data } from './dataProducts';
 
@@ -23,8 +24,6 @@ function Catalog(): ReactElement {
   // const router = useRouter();
   const { filteredProducts, totalFilteredProducts } =
     useAppSelector(selectFilterState);
-
-  console.log('filteredProducts', filteredProducts);
 
   useEffect(() => {
     const fetchProducts = (): void => {
@@ -52,7 +51,7 @@ function Catalog(): ReactElement {
           <SortButtonsPanel productsCount={totalFilteredProducts} />
           <FilteredProductContainer
             filteredProducts={filteredProducts}
-            itemsPerPage={15}
+            itemsPerPage={DEFAULT_LIMIT}
           />
         </div>
       </div>
