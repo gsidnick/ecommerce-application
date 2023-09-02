@@ -18,7 +18,7 @@ export const colors: Color[] = [
   },
   {
     name: 'Ebony',
-    hex: '#555D50',
+    hex: '#1a1c1a',
   },
   {
     name: 'Inverness Green',
@@ -50,7 +50,7 @@ export const colors: Color[] = [
   },
   {
     name: 'Tobacco Burst',
-    hex: '#529A73',
+    hex: '#400101',
   },
   {
     name: 'Translucent Fuchsia',
@@ -119,5 +119,69 @@ export const colors: Color[] = [
   {
     name: 'Faded Sunburst',
     hex: '#f7dd9b',
+  },
+  {
+    name: 'Brown',
+    hex: '#964B00',
+  },
+  {
+    name: 'Vintage Cherry',
+    hex: '#f2474d',
+  },
+  {
+    name: 'Faded Pelham Blue',
+    hex: '#9f9282',
+  },
+  {
+    name: 'Worn Ebony',
+    hex: '#302d2d',
+  },
+  {
+    name: 'Worn Cherry',
+    hex: '#D2042D',
+  },
+  {
+    name: 'Blue Stain',
+    hex: '#3c4968',
+  },
+  {
+    name: 'Worn Brown',
+    hex: '#b07154',
+  },
+  {
+    name: 'Heritage Cherry',
+    hex: '#453432',
+  },
+  {
+    name: 'Rosewood Burst',
+    hex: '#65000b',
+  },
+  {
+    name: 'Natural',
+    hex: '#E5D3BF',
+  },
+  {
+    name: 'Black',
+    hex: '#000000',
+  },
+  {
+    name: 'Tan',
+    hex: '#D2B48C',
+  },
+  {
+    name: 'Grey',
+    hex: '#808080',
+  },
+  {
+    name: 'Multi',
+    hex: ' #ff00e1',
+  },
+  {
+    name: 'White',
+    hex: '#ffffff',
+  },
+  {
+    name: 'Red',
+    hex: '#ff0000',
   },
 ];
