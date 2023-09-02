@@ -35,9 +35,12 @@
   background-color: rgb(80, 80, 80);
 }
 
-
 .activeLinkClassName {
   color: black !important;
   border: none !important;
   background-color: white;
+}
+
+.noItems {
+  color: #ffffff;
 }

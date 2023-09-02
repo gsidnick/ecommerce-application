@@ -1,10 +1,5 @@
 import { ReactElement, useEffect } from 'react';
-// import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-// import { ClientResponse } from '@commercetools/sdk-client-v2';
-import // ProductProjection,
-// ProductProjectionPagedQueryResponse,
-'@commercetools/platform-sdk';
-import { categoriesList } from './categoriesData';
+// import { useRouter } from 'next/router';
 import SideBar from '../../components/SideBar';
 import FilterPanelContainer from '@/components/FilterPanelContainer';
 import SortButtonsPanel from '@/components/SortButtonsPanel';
@@ -15,7 +10,7 @@ import {
   getFilteredProducts,
   selectFilterState,
 } from '@/store/slices/filterSlice';
-// import ProductController from '@/api/controllers/ProductController';
+import { getAllCategories } from '@/store/slices/productsSlice';
 import styles from './styles.module.css';
 
 // import { data } from './dataProducts';
@@ -25,7 +20,9 @@ import styles from './styles.module.css';
 // }: InferGetServerSidePropsType<typeof getServerSideProps>): ReactElement {
 function Catalog(): ReactElement {
   const dispatch = useAppDispatch();
-  const { filteredProducts, totalFilteredProducts } = useAppSelector(selectFilterState);
+  // const router = useRouter();
+  const { filteredProducts, totalFilteredProducts } =
+    useAppSelector(selectFilterState);
 
   console.log('filteredProducts', filteredProducts);
 
@@ -33,14 +30,19 @@ function Catalog(): ReactElement {
     const fetchProducts = (): void => {
       dispatch(getFilteredProducts());
     };
+    const fetchCategories = (): void => {
+      dispatch(getAllCategories());
+    };
 
+    fetchCategories();
     fetchProducts();
   }, []);
+
 
   return (
     <div className="flex justify-between ">
       <div>
-        <SideBar categoriesList={categoriesList} className="w-72 flex-none" />
+        <SideBar className="w-72 flex-none" />
         <div className={`${styles.filterPanelWrapper} text-white`}>
           <FilterPanelContainer />
         </div>

@@ -1,4 +1,5 @@
 import { ReactElement, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import ReactPaginate from 'react-paginate';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
@@ -23,6 +24,7 @@ const FilteredProductContainer = (
   const [pageCount, setPageCount] = useState(ZERO_INDEX);
 
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const filterPaginationPage = useAppSelector(
     (state) => state.filter.filterPaginationPage
@@ -40,6 +42,10 @@ const FilteredProductContainer = (
   useEffect(() => {
     setPageCount(Math.ceil(filteredProducts.length / itemsPerPage));
   }, []);
+
+  if (router.isFallback) {
+    return <div className='text-white'>Loading...</div>;
+  }
 
   return (
     <div>

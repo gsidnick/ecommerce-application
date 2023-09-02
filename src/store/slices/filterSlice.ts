@@ -22,7 +22,7 @@ export const getFilteredProducts = createAsyncThunk(
   'filter/fetchFilteredProducts',
   async (): Promise<ProductProjectionPagedQueryResponse> => {
     const productController = new ProductController();
-    const response = await productController.getProducts(); // change to getFilteredProducts
+    const response = await productController.getProducts();
     console.log('response', response);
 
     return {
