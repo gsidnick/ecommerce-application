@@ -1,5 +1,9 @@
 .slider {
   width: 600px;
+}
+
+.port {
+  width: 600px;
   height: 600px;
   background-color: #ffffff;
   overflow: hidden;
@@ -15,4 +19,32 @@
   width: 560px;
   height: 560px;
   object-fit: contain;
+}
+
+.navigationWrapper {
+  position: relative;
+  padding: 0 50px;
+}
+
+.arrow {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  fill: #000000;
+  cursor: pointer;
+}
+
+.arrowLeft {
+  left: 5px;
+}
+
+.arrowRight {
+  left: auto;
+  right: 5px;
+}
+
+.arrowDisabled {
+  fill: rgba(0, 0, 0, 0.2);
 }
