@@ -15,7 +15,7 @@ class CategoryController {
     const categories = [] as ICategoryWithSubcategories[];
     if (response?.body) {
       const { results } = response.body;
-      results.forEach((item) => {
+      results?.forEach((item) => {
         categories.push({
           id: item.id,
           name: item.name['en-US'],
