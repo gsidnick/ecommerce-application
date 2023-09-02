@@ -46,18 +46,18 @@ export const getServerSideProps: GetServerSideProps<ProductProps> = async (
 ) => {
   const productID = context.params?.id as string;
   const productController = new ProductController();
-  const response = await productController.getProduct(productID);
-  const product = response.body;
-
-  if (product === undefined) {
+  try {
+    const response = await productController.getProduct(productID);
+    const product = response.body;
+    if (!product) throw new Error('Product Not Found');
+    return {
+      props: {
+        product,
+      },
+    };
+  } catch {
     return {
       notFound: true,
     };
   }
-
-  return {
-    props: {
-      product,
-    },
-  };
 };
