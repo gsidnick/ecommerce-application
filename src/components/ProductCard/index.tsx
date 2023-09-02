@@ -63,31 +63,38 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       [];
 
     const mainColorName: Attribute | undefined = attributes?.find(
-      (attribute: Attribute) => attribute.name === 'finish'
+      (attribute: Attribute) =>
+        attribute.name === 'finish' || attribute.name === 'color'
     );
     const { key: keyColor } = (mainColorName?.value as {
-      key: string;
-      label: string;
-    }) ?? { key: '', label: '' };
+      key: string | null;
+      label: string | null;
+    }) ?? { key: null, label: null };
 
     const mainColor: string | undefined = colors.find(
       (color: Color) => color.name === keyColor
     )?.hex;
-    availableColors.push({ variantId: 1, color: mainColor });
+
+    if (typeof mainColor === 'string')
+      availableColors.push({ variantId: 1, color: mainColor });
 
     variants?.forEach((variant: ProductVariant): void => {
       const colorProps: Attribute | undefined = variant.attributes?.find(
-        (attribute: Attribute) => attribute.name === 'finish'
+        (attribute: Attribute) =>
+          attribute.name === 'finish' || attribute.name === 'color'
       );
       const { key: keyColorProp } = (colorProps?.value as {
-        key: string;
-        label: string;
-      }) ?? { key: '', label: '' };
-      const colorHex: string =
-        colors.find((color: Color) => color.name === keyColorProp)?.hex ?? '';
+        key: string | null;
+        label: string | null;
+      }) ?? { key: null, label: null };
+      const colorHex: string | null =
+        colors.find((color: Color) => color.name === keyColorProp)?.hex ?? null;
+
+      console.log('colorHex', colorHex);
 
       if (!availableColors.some((color) => color.color === colorHex)) {
-        availableColors.push({ color: colorHex, variantId: variant.id });
+        if (colorHex)
+          availableColors.push({ color: colorHex, variantId: variant.id });
       }
     });
 
