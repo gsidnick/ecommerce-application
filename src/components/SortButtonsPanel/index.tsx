@@ -1,4 +1,6 @@
 import { ReactElement } from 'react';
+import { setSortByValue, getFilteredProducts } from '@/store/slices/filterSlice';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
 
 import styles from './styles.module.css';
 
@@ -9,10 +11,14 @@ interface ISortButtonsPanel {
 const SortButtonsPanel = ({
   productsCount,
 }: ISortButtonsPanel): ReactElement => {
+
+  const dispatch = useAppDispatch();
+
   const handleChangeSelect = (
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
-    console.log('event', event.target.value);
+    dispatch(setSortByValue(event.target.value));
+    dispatch(getFilteredProducts());
   };
 
   return (
@@ -20,10 +26,10 @@ const SortButtonsPanel = ({
       <p className="text-white">{productsCount} products</p>
       <div className={styles.selectWrapper}>
         <select onChange={handleChangeSelect} className={styles.select}>
-          <option value="desc">Price: low to high</option>
-          <option value="asc">Price: high to low</option>
-          <option value="a-z">Product name: A to Z</option>
-          <option value="z-a">Product name: Z to A</option>
+          <option value="price asc">Price: low to high</option>
+          <option value="price desc">Price: high to low</option>
+          <option value="name.en-US asc">Product name: A to Z</option>
+          <option value="name.en-US desc">Product name: Z to A</option>
         </select>
       </div>
     </div>

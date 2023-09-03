@@ -109,7 +109,6 @@ const ProductCard: FC<ProductCardProps> = (props) => {
 
   const getActiveVariantImage = (): string => {
     if (activeVariantId === MAIN_VARIANT_ID) {
-      console.log('activeVariantImage', img);
       return `${img}?fit=fill&w=220`;
     }
     const activeVariant = variants.find(

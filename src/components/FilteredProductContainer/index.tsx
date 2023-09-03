@@ -8,6 +8,8 @@ import {
   setFilterPaginationPage,
   selectFilterState,
   getFilteredProducts,
+  setOffsetValue,
+  setCardsLimitPerPage,
 } from '@/store/slices/filterSlice';
 import ProductCard from '@/components/ProductCard';
 import {
@@ -40,8 +42,6 @@ const FilteredProductContainer = (
     console.log('event', selectedItem.selected);
 
     window.scrollTo(ZERO_INDEX, ZERO_INDEX);
-    // const newOffset = (selectedItem.selected * itemsPerPage) % filteredProducts.length;
-    // setItemOffset(newOffset);
     dispatch(setFilterPaginationPage(selectedItem.selected));
   };
 
@@ -50,12 +50,9 @@ const FilteredProductContainer = (
   }, [totalFilteredProducts]);
 
   useEffect(() => {
-    dispatch(
-      getFilteredProducts({
-        offset: filterPaginationPage * itemsPerPage,
-        limit: itemsPerPage,
-      })
-    );
+    dispatch(setOffsetValue(filterPaginationPage * itemsPerPage));
+    dispatch(setCardsLimitPerPage(itemsPerPage));
+    dispatch(getFilteredProducts());
   }, [filterPaginationPage]);
 
   if (router.isFallback) {
