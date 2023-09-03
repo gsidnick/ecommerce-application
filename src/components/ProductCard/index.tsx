@@ -1,6 +1,5 @@
 import { FC, useState, MouseEvent } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ProductVariant, Attribute } from '@commercetools/platform-sdk';
 import {
   PRODUCT_DESCRIPTION_SLICE_FROM,
@@ -110,7 +109,8 @@ const ProductCard: FC<ProductCardProps> = (props) => {
 
   const getActiveVariantImage = (): string => {
     if (activeVariantId === MAIN_VARIANT_ID) {
-      return img;
+      console.log('activeVariantImage', img);
+      return `${img}?fit=fill&w=220`;
     }
     const activeVariant = variants.find(
       (variant) => variant.id === activeVariantId
@@ -174,13 +174,18 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     <Link href={`/product/${id}`}>
       <div id={id} className={styles.cardWrapper}>
         <div className={`${styles.container} text-white`}>
-          <Image
-            src={getActiveVariantImage()}
-            alt={name}
-            // className={styles.image}
-            width={220}
-            height={500}
-          />
+          <div className={`${styles.imageWrapper} bg-white`}>
+            {/* <Image
+              src={getActiveVariantImage()}
+              alt={name}
+              // className={styles.image}
+              // width={220}
+              // height={500}
+            /> */}
+            <picture>
+              <img src={getActiveVariantImage()} alt="sdfsdsf" className={styles.image}/>
+            </picture>
+          </div>
           <div className={`${styles.infoWrapper}`}>
             <div className="flex">
               {getAvailableColors().map((color) => (

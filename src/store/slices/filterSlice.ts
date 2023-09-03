@@ -20,17 +20,20 @@ const NO_PRODUCTS_COUNT = 0;
 
 export const getFilteredProducts = createAsyncThunk(
   'filter/fetchFilteredProducts',
-  async ({
-    filter,
-    sort,
-    limit,
-    offset,
-  }: {
-    filter?: string[];
-    sort?: string[];
-    limit?: number;
-    offset?: number;
-  }): Promise<ProductProjectionPagedQueryResponse> => {
+  async (
+    {
+      filter,
+      sort,
+      limit,
+      offset,
+    }: {
+      filter?: string[];
+      sort?: string[];
+      limit?: number;
+      offset?: number;
+    },
+    { getState }
+  ): Promise<ProductProjectionPagedQueryResponse> => {
     const productController = new ProductController();
     const response = await productController.getProducts({
       filter,
@@ -38,7 +41,9 @@ export const getFilteredProducts = createAsyncThunk(
       limit,
       offset,
     });
-    console.log('response', response);
+
+    const stateVar = getState();
+    console.log('getState stateVar', stateVar);
 
     return {
       results: response.body?.results ?? [],
