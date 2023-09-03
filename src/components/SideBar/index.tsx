@@ -4,7 +4,7 @@ import { EMPTY_DATA } from '../../constants';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { selectProductState } from '@/store/slices/productsSlice';
-import { getFilteredProducts } from '@/store/slices/filterSlice';
+import { getFilteredProducts, setFilterCategory } from '@/store/slices/filterSlice';
 import { ICategoryWithSubcategories } from '@/api/types';
 
 interface ISideBarProps {
@@ -29,11 +29,8 @@ const SideBar = ({ className }: ISideBarProps): ReactElement => {
   const handleCategoryClick = (
     menuElement: ICategoryWithSubcategories
   ): void => {
-    dispatch(
-      getFilteredProducts({
-        filter: [`categories.id:subtree("${menuElement.id}")`],
-      })
-    );
+    dispatch(setFilterCategory(menuElement.id))
+    dispatch(getFilteredProducts());
   };
 
   const renderMenu = (

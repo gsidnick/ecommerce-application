@@ -20,30 +20,36 @@ const NO_PRODUCTS_COUNT = 0;
 
 export const getFilteredProducts = createAsyncThunk(
   'filter/fetchFilteredProducts',
-  async (
-    {
-      filter,
-      sort,
-      limit,
-      offset,
-    }: {
-      filter?: string[];
-      sort?: string[];
-      limit?: number;
-      offset?: number;
-    },
-    { getState }
-  ): Promise<ProductProjectionPagedQueryResponse> => {
+  async (_, { getState }): Promise<ProductProjectionPagedQueryResponse> => {
     const productController = new ProductController();
-    const response = await productController.getProducts({
-      filter,
-      sort,
-      limit,
-      offset,
-    });
 
-    const stateVar = getState();
-    console.log('getState stateVar', stateVar);
+    const allState = getState() as RootState;
+
+    const { filterCategory, sortBy, offSet, cardsLimitPerPage } =
+      allState.filter;
+    const allFiltersQueryString: string[] = [];
+
+    const filterCategoryQueryString = filterCategory.length
+      ? `categories.id:subtree("${filterCategory}")`
+      : undefined;
+
+    if (filterCategoryQueryString) {
+      allFiltersQueryString.push(filterCategoryQueryString);
+    }
+
+    // const { min, max } = priceSliderValues;
+    allFiltersQueryString.push(
+      `variants.price.centAmount:range (0 to 90000000)`
+    );
+
+    const sortQueryString = sortBy.length ? sortBy : undefined;
+
+    const response = await productController.getProducts({
+      filter: allFiltersQueryString,
+      sort: sortQueryString,
+      limit: cardsLimitPerPage,
+      offset: offSet,
+    });
 
     return {
       results: response.body?.results ?? [],
@@ -56,12 +62,15 @@ export interface FilterState {
   filteredProducts: ProductProjection[];
   filterByColor: [];
   filterByBrand: string[];
-  filterCategory: [] | null;
+  filterCategory: string;
   priceSliderValues: {
     min: number;
     max: number;
   };
   filterPaginationPage: number;
+  sortBy: string[];
+  offSet: number;
+  cardsLimitPerPage: number;
   totalFilteredProducts: number;
 }
 
@@ -69,12 +78,15 @@ const initialState: FilterState = {
   filteredProducts: [],
   filterByColor: [],
   filterByBrand: [],
-  filterCategory: null,
+  filterCategory: '',
   priceSliderValues: {
     min: 0,
     max: 0,
   },
   filterPaginationPage: 0,
+  sortBy: [],
+  offSet: 0,
+  cardsLimitPerPage: 20,
   totalFilteredProducts: 0,
 };
 
@@ -94,6 +106,12 @@ export const filterSlice = createSlice({
         filteredProducts: action.payload,
       };
     },
+    setFilterCategory(state: FilterState, action: PayloadAction<string>) {
+      return {
+        ...state,
+        filterCategory: action.payload,
+      };
+    },
     setMinSliderValue(state: FilterState, action: PayloadAction<number>) {
       return {
         ...state,
@@ -110,6 +128,25 @@ export const filterSlice = createSlice({
       return {
         ...state,
         filterByBrand: action.payload,
+      };
+    },
+    setSortByValue(state: FilterState, action: PayloadAction<string>) {
+      const newSortByValue = [action.payload];
+      return {
+        ...state,
+        sortBy: newSortByValue,
+      };
+    },
+    setOffsetValue(state: FilterState, action: PayloadAction<number>) {
+      return {
+        ...state,
+        offSet: action.payload,
+      };
+    },
+    setCardsLimitPerPage(state: FilterState, action: PayloadAction<number>) {
+      return {
+        ...state,
+        cardsLimitPerPage: action.payload,
       };
     },
     setFilterPaginationPage(state: FilterState, action: PayloadAction<number>) {
@@ -147,10 +184,14 @@ export const filterSlice = createSlice({
 
 export const {
   setStateFilteredProducts,
+  setFilterCategory,
   setMinSliderValue,
   setMaxSliderValue,
   updateFilterBrands,
   setFilterPaginationPage,
+  setSortByValue,
+  setOffsetValue,
+  setCardsLimitPerPage,
 } = filterSlice.actions;
 export const selectFilterState = (state: RootState): FilterState =>
   state.filter;
