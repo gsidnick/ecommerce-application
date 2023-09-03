@@ -1,0 +1,67 @@
+.slider {
+  width: 600px;
+  background-color: #ffffff;
+}
+
+.port {
+  width: 600px;
+  height: 600px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.slide {
+  width: inherit;
+  height: inherit;
+  padding: 20px;
+}
+
+.image {
+  width: 560px;
+  height: 560px;
+  object-fit: contain;
+}
+
+.navigationWrapper {
+  position: relative;
+  padding: 0 50px;
+}
+
+.arrow {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  fill: #ffffff;
+  cursor: pointer;
+}
+
+.arrowLeft {
+  left: 5px;
+}
+
+.arrowRight {
+  left: auto;
+  right: 5px;
+}
+
+.arrowDisabled {
+  fill: rgba(0, 0, 0, 0.2);
+}
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.closeButton {
+  padding: 6px 13px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  margin: 0 0 10px 0;
+}
+
+.closeButton:hover {
+  background-color: #dedede;
+}

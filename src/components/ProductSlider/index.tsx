@@ -12,6 +12,10 @@ import {
 import 'keen-slider/keen-slider.min.css';
 import styles from './styles.module.css';
 import { ArrowProps } from '@/components/slider/types';
+import ProductSliderModal from '@/components/ProductSliderModal';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { selectModalState, setModalState } from '@/store/slices/modalSlice';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
 
 interface ProductSliderProps {
   images: string[];
@@ -76,6 +80,8 @@ function ThumbnailPlugin(
 }
 
 const ProductSlider = ({ images }: ProductSliderProps): ReactElement => {
+  const { modalState } = useAppSelector(selectModalState);
+  const dispatch = useAppDispatch();
   const [currentSlide, setCurrentSlide] = useState<number>(INITIAL_ZERO);
   const [loaded, setLoaded] = useState<boolean>(false);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
@@ -109,9 +115,23 @@ const ProductSlider = ({ images }: ProductSliderProps): ReactElement => {
     instanceRef.current?.next();
   };
 
+  const openModalHandler = (e: MouseEvent): void => {
+    e.stopPropagation();
+    dispatch(setModalState(true));
+    const body = document.querySelector('body');
+    body?.classList.add('modal');
+  };
+
   return (
     <div className={styles.slider}>
-      <div ref={sliderRef} className="keen-slider">
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+      <div
+        ref={sliderRef}
+        role="button"
+        tabIndex={0}
+        onClick={openModalHandler}
+        className="keen-slider"
+      >
         {images.map((image) => (
           <div className={`keen-slider__slide ${styles.slide}`} key={image}>
             <picture>
@@ -154,6 +174,9 @@ const ProductSlider = ({ images }: ProductSliderProps): ReactElement => {
           </>
         )}
       </div>
+      {modalState && (
+        <ProductSliderModal images={images} current={currentSlide} />
+      )}
     </div>
   );
 };
