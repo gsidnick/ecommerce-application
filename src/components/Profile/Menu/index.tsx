@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import classes from './profilemenu.module.scss';
 
-const PROFILE_TAB = 0;
-const ADDRESS_TAB = 1;
+export const PROFILE_TAB = 0;
+export const ADDRESS_TAB = 1;
 
 interface ProfileMenuProps {
   activeContentIndex: number;

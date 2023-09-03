@@ -80,7 +80,9 @@ const CustomBillingInput: FC<InputProps> = (props) => {
         className={
           type === 'checkbox'
             ? 'rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none'
-            : 'w-full rounded-md border border-neutral-800 bg-background-main p-2 pl-3 pr-3 text-white focus:border-neutral-500 focus:outline-none'
+            : `w-full rounded-md border border-neutral-800 bg-background-main p-2 pl-3 pr-3 ${
+                disabled ? 'text-neutral-400' : 'text-white'
+              } focus:border-neutral-500 focus:outline-none`
         }
         onChange={handleOnChangeBillingAddress}
       />

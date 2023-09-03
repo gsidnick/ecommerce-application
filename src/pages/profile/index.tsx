@@ -8,14 +8,52 @@ import ProfileMenu from '../../components/Profile/Menu';
 import UserInfo, {
   ProfileChangableProps,
 } from '../../components/Profile/UserInfo';
+import Addresses, {
+  IAddressesListProps,
+} from '../../components/Profile/Addresses';
 
 const INIT_ZERO = 0;
 
 const ProfilePage: NextPage<AuthState> = () => {
   const [activeContentIndex, setActiveContentIndex] = useState(INIT_ZERO);
   const [inEditMode, setInEditMode] = useState(false);
-  const [initialValues, setInitialValues] = useState<ProfileChangableProps>();
+  const [initialValues, setInitialValues] = useState<ProfileChangableProps>({
+    email: '',
+    firstName: '',
+    lastName: '',
+    dateOfBirth: '',
+  });
+
+  const [addresses, setAddresses] = useState<IAddressesListProps>({
+    addresses: [],
+    billingAddressIds: [],
+    defaultBillingAddressId: '',
+    defaultShippingAddressId: '',
+    shippingAddressIds: [],
+  });
+
   const [profileVersion, setProfileVersion] = useState<number>(INIT_ZERO);
+
+  const tabData = [
+    {
+      component: (
+        <UserInfo
+          inEditMode={inEditMode}
+          initialValues={initialValues}
+          version={profileVersion}
+        />
+      ),
+    },
+    {
+      component: (
+        <Addresses
+          inEditMode={inEditMode}
+          addresses={addresses}
+          version={profileVersion}
+        />
+      ),
+    },
+  ];
 
   Modal.setAppElement('#__next');
 
@@ -41,6 +79,14 @@ const ProfilePage: NextPage<AuthState> = () => {
           firstName: response.firstName ?? '',
           lastName: response.lastName ?? '',
           dateOfBirth: response.dateOfBirth ?? '',
+        });
+
+        setAddresses({
+          addresses: response.addresses,
+          billingAddressIds: response.billingAddressIds ?? [],
+          defaultBillingAddressId: response.defaultBillingAddressId ?? '',
+          defaultShippingAddressId: response.defaultShippingAddressId ?? '',
+          shippingAddressIds: response.shippingAddressIds ?? [],
         });
 
         setProfileVersion(response?.version ?? INIT_ZERO);
@@ -70,13 +116,7 @@ const ProfilePage: NextPage<AuthState> = () => {
           />
           Edit
         </label>
-        {initialValues && (
-          <UserInfo
-            inEditMode={inEditMode}
-            initialValues={initialValues}
-            version={profileVersion}
-          />
-        )}
+        {initialValues && tabData[activeContentIndex].component}
       </div>
     </div>
   );
