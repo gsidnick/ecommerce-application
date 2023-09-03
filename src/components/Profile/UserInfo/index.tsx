@@ -16,6 +16,7 @@ import { dateSchema, emailSchema, nameSchema } from '@/validation/schemas';
 import Loader from '../../ui/loader/Loader';
 import CustomerRepository from '../../../api/repositories/CustomerRepository';
 import { RegisterProps } from '../../../types';
+import PasswordChangeModal from '../ChangePassword';
 
 export type ProfileChangableProps = Pick<
   RegisterProps,
@@ -35,6 +36,15 @@ const UserInfo: FC<IUserInfoProps> = ({
 }: IUserInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [profileVersion, setProfileVersion] = useState(version);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (): void => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = (): void => {
+    setIsModalOpen(false);
+  };
 
   const validationSchema = Yup.object({
     email: emailSchema,
@@ -102,80 +112,89 @@ const UserInfo: FC<IUserInfoProps> = ({
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      <Form>
-        <div className="mt-4 border-b border-gray-900/10">
-          <div className="mb-4">
-            <CustomInput
-              name="email"
-              type="text"
-              placeholder="Email"
-              disabled={!inEditMode}
-            />
+    <>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form>
+          <div className="mt-4 border-b border-gray-900/10">
+            <div className="mb-4">
+              <CustomInput
+                name="email"
+                type="text"
+                placeholder="Email"
+                disabled={!inEditMode}
+              />
+            </div>
+            <div className="relative flex mb-4">
+              <CustomInput
+                name="password"
+                type="password"
+                placeholder="**********"
+                disabled
+              />
+              <button
+                type="button"
+                className={`ml-2 p-2 ${
+                  inEditMode ? 'text-white' : 'text-gray-600'
+                } whitespace-nowrap rounded-md border border-neutral-800`}
+                disabled={!inEditMode}
+                onClick={openModal}
+              >
+                🔑 change
+              </button>
+            </div>
+            <div className="mb-4">
+              <CustomInput
+                name="firstName"
+                type="text"
+                placeholder="First Name"
+                disabled={!inEditMode}
+                isWhiteSpacesAllowed
+              />
+            </div>
+            <div className="mb-4">
+              <CustomInput
+                name="lastName"
+                type="text"
+                placeholder="Last Name"
+                disabled={!inEditMode}
+                isWhiteSpacesAllowed
+              />
+            </div>
+            <div className="mb-4">
+              <CustomInput
+                name="dateOfBirth"
+                type="date"
+                disabled={!inEditMode}
+                isWhiteSpacesAllowed
+              />
+            </div>
           </div>
-          <div className="relative flex mb-4">
-            <CustomInput
-              name="password"
-              type="password"
-              placeholder="**********"
-              disabled
-            />
-            <button
-              type="button"
-              className={`ml-2 p-2 ${
-                inEditMode ? 'text-white' : 'text-gray-600'
-              } whitespace-nowrap rounded-md border border-neutral-800`}
-              disabled={!inEditMode}
-            >
-              🔑 change
-            </button>
-          </div>
-          <div className="mb-4">
-            <CustomInput
-              name="firstName"
-              type="text"
-              placeholder="First Name"
-              disabled={!inEditMode}
-              isWhiteSpacesAllowed
-            />
-          </div>
-          <div className="mb-4">
-            <CustomInput
-              name="lastName"
-              type="text"
-              placeholder="Last Name"
-              disabled={!inEditMode}
-              isWhiteSpacesAllowed
-            />
-          </div>
-          <div className="mb-4">
-            <CustomInput
-              name="dateOfBirth"
-              type="date"
-              disabled={!inEditMode}
-              isWhiteSpacesAllowed
-            />
-          </div>
-        </div>
 
-        <button
-          type="submit"
-          className={`flex w-full items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
-            isLoading ? 'cursor-not-allowed' : ''
-          }`}
-          disabled={isLoading}
-        >
-          {isLoading ? <Loader /> : ''}
-          <span className="mx-[4px]">
-            {isLoading ? 'Saving profile...' : 'Save profile'}
-          </span>
-        </button>
-      </Form>
-    </Formik>
+          <button
+            type="submit"
+            className={`flex w-full items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 ${
+              isLoading ? 'cursor-not-allowed' : ''
+            }`}
+            disabled={isLoading}
+          >
+            {isLoading ? <Loader /> : ''}
+            <span className="mx-[4px]">
+              {isLoading ? 'Saving profile...' : 'Save profile'}
+            </span>
+          </button>
+        </Form>
+      </Formik>
+      <PasswordChangeModal
+        isOpen={isModalOpen}
+        email={initialValues.email}
+        closeModal={closeModal}
+        version={version}
+      />
+    </>
   );
 };
 

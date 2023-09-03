@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
+import Modal from 'react-modal';
 import { Customer } from '@commercetools/platform-sdk';
 import { AuthState } from '../../store/slices/authSlice';
 import CustomerController from '../../api/controllers/CustomerController';
@@ -15,6 +16,8 @@ const ProfilePage: NextPage<AuthState> = () => {
   const [inEditMode, setInEditMode] = useState(false);
   const [initialValues, setInitialValues] = useState<ProfileChangableProps>();
   const [profileVersion, setProfileVersion] = useState<number>(INIT_ZERO);
+
+  Modal.setAppElement('#__next');
 
   useEffect(() => {
     const getData = async (): Promise<Customer> => {
