@@ -88,7 +88,7 @@ const CustomInput: FC<InputProps> = (props) => {
         onChange={handleChange}
         disabled={disabled}
       />
-      {type === 'password' && (
+      {type === 'password' && !disabled && (
         <button
           type="button"
           className={`absolute right-3 top-3 text-white transition-transform ease-in-out ${
@@ -104,7 +104,9 @@ const CustomInput: FC<InputProps> = (props) => {
       ) : (
         ''
       )}
-      {isSignUpPassInput && touched && <ValidationPrompt validation={value} />}
+      {isSignUpPassInput && touched && !disabled && (
+        <ValidationPrompt validation={value} />
+      )}
     </>
   );
 };
