@@ -174,19 +174,16 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       <div id={id} className={styles.cardWrapper}>
         <div className={`${styles.container} text-white`}>
           <div className={`${styles.imageWrapper} bg-white`}>
-            {/* <Image
-              src={getActiveVariantImage()}
-              alt={name}
-              // className={styles.image}
-              // width={220}
-              // height={500}
-            /> */}
             <picture>
-              <img src={getActiveVariantImage()} alt="sdfsdsf" className={styles.image}/>
+              <img
+                src={getActiveVariantImage()}
+                alt="sdfsdsf"
+                className={styles.image}
+              />
             </picture>
           </div>
           <div className={`${styles.infoWrapper}`}>
-            <div className="flex">
+            <div className={styles.colorsWrapper}>
               {getAvailableColors().map((color) => (
                 <div
                   key={color.color}
@@ -202,10 +199,12 @@ const ProductCard: FC<ProductCardProps> = (props) => {
                 />
               ))}
             </div>
-            <p className={styles.title}>{name}</p>
-            <p className={styles.modelName}>{model}</p>
-            <p className={styles.description}>{briefDescription}</p>
-            <div className="flex justify-between">
+            <div className={styles.text}>
+              <p className={styles.title}>{name}</p>
+              <p className={styles.modelName}>{model}</p>
+              <p className={styles.description}>{briefDescription}</p>
+            </div>
+            <div className={`${styles.priceSection} flex justify-between`}>
               <div>
                 <p className={`${styles.oldPciceWrapper} text-sm line-through`}>
                   {currency} {getActiveVariantPrice()}
@@ -214,12 +213,12 @@ const ProductCard: FC<ProductCardProps> = (props) => {
                   {currency} {getActiveVariantDiscountPrice()}
                 </p>
               </div>
-              <div
+              {/* <div
                 role="button"
                 className={`${styles.button} rounded-md bg-slate-500 text-white`}
               >
                 Add to cart
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
