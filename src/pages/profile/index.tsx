@@ -45,13 +45,7 @@ const ProfilePage: NextPage<AuthState> = () => {
       ),
     },
     {
-      component: (
-        <Addresses
-          inEditMode={inEditMode}
-          addresses={addresses}
-          version={profileVersion}
-        />
-      ),
+      component: <Addresses inEditMode={inEditMode} addresses={addresses} />,
     },
   ];
 
