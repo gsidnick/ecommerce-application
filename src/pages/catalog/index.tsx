@@ -27,6 +27,7 @@ function Catalog(): ReactElement {
     filterCategory,
     filteredAllProducts,
     filterPaginationPage,
+    priceSliderValues: { min, max },
   } = useAppSelector(selectFilterState);
   const [brands, setBrands] = useState<string[]>([]);
 
@@ -61,7 +62,7 @@ function Catalog(): ReactElement {
 
   useEffect(() => {
     dispatch(getFilteredProducts({}));
-  }, [filterPaginationPage]);
+  }, [filterPaginationPage, min, max]);
 
   return (
     <div className="flex justify-between ">

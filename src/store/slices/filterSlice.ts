@@ -19,6 +19,7 @@ interface ProductProjectionPagedQueryResponse {
 const NO_PRODUCTS_COUNT = 0;
 const FIRST_INDEX_OF_ARRAY = 0;
 const LAST_INDEX_OF_ARRAY = -1;
+const FRACTION_DIGITS_DEFAULT_MULT = 100;
 
 export const getFilteredProducts = createAsyncThunk(
   'filter/fetchFilteredProducts',
@@ -40,8 +41,14 @@ export const getFilteredProducts = createAsyncThunk(
 
     const allState = getState() as RootState;
 
-    const { filterCategory, sortBy, offSet, cardsLimitPerPage, filterByBrand } =
-      allState.filter;
+    const {
+      filterCategory,
+      sortBy,
+      offSet,
+      cardsLimitPerPage,
+      filterByBrand,
+      priceSliderValues,
+    } = allState.filter;
     const allFiltersQueryString: string[] = [];
 
     const filterCategoryQueryString = filterCategory.length
@@ -59,13 +66,19 @@ export const getFilteredProducts = createAsyncThunk(
       });
 
       allFiltersQueryString.push(
-        `variants.attributes.brand.key:${res}`.slice(FIRST_INDEX_OF_ARRAY, LAST_INDEX_OF_ARRAY)
+        `variants.attributes.brand.key:${res}`.slice(
+          FIRST_INDEX_OF_ARRAY,
+          LAST_INDEX_OF_ARRAY
+        )
       );
     }
 
-    // const { min, max } = priceSliderValues;
+    const { min, max } = priceSliderValues;
     allFiltersQueryString.push(
-      `variants.price.centAmount:range (0 to 90000000)`
+      `variants.price.centAmount:range (${
+        min * FRACTION_DIGITS_DEFAULT_MULT
+      } to ${max * FRACTION_DIGITS_DEFAULT_MULT})`
+      // `variants.price.centAmount:range (0 to 90000000)`
     );
 
     const sortQueryString = sortBy.length ? sortBy : undefined;
@@ -102,8 +115,7 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
 
     const allState = getState() as RootState;
 
-    const { filterCategory, sortBy, offSet, filterByBrand } =
-      allState.filter;
+    const { filterCategory, sortBy, offSet, filterByBrand } = allState.filter;
     const allFiltersQueryString: string[] = [];
 
     const filterCategoryQueryString = filterCategory.length
@@ -121,7 +133,10 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
       });
 
       allFiltersQueryString.push(
-        `variants.attributes.brand.key:${res}`.slice(FIRST_INDEX_OF_ARRAY, LAST_INDEX_OF_ARRAY)
+        `variants.attributes.brand.key:${res}`.slice(
+          FIRST_INDEX_OF_ARRAY,
+          LAST_INDEX_OF_ARRAY
+        )
       );
     }
 
@@ -200,6 +215,7 @@ export const filterSlice = createSlice({
       return {
         ...state,
         filterCategory: action.payload,
+        filterPaginationPage: 0,
       };
     },
     setMinSliderValue(state: FilterState, action: PayloadAction<number>) {
@@ -222,6 +238,7 @@ export const filterSlice = createSlice({
           filterByBrand: filterByBrand.includes(action.payload)
             ? filterByBrand.filter((brand) => brand !== action.payload)
             : filterByBrand,
+          filterPaginationPage: 0,
         };
       }
 
@@ -233,6 +250,7 @@ export const filterSlice = createSlice({
       return {
         ...state,
         sortBy: newSortByValue,
+        filterPaginationPage: 0,
       };
     },
     setOffsetValue(state: FilterState, action: PayloadAction<number>) {
@@ -245,6 +263,7 @@ export const filterSlice = createSlice({
       return {
         ...state,
         cardsLimitPerPage: action.payload,
+        filterPaginationPage: 0,
       };
     },
     setFilterPaginationPage(state: FilterState, action: PayloadAction<number>) {

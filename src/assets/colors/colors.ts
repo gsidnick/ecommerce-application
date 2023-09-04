@@ -184,4 +184,8 @@ export const colors: Color[] = [
     name: 'Red',
     hex: '#ff0000',
   },
+  {
+    name: 'Mahogany Burst',
+    hex: '#C04000',
+  },
 ];
