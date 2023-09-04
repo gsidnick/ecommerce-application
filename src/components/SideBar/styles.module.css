@@ -1,0 +1,12 @@
+.titleWrapper {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.categoriesWrapper {
+  border-bottom: 1px solid #383838;
+  padding: 15px 5px 15px 10px;
+  margin-bottom: 10px;
+}
