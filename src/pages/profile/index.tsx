@@ -66,8 +66,6 @@ const ProfilePage: NextPage<AuthState> = () => {
 
     getData()
       .then((response) => {
-        console.log(response);
-
         setInitialValues({
           email: response.email,
           firstName: response.firstName ?? '',
