@@ -1,78 +1,124 @@
-import React, { useState, useEffect, ReactElement } from 'react';
-import Slider from 'rc-slider';
-import { useDebouncedCallback } from 'use-debounce';
-import { ProductProjection } from '@commercetools/platform-sdk';
+import React, { useState, ReactElement } from 'react';
+// import Slider from 'rc-slider';
+// import { useDebouncedCallback } from 'use-debounce';
+// import { ProductProjection } from '@commercetools/platform-sdk';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { useAppSelector } from '@/hooks/useAppSelector';
+// import { useAppSelector } from '@/hooks/useAppSelector';
 import {
   setMinSliderValue,
   setMaxSliderValue,
 } from '@/store/slices/filterSlice';
-import { extractAllPrices } from '../../helpers/productsHelpers';
+// import { extractAllPrices } from '../../helpers/productsHelpers';
 
 import 'rc-slider/assets/index.css';
 import styles from './styles.module.css';
 
-interface IFilterPriceSlider {
-  productsItems: ProductProjection[];
-}
+// interface IFilterPriceSlider {
+//   productsItems: ProductProjection[];
+// }
 
-const DEBOUNCE_TIME = 200;
-const INDEX_BEGIN = 0;
-const INDEX_END = 1;
+// const DEBOUNCE_TIME = 200;
+// const INDEX_BEGIN = 0;
+// const INDEX_END = 1;
 
-const FilterPriceSlider = ({
-  productsItems,
-}: IFilterPriceSlider): ReactElement => {
+// const FilterPriceSlider = ({
+//   productsItems,
+// }: IFilterPriceSlider): ReactElement => {
+  const FilterPriceSlider = (): ReactElement => {
   const dispatch = useAppDispatch();
-  const minFilterPriceGlobal = useAppSelector(
-    (state) => state.filter.priceSliderValues.min
-  );
-  const maxFilterPriceGlobal: number = useAppSelector(
-    (state) => state.filter.priceSliderValues.max
-  );
 
-  const [priceValue, setPriceValue] = useState<number[]>([
-    minFilterPriceGlobal,
-    maxFilterPriceGlobal,
-  ]);
+  const [minPrice, setMinPrice] = useState<string>('');
+  const [maxPrice, setMaxPrice] = useState<string>('');
 
-  const priceArray = extractAllPrices(productsItems);
+  // const minFilterPriceGlobal = useAppSelector(
+  //   (state) => state.filter.priceSliderValues.min
+  // );
+  // const maxFilterPriceGlobal: number = useAppSelector(
+  //   (state) => state.filter.priceSliderValues.max
+  // );
 
-  const reduxRequest = useDebouncedCallback((value) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const min: number = value[INDEX_BEGIN] as number;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const max: number = value[INDEX_END] as number;
-    dispatch(setMinSliderValue(min));
-    dispatch(setMaxSliderValue(max));
-  }, DEBOUNCE_TIME);
+  // const [priceValue, setPriceValue] = useState<number[]>([
+  //   minFilterPriceGlobal,
+  //   maxFilterPriceGlobal,
+  // ]);
 
-  const handleChangePrice = (value: number[]): void => {
-    const [min, max] = value;
-    setPriceValue([min, max]);
-    reduxRequest(value);
+  // const priceArray = extractAllPrices(productsItems);
+
+  // const reduxRequest = useDebouncedCallback(
+  //   (value: [min: number, max: number]) => {
+  //     const [min, max] = value;
+
+  //     dispatch(setMinSliderValue(min));
+  //     dispatch(setMaxSliderValue(max));
+  //   },
+  //   DEBOUNCE_TIME
+  // );
+
+  // const handleChangePrice = (value: number[]): void => {
+  //   const [min, max] = value;
+  //   setPriceValue([min, max]);
+  //   reduxRequest([min, max]);
+  // };
+
+  // useEffect(() => {
+  //   setPriceValue([
+  //     priceArray[INDEX_BEGIN],
+  //     priceArray[priceArray.length - INDEX_END],
+  //   ]);
+  //   reduxRequest([
+  //     priceArray[INDEX_BEGIN],
+  //     priceArray[priceArray.length - INDEX_END],
+  //   ]);
+  // }, []);
+
+  const handleChangePrice = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const { name, value } = event.target;
+    if (name === 'minPrice') {
+      setMinPrice(value);
+    }
+    if (name === 'maxPrice') {
+      setMaxPrice(value);
+    }
   };
 
-  useEffect(() => {
-    setPriceValue([
-      priceArray[INDEX_BEGIN],
-      priceArray[priceArray.length - INDEX_END],
-    ]);
-    reduxRequest([
-      priceArray[INDEX_BEGIN],
-      priceArray[priceArray.length - INDEX_END],
-    ]);
-  }, []);
+  const handleSubmit = (): void => {
+    dispatch(setMinSliderValue(Number(minPrice)));
+    dispatch(setMaxSliderValue(Number(maxPrice)));
+  };
 
   return (
     <div className={styles.priceFilterWrapper}>
-      <div className="flex h-16 items-center justify-around text-xl font-bold text-white-200">
-        <p>{priceValue[INDEX_BEGIN]}</p>
-        <p>-</p>
-        <p>{priceValue[INDEX_END]}</p>
+      <div className="text-white-200 flex h-16 w-36 items-center justify-between">
+        <input
+          type="text"
+          name="minPrice"
+          value={minPrice}
+          style={{ width: '100px' }}
+          onChange={handleChangePrice}
+          className="text-black"
+        />
+        <span>-</span>
+        <input
+          type="text"
+          name="maxPrice"
+          value={maxPrice}
+          style={{ width: '100px' }}
+          onChange={handleChangePrice}
+          className="text-black"
+        />
+        <button type="button" onClick={handleSubmit}>
+          OK
+        </button>
       </div>
-      <div className={styles.sliderWrapper}>
+      {/* <div className="text-white-200 flex h-16 items-center justify-around text-xl font-bold">
+        <p>{priceValue[INDEX_BEGIN]}</p>
+
+        <span>-</span>
+        <p>{priceValue[INDEX_END]}</p>
+      </div> */}
+      {/* <div className={styles.sliderWrapper}>
         {priceValue[INDEX_BEGIN] && priceValue[INDEX_END] && (
           <Slider
             range
@@ -91,7 +137,7 @@ const FilterPriceSlider = ({
             railStyle={{ backgroundColor: '#f1b8ff' }}
           />
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
