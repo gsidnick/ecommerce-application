@@ -19,6 +19,7 @@ class ProductController {
     return this.productRepository.getProductByID(id);
   }
 
+
   public async getProducts({
     filter,
     sort,
