@@ -186,7 +186,7 @@ const initialState: FilterState = {
   filterCategory: '',
   priceSliderValues: {
     min: 0,
-    max: 100000,
+    max: 10000000000,
   },
   filterPaginationPage: 0,
   sortBy: [],
@@ -272,6 +272,21 @@ export const filterSlice = createSlice({
         filterPaginationPage: action.payload,
       };
     },
+    resetAllFilters(state: FilterState) {
+      return {
+        ...state,
+        filterByBrand: [],
+        filterCategory: '',
+        priceSliderValues: {
+          min: 0,
+          max: 10000000000,
+        },
+        filterPaginationPage: 0,
+        sortBy: [],
+        offSet: 0,
+        cardsLimitPerPage: 20,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -323,6 +338,7 @@ export const {
   setSortByValue,
   setOffsetValue,
   setCardsLimitPerPage,
+  resetAllFilters,
 } = filterSlice.actions;
 export const selectFilterState = (state: RootState): FilterState =>
   state.filter;
