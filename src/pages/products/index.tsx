@@ -15,7 +15,7 @@ const Products = (): ReactElement => {
   useEffect(() => {
     // console.log('getFilteredProducts working');
 
-    dispatch(getFilteredProducts());
+    dispatch(getFilteredProducts({}));
     // dispatch(setStateFilteredProducts(data.body.results));
   }, []);
 

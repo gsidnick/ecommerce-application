@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ReactElement } from 'react';
 import Slider from 'rc-slider';
 import { useDebouncedCallback } from 'use-debounce';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import {
@@ -8,13 +9,12 @@ import {
   setMaxSliderValue,
 } from '@/store/slices/filterSlice';
 import { extractAllPrices } from '../../helpers/productsHelpers';
-import { IProduct } from '../../pages/products/typesProduct';
 
 import 'rc-slider/assets/index.css';
 import styles from './styles.module.css';
 
 interface IFilterPriceSlider {
-  productsItems: IProduct[];
+  productsItems: ProductProjection[];
 }
 
 const DEBOUNCE_TIME = 200;

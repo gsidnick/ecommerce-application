@@ -1,12 +1,18 @@
 import { ReactElement, useState, useEffect } from 'react';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import FilterCreatorBrand from '@/components/FilterCreatorBrand';
 import FilterPriceSlider from '@/components/FilterPriceSlider';
 
 import styles from './styles.module.css';
-import { filteredBrands } from './data';
-import { data } from '../../pages/products/dataProducts';
 
-const FilterPanelContainer = (): ReactElement => {
+interface IFilterPanelContainer {
+  filteredProducts: ProductProjection[];
+  filteredBrands: string[];
+}
+const FilterPanelContainer = ({
+  filteredProducts,
+  filteredBrands,
+}: IFilterPanelContainer): ReactElement => {
   const [filterPrice, setFilterPrice] = useState<boolean>(false);
 
   useEffect(() => {
@@ -23,7 +29,7 @@ const FilterPanelContainer = (): ReactElement => {
       </div>
       <div>
         {filterPrice && (
-          <FilterPriceSlider productsItems={data.results} />
+          <FilterPriceSlider productsItems={filteredProducts} />
         )}
       </div>
     </div>

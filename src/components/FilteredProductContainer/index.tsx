@@ -52,7 +52,7 @@ const FilteredProductContainer = (
   useEffect(() => {
     dispatch(setOffsetValue(filterPaginationPage * itemsPerPage));
     dispatch(setCardsLimitPerPage(itemsPerPage));
-    dispatch(getFilteredProducts());
+    dispatch(getFilteredProducts({}));
   }, [filterPaginationPage]);
 
   if (router.isFallback) {

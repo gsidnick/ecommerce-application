@@ -1,4 +1,4 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 // import { useRouter } from 'next/router';
 import SideBar from '../../components/SideBar';
 import FilterPanelContainer from '@/components/FilterPanelContainer';
@@ -8,11 +8,13 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import {
   getFilteredProducts,
+  getAllFilteredProductsWithoutLimit,
   selectFilterState,
 } from '@/store/slices/filterSlice';
 import { getAllCategories } from '@/store/slices/productsSlice';
 import styles from './styles.module.css';
 import { DEFAULT_LIMIT } from '@/api/constants';
+import { extractAllBrands } from '@/helpers/productsHelpers';
 
 // import { data } from './dataProducts';
 
@@ -21,29 +23,45 @@ import { DEFAULT_LIMIT } from '@/api/constants';
 // }: InferGetServerSidePropsType<typeof getServerSideProps>): ReactElement {
 function Catalog(): ReactElement {
   const dispatch = useAppDispatch();
-  // const router = useRouter();
-  const { filteredProducts, totalFilteredProducts } =
+  const { filteredProducts, totalFilteredProducts, filterCategory, filteredAllProducts } =
     useAppSelector(selectFilterState);
+  const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchProducts = (): void => {
-      dispatch(getFilteredProducts());
+      dispatch(getFilteredProducts({}));
     };
     const fetchCategories = (): void => {
-      dispatch(getAllCategories());
+      dispatch(getAllCategories({}));
     };
+
+    const fetchAllProductsWithoutLimit = (): void => {
+      dispatch(getAllFilteredProductsWithoutLimit({}));
+    };
+    const brandsArr = extractAllBrands(filteredAllProducts);
 
     fetchCategories();
     fetchProducts();
+    fetchAllProductsWithoutLimit();
+    setBrands(brandsArr);
   }, []);
 
+  useEffect(() => {
+    dispatch(getFilteredProducts({}));
+    dispatch(getAllFilteredProductsWithoutLimit({}));
+    const brandsArr = extractAllBrands(filteredAllProducts);
+    setBrands(brandsArr);
+  }, [filterCategory]);
 
   return (
     <div className="flex justify-between ">
       <div>
         <SideBar className="w-72 flex-none" />
         <div className={`${styles.filterPanelWrapper} text-white`}>
-          <FilterPanelContainer />
+          <FilterPanelContainer
+            filteredProducts={filteredProducts}
+            filteredBrands={brands}
+          />
         </div>
       </div>
       <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 px-5">
