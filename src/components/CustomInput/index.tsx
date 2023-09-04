@@ -10,11 +10,13 @@ type InputProps = FieldHookConfig<string> & {
   isWhiteSpacesAllowed?: boolean;
   isTrailingWhiteSpacesAllowed?: boolean;
   disabled?: boolean;
+  label?: string;
 };
 
 const CustomInput: FC<InputProps> = (props) => {
   const [visionPass, setVisionPass] = useState<boolean>(false);
   const {
+    label,
     type,
     placeholder,
     isSignUpPassInput,
@@ -80,6 +82,11 @@ const CustomInput: FC<InputProps> = (props) => {
   };
   return (
     <>
+      {label && (
+        <label className="text-sm text-white" htmlFor={name}>
+          {label}
+        </label>
+      )}
       <input
         {...field}
         type={visionPass ? 'text' : type}
@@ -88,10 +95,12 @@ const CustomInput: FC<InputProps> = (props) => {
         onChange={handleChange}
         disabled={disabled}
       />
-      {type === 'password' && (
+      {type === 'password' && !disabled && (
         <button
           type="button"
-          className={`absolute right-3 top-3 text-white transition-transform ease-in-out ${
+          className={`absolute ${
+            label ? 'right-3 top-8' : 'right-3 top-3'
+          } text-white transition-transform ease-in-out ${
             visionPass ? 'rotate-0' : 'rotate-180'
           }`}
           onClick={toggleVisionPass}
@@ -104,7 +113,9 @@ const CustomInput: FC<InputProps> = (props) => {
       ) : (
         ''
       )}
-      {isSignUpPassInput && touched && <ValidationPrompt validation={value} />}
+      {isSignUpPassInput && touched && !disabled && (
+        <ValidationPrompt validation={value} />
+      )}
     </>
   );
 };
@@ -114,6 +125,7 @@ CustomInput.defaultProps = {
   isWhiteSpacesAllowed: false,
   isTrailingWhiteSpacesAllowed: false,
   disabled: false,
+  label: '',
 };
 
 export default CustomInput;
