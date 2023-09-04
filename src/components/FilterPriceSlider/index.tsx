@@ -24,7 +24,7 @@ import styles from './styles.module.css';
 // const FilterPriceSlider = ({
 //   productsItems,
 // }: IFilterPriceSlider): ReactElement => {
-  const FilterPriceSlider = (): ReactElement => {
+const FilterPriceSlider = (): ReactElement => {
   const dispatch = useAppDispatch();
 
   const [minPrice, setMinPrice] = useState<string>('');
@@ -90,14 +90,17 @@ import styles from './styles.module.css';
 
   return (
     <div className={styles.priceFilterWrapper}>
-      <div className="text-white-200 flex h-16 w-36 items-center justify-between">
+      <p className={styles.priceTitle}>Price</p>
+      <div
+        className={`${styles.inputWrapper} text-white-200 flex h-16 w-36 items-center justify-center gap-2`}
+      >
         <input
           type="text"
           name="minPrice"
           value={minPrice}
           style={{ width: '100px' }}
           onChange={handleChangePrice}
-          className="text-black"
+          className={`${styles.inputText} text-black`}
         />
         <span>-</span>
         <input
@@ -106,9 +109,9 @@ import styles from './styles.module.css';
           value={maxPrice}
           style={{ width: '100px' }}
           onChange={handleChangePrice}
-          className="text-black"
+          className={`${styles.inputText} text-black`}
         />
-        <button type="button" onClick={handleSubmit}>
+        <button type="button" onClick={handleSubmit} className={styles.submitBtn}>
           OK
         </button>
       </div>

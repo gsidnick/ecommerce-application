@@ -22,7 +22,7 @@ const FilterBrandElement = ({
       checked={checked}
       onChange={onChange}
     />
-    <label htmlFor={`brand_${brand}`}>{brand}</label>
+    <label htmlFor={`brand_${brand}`} className={styles.label}>{brand}</label>
   </li>
 );
 

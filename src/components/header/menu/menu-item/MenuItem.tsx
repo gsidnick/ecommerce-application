@@ -12,7 +12,6 @@ interface IMenuItem {
 function MenuItem({ item }: IMenuItem): ReactElement {
   const dispatch = useAppDispatch();
   const handleClick = (): void => {
-    console.log('item', item);
     if (item.name === 'CATALOG') {
       dispatch(resetAllFilters());
     }

@@ -16,9 +16,6 @@ import styles from './styles.module.css';
 import { DEFAULT_LIMIT } from '@/api/constants';
 import { extractAllBrands } from '@/helpers/productsHelpers';
 
-// function Catalog({
-//   res,
-// }: InferGetServerSidePropsType<typeof getServerSideProps>): ReactElement {
 function Catalog(): ReactElement {
   const dispatch = useAppDispatch();
   const {
@@ -88,13 +85,5 @@ function Catalog(): ReactElement {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps<
-//   ClientResponse<ProductProjectionPagedQueryResponse>
-// > = async () => {
-//   const productController = new ProductController();
-//   const res = await productController.getProducts();
-
-//   return { props: { res } };
-// };
 
 export default Catalog;

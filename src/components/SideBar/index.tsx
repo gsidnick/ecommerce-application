@@ -4,17 +4,12 @@ import { EMPTY_DATA } from '../../constants';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { selectProductState } from '@/store/slices/productsSlice';
-import {
-  // getFilteredProducts,
-  setFilterCategory,
-  // getAllFilteredProductsWithoutLimit,
-} from '@/store/slices/filterSlice';
+import { setFilterCategory } from '@/store/slices/filterSlice';
 import { ICategoryWithSubcategories } from '@/api/types';
 
-interface ISideBarProps {
-  className?: string;
-}
-const SideBar = ({ className }: ISideBarProps): ReactElement => {
+import styles from './styles.module.css';
+
+const SideBar = (): ReactElement => {
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
 
   const dispatch = useAppDispatch();
@@ -39,7 +34,7 @@ const SideBar = ({ className }: ISideBarProps): ReactElement => {
   const renderMenu = (
     menuItems: ICategoryWithSubcategories[]
   ): ReactElement => (
-    <ul className="ml-8">
+    <ul className="ml-4">
       {menuItems.map((menuItem) => (
         <li key={menuItem.id}>
           <div className="flex justify-between">
@@ -74,8 +69,9 @@ const SideBar = ({ className }: ISideBarProps): ReactElement => {
   );
 
   return (
-    <div className={className}>
-      <nav className="flex w-full justify-between">
+    <div className={styles.categoriesWrapper}>
+      <nav className="flex w-full justify-between flex-col">
+        <p className={styles.titleWrapper}>Categories</p>
         <div className="w-full text-white">{renderMenu(categories)}</div>
       </nav>
     </div>
