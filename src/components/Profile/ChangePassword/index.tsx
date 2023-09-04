@@ -66,8 +66,6 @@ const PasswordChangeModal: FC<IChangePassProps> = ({
             response.token?.token.length
           ) {
             if (response.token) {
-              console.log('Save new token', response.token);
-
               const { token, refreshToken, expirationTime } = response.token;
 
               dispatch(setAuthState(true));
@@ -109,7 +107,6 @@ const PasswordChangeModal: FC<IChangePassProps> = ({
         closeModal();
       })
       .catch((e: HttpErrorType) => {
-        console.log(e);
         setIsLoading(false);
         toast.error(`Can't change password. ${e.message}`);
       });

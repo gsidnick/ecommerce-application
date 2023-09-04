@@ -55,7 +55,6 @@ const UserInfo: FC<IUserInfoProps> = ({
 
   const handleSubmit = (values: ProfileChangableProps): void => {
     setIsLoading(true);
-    console.log('In submit handler');
 
     const updateUser = async (): Promise<ClientResponse<Customer>> => {
       const customerRepo = new CustomerRepository();
@@ -91,20 +90,17 @@ const UserInfo: FC<IUserInfoProps> = ({
         version: profileVersion,
         actions,
       });
-      console.log(response);
 
       return response;
     };
 
     updateUser()
       .then((response) => {
-        console.log(response);
         toast.success('Changing was succesful');
         setProfileVersion(response.body?.version ?? profileVersion);
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error('Error in changing profile');
-        console.log(error);
       })
       .finally(() => {
         setIsLoading(false);
