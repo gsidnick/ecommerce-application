@@ -18,7 +18,7 @@ const SortButtonsPanel = ({
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     dispatch(setSortByValue(event.target.value));
-    dispatch(getFilteredProducts());
+    dispatch(getFilteredProducts({}));
   };
 
   return (

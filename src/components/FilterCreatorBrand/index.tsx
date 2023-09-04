@@ -1,52 +1,49 @@
-import React, { ReactElement, memo } from 'react';
+import React, { ReactElement, memo, useEffect, useState } from 'react';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import FilterBrandElement from './FilterBrandElement';
 
-import { IFilteredBrands } from '../FilterPanelContainer/data';
 import {
   selectFilterState,
   updateFilterBrands,
+  getFilteredProducts,
 } from '@/store/slices/filterSlice';
 
 import styles from './styles.module.css';
 
 interface IFilterCreatorBrand {
-  brandsFiltered: IFilteredBrands;
+  brandsFiltered: string[];
 }
 
 const FilterCreatorBrand = (props: IFilterCreatorBrand): ReactElement => {
   const { brandsFiltered } = props;
 
   const dispatch = useAppDispatch();
-  const { filterByBrand } = useAppSelector(selectFilterState);
+  const { filterByBrand, filterCategory } = useAppSelector(selectFilterState);
+  const [activeBrands, setActiveBrands] = useState<string[]>(brandsFiltered);
 
   const toggleBrandToRedux = (brand: string): void => {
-    const newFilterByBrand = [...filterByBrand];
-    if (!newFilterByBrand.includes(brand)) {
-      dispatch(updateFilterBrands([...newFilterByBrand, brand]));
-    } else {
-      dispatch(
-        updateFilterBrands(newFilterByBrand.filter((item) => item !== brand))
-      );
-    }
+    dispatch(updateFilterBrands(brand));
+    dispatch(getFilteredProducts({}));
   };
+
+  useEffect(() => {
+    dispatch(getFilteredProducts({}));
+  }, [filterByBrand]);
+
+  useEffect(() => {
+    setActiveBrands(brandsFiltered);
+  }, [filterCategory]);
 
   return (
     <ul className={styles.brandsContainer}>
-      {brandsFiltered?.map((brand) => (
-        <li key={brand} className={styles.brandElement}>
-          <input
-            type="checkbox"
-            className={styles.brandsCheckbox}
-            id={`brand_${brand}`}
-            name={`brand_${brand}`}
-            checked={filterByBrand.includes(brand)}
-            onChange={(): void => {
-              toggleBrandToRedux(brand);
-            }}
-          />
-          <label htmlFor={`brand_${brand}`}>{brand}</label>
-        </li>
+      {activeBrands?.map((brand) => (
+        <FilterBrandElement
+          brand={brand}
+          checked={filterByBrand.includes(brand)}
+          onChange={(): void => toggleBrandToRedux(brand)}
+          key={`key_${brand}`}
+        />
       ))}
     </ul>
   );
