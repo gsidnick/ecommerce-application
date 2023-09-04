@@ -7,7 +7,6 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import {
   setFilterPaginationPage,
   selectFilterState,
-  getFilteredProducts,
   setOffsetValue,
   setCardsLimitPerPage,
 } from '@/store/slices/filterSlice';
@@ -52,7 +51,6 @@ const FilteredProductContainer = (
   useEffect(() => {
     dispatch(setOffsetValue(filterPaginationPage * itemsPerPage));
     dispatch(setCardsLimitPerPage(itemsPerPage));
-    dispatch(getFilteredProducts({}));
   }, [filterPaginationPage]);
 
   if (router.isFallback) {

@@ -28,9 +28,7 @@ const FilterPanelContainer = ({
         )}
       </div>
       <div>
-        {filterPrice && (
-          <FilterPriceSlider productsItems={filteredProducts} />
-        )}
+        {filterPrice && <FilterPriceSlider productsItems={filteredProducts} />}
       </div>
     </div>
   );

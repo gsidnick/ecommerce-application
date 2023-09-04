@@ -16,15 +16,18 @@ import styles from './styles.module.css';
 import { DEFAULT_LIMIT } from '@/api/constants';
 import { extractAllBrands } from '@/helpers/productsHelpers';
 
-// import { data } from './dataProducts';
-
 // function Catalog({
 //   res,
 // }: InferGetServerSidePropsType<typeof getServerSideProps>): ReactElement {
 function Catalog(): ReactElement {
   const dispatch = useAppDispatch();
-  const { filteredProducts, totalFilteredProducts, filterCategory, filteredAllProducts } =
-    useAppSelector(selectFilterState);
+  const {
+    filteredProducts,
+    totalFilteredProducts,
+    filterCategory,
+    filteredAllProducts,
+    filterPaginationPage,
+  } = useAppSelector(selectFilterState);
   const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
@@ -49,9 +52,16 @@ function Catalog(): ReactElement {
   useEffect(() => {
     dispatch(getFilteredProducts({}));
     dispatch(getAllFilteredProductsWithoutLimit({}));
+  }, [filterCategory]);
+
+  useEffect(() => {
     const brandsArr = extractAllBrands(filteredAllProducts);
     setBrands(brandsArr);
-  }, [filterCategory]);
+  }, [filteredAllProducts]);
+
+  useEffect(() => {
+    dispatch(getFilteredProducts({}));
+  }, [filterPaginationPage]);
 
   return (
     <div className="flex justify-between ">
