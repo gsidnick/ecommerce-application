@@ -25,19 +25,19 @@ const FilterCreatorBrand = (props: IFilterCreatorBrand): ReactElement => {
   const toggleBrandToRedux = (brand: string): void => {
     dispatch(updateFilterBrands(brand));
 
-    const getProducts = async (): Promise<void> => {
-      await dispatch(getFilteredProducts({}));
+    const getProducts = (): void => {
+      dispatch(getFilteredProducts({}));
     };
 
-    void getProducts();
+    getProducts();
   };
 
   useEffect(() => {
-    const getProducts = async (): Promise<void> => {
-      await dispatch(getFilteredProducts({}));
+    const getProducts = (): void => {
+      dispatch(getFilteredProducts({}));
     };
 
-    void getProducts();
+    getProducts();
   }, [filterByBrand]);
 
   useEffect(() => {

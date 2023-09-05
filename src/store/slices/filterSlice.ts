@@ -273,7 +273,6 @@ export const filterSlice = createSlice({
       return {
         ...state,
         cardsLimitPerPage: action.payload,
-        filterPaginationPage: 0,
       };
     },
     setFilterPaginationPage(state: FilterState, action: PayloadAction<number>) {

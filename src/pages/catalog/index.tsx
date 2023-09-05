@@ -29,32 +29,32 @@ function Catalog(): ReactElement {
   const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchProducts = async (): Promise<void> => {
-      await dispatch(getFilteredProducts({}));
+    const fetchProducts = (): void => {
+      dispatch(getFilteredProducts({}));
     };
-    const fetchCategories = async (): Promise<void> => {
-      await dispatch(getAllCategories());
+    const fetchCategories = (): void => {
+      dispatch(getAllCategories());
     };
 
-    const fetchAllProductsWithoutLimit = async (): Promise<void> => {
-      await dispatch(getAllFilteredProductsWithoutLimit({}));
+    const fetchAllProductsWithoutLimit = (): void => {
+      dispatch(getAllFilteredProductsWithoutLimit({}));
     };
     const brandsArr = extractAllBrands(filteredAllProducts);
 
-    void fetchCategories();
-    void fetchProducts();
-    void fetchAllProductsWithoutLimit();
+    fetchCategories();
+    fetchProducts();
+    fetchAllProductsWithoutLimit();
 
     setBrands(brandsArr);
   }, []);
 
   useEffect(() => {
-    const getProducts = async (): Promise<void> => {
-      await dispatch(getFilteredProducts({}));
-      await dispatch(getAllFilteredProductsWithoutLimit({}));
+    const getProducts = (): void => {
+      dispatch(getFilteredProducts({}));
+      dispatch(getAllFilteredProductsWithoutLimit({}));
     };
 
-    void getProducts();
+    getProducts();
   }, [filterCategory]);
 
   useEffect(() => {
@@ -63,11 +63,11 @@ function Catalog(): ReactElement {
   }, [filteredAllProducts]);
 
   useEffect(() => {
-    const getProducts = async (): Promise<void> => {
-      await dispatch(getFilteredProducts({}));
+    const getProducts = (): void => {
+      dispatch(getFilteredProducts({}));
     };
 
-    void getProducts();
+    getProducts();
   }, [filterPaginationPage, min, max]);
 
   return (

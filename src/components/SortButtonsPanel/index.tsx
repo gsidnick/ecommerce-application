@@ -21,11 +21,11 @@ const SortButtonsPanel = ({
   ): void => {
     dispatch(setSortByValue(event.target.value));
 
-    const getProducts = async (): Promise<void> => {
-      await dispatch(getFilteredProducts({}));
+    const getProducts = (): void => {
+      dispatch(getFilteredProducts({}));
     };
 
-    void getProducts();
+    getProducts();
   };
 
   return (

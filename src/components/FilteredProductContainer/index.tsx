@@ -28,7 +28,6 @@ const FilteredProductContainer = (
   props: IFilteredProductContainer
 ): ReactElement => {
   const { filteredProducts, itemsPerPage } = props;
-  // const [itemOffset, setItemOffset] = useState(ZERO_INDEX);
   const [pagesTotalCount, setPagesTotalCount] = useState(ZERO_INDEX);
 
   const { totalFilteredProducts, filterPaginationPage } =
@@ -38,7 +37,6 @@ const FilteredProductContainer = (
   const router = useRouter();
 
   const handlePageChange = (selectedItem: { selected: number }): void => {
-    console.log('event', selectedItem.selected);
 
     window.scrollTo(ZERO_INDEX, ZERO_INDEX);
     dispatch(setFilterPaginationPage(selectedItem.selected));
@@ -60,7 +58,6 @@ const FilteredProductContainer = (
   return (
     <div>
       <div
-        // key={filteredProducts[ZERO_INDEX].id}
         className={`${styles.gridItemContainer} grid grid-cols-5 gap-4`}
       >
         {filteredProducts.length &&
