@@ -1,6 +1,7 @@
 import { ReactElement, useState, ChangeEvent, KeyboardEvent } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 import search from '@/assets/images/search-icon.png';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import {
@@ -22,19 +23,20 @@ function Search(): ReactElement {
     setSearchValue(e.target.value);
   };
 
-  const handleSearch = async (): Promise<void> => {
-    await dispatch(getFilteredProducts({}));
-    await dispatch(getAllFilteredProductsWithoutLimit({}));
+  const handleSearch = (): void => {
     dispatch(setSearchQueryString(searchValue));
+    dispatch(getFilteredProducts({}));
+    dispatch(getAllFilteredProductsWithoutLimit({}));
     if (router.pathname !== '/catalog') {
-      await router.push('/catalog');
+      router.push('/catalog').catch((error) => {
+        toast.error(error as string);
+      });
     }
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
-    console.log(event);
     if (event.which === ENTER_KEY_CODE || event.keyCode === ENTER_KEY_CODE) {
-      void handleSearch();
+      handleSearch();
     }
   };
 
@@ -47,13 +49,13 @@ function Search(): ReactElement {
           name="search"
           className={styles.searchInput}
           onChange={handleChange}
-          onKeyDown={(e): void => void handleKeyDown(e)}
+          onKeyDown={(e): void => handleKeyDown(e)}
         />
       </div>
       <button
         type="button"
         className={`${styles.searchButton} text-white`}
-        onClick={(): void => void handleSearch()}
+        onClick={(): void => handleSearch()}
       >
         SEARCH
       </button>
