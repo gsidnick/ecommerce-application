@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { ReactElement } from 'react';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { resetAllFilters } from '@/store/slices/filterSlice';
+import {
+  resetAllFilters,
+  setFilterBreadCrumbs,
+} from '@/store/slices/filterSlice';
 
 import { IMenuLink } from './types';
 
@@ -14,6 +17,7 @@ function MenuItem({ item }: IMenuItem): ReactElement {
   const handleClick = (): void => {
     if (item.name === 'CATALOG') {
       dispatch(resetAllFilters());
+      dispatch(setFilterBreadCrumbs([]));
     }
   };
   return (

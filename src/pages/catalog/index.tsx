@@ -15,6 +15,7 @@ import { getAllCategories } from '@/store/slices/productsSlice';
 import styles from './styles.module.css';
 import { DEFAULT_LIMIT } from '@/api/constants';
 import { extractAllBrands } from '@/helpers/productsHelpers';
+import CategoryBreadcrumbs from '@/components/CategoryBreadcrumbs';
 
 function Catalog(): ReactElement {
   const dispatch = useAppDispatch();
@@ -73,13 +74,14 @@ function Catalog(): ReactElement {
   return (
     <div className="flex justify-between ">
       <div>
-        <SideBar className="flex-none w-72" />
+        <SideBar className="w-72 flex-none" />
         <div className={`${styles.filterPanelWrapper} text-white`}>
           <FilterPanelContainer filteredBrands={brands} />
         </div>
       </div>
-      <div className="flex flex-wrap justify-between flex-1 gap-2 px-5 mb-8">
+      <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 px-5">
         <div className="flex-1">
+          <CategoryBreadcrumbs />
           <SortButtonsPanel productsCount={totalFilteredProducts} />
           <FilteredProductContainer
             filteredProducts={filteredProducts}

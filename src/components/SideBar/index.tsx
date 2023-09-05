@@ -1,17 +1,19 @@
-import { ReactElement, useState, useEffect, memo } from 'react';
-import { EMPTY_DATA } from '../../constants';
-
+import React, { ReactElement, useState, useEffect, memo } from 'react';
+import { EMPTY_DATA } from '@/constants';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { selectProductState } from '@/store/slices/productsSlice';
-import { setFilterCategory } from '@/store/slices/filterSlice';
+import {
+  setFilterBreadCrumbs,
+  setFilterCategory,
+} from '@/store/slices/filterSlice';
 import { ICategoryWithSubcategories } from '@/api/types';
+import { buildBreadcrumbsMaker } from '@/components/CategoryCrumb/buildCrumbMaker';
 
 import styles from './styles.module.css';
 
 const SideBar = (): ReactElement => {
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
-
   const dispatch = useAppDispatch();
   const { categories } = useAppSelector(selectProductState);
 
@@ -29,6 +31,10 @@ const SideBar = (): ReactElement => {
     menuElement: ICategoryWithSubcategories
   ): void => {
     dispatch(setFilterCategory(menuElement.id));
+    const breadcrumbs: ReactElement[] = [];
+    const makeBreadcrumbs = buildBreadcrumbsMaker(categories, breadcrumbs);
+    makeBreadcrumbs(menuElement.id, categories);
+    dispatch(setFilterBreadCrumbs(breadcrumbs.reverse()));
   };
 
   const renderMenu = (
@@ -70,7 +76,7 @@ const SideBar = (): ReactElement => {
 
   return (
     <div className={styles.categoriesWrapper}>
-      <nav className="flex w-full justify-between flex-col">
+      <nav className="flex w-full flex-col justify-between">
         <p className={styles.titleWrapper}>Categories</p>
         <div className="w-full text-white">{renderMenu(categories)}</div>
       </nav>

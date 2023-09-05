@@ -1,0 +1,14 @@
+.breadcrumbs {
+  font-size: 24px;
+  color: #ffffff;
+  padding: 10px 5px;
+}
+
+.link {
+  color: #ffffff;
+}
+
+.link:hover {
+  color: #cecece;
+  text-decoration: underline;
+}
