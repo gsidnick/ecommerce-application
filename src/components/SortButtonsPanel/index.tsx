@@ -1,5 +1,8 @@
 import { ReactElement } from 'react';
-import { setSortByValue, getFilteredProducts } from '@/store/slices/filterSlice';
+import {
+  setSortByValue,
+  getFilteredProducts,
+} from '@/store/slices/filterSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 
 import styles from './styles.module.css';
@@ -11,14 +14,18 @@ interface ISortButtonsPanel {
 const SortButtonsPanel = ({
   productsCount,
 }: ISortButtonsPanel): ReactElement => {
-
   const dispatch = useAppDispatch();
 
   const handleChangeSelect = (
     event: React.ChangeEvent<HTMLSelectElement>
   ): void => {
     dispatch(setSortByValue(event.target.value));
-    dispatch(getFilteredProducts({}));
+
+    const getProducts = async (): Promise<void> => {
+      await dispatch(getFilteredProducts({}));
+    };
+
+    void getProducts();
   };
 
   return (

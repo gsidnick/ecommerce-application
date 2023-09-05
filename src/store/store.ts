@@ -35,22 +35,21 @@ export interface IPersistorStore {
   persistor: Persistor;
 }
 
-const setupStore = (): ToolkitStore =>
-  configureStore({
-    reducer: rootReducer,
-    devTools: true,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
-      }),
-  });
+const setupStore = configureStore({
+  reducer: rootReducer,
+  devTools: true,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
 
 export const makeStore = (): ToolkitStore & IPersistorStore => {
   const isServer = typeof window === 'undefined';
   if (isServer) {
-    return { ...setupStore(), persistor: persistStore(setupStore()) };
+    return { ...setupStore, persistor: persistStore(setupStore) };
   }
 
   const persistConfig = {
@@ -74,9 +73,10 @@ export const makeStore = (): ToolkitStore & IPersistorStore => {
 };
 
 export type RootState = ReturnType<typeof rootReducer>;
+
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
-export type ClientStore = ReturnType<typeof setupStore>;
+export type ClientStore = typeof setupStore;
 export type AppDispatch = ClientStore['dispatch'];
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,

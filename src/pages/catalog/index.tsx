@@ -29,27 +29,32 @@ function Catalog(): ReactElement {
   const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchProducts = (): void => {
-      dispatch(getFilteredProducts({}));
+    const fetchProducts = async (): Promise<void> => {
+      await dispatch(getFilteredProducts({}));
     };
-    const fetchCategories = (): void => {
-      dispatch(getAllCategories({}));
+    const fetchCategories = async (): Promise<void> => {
+      await dispatch(getAllCategories());
     };
 
-    const fetchAllProductsWithoutLimit = (): void => {
-      dispatch(getAllFilteredProductsWithoutLimit({}));
+    const fetchAllProductsWithoutLimit = async (): Promise<void> => {
+      await dispatch(getAllFilteredProductsWithoutLimit({}));
     };
     const brandsArr = extractAllBrands(filteredAllProducts);
 
-    fetchCategories();
-    fetchProducts();
-    fetchAllProductsWithoutLimit();
+    void fetchCategories();
+    void fetchProducts();
+    void fetchAllProductsWithoutLimit();
+
     setBrands(brandsArr);
   }, []);
 
   useEffect(() => {
-    dispatch(getFilteredProducts({}));
-    dispatch(getAllFilteredProductsWithoutLimit({}));
+    const getProducts = async (): Promise<void> => {
+      await dispatch(getFilteredProducts({}));
+      await dispatch(getAllFilteredProductsWithoutLimit({}));
+    };
+
+    void getProducts();
   }, [filterCategory]);
 
   useEffect(() => {
@@ -58,21 +63,22 @@ function Catalog(): ReactElement {
   }, [filteredAllProducts]);
 
   useEffect(() => {
-    dispatch(getFilteredProducts({}));
+    const getProducts = async (): Promise<void> => {
+      await dispatch(getFilteredProducts({}));
+    };
+
+    void getProducts();
   }, [filterPaginationPage, min, max]);
 
   return (
     <div className="flex justify-between ">
       <div>
-        <SideBar className="w-72 flex-none" />
+        <SideBar className="flex-none w-72" />
         <div className={`${styles.filterPanelWrapper} text-white`}>
-          <FilterPanelContainer
-            filteredProducts={filteredProducts}
-            filteredBrands={brands}
-          />
+          <FilterPanelContainer filteredBrands={brands} />
         </div>
       </div>
-      <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 px-5">
+      <div className="flex flex-wrap justify-between flex-1 gap-2 px-5 mb-8">
         <div className="flex-1">
           <SortButtonsPanel productsCount={totalFilteredProducts} />
           <FilteredProductContainer
@@ -84,6 +90,5 @@ function Catalog(): ReactElement {
     </div>
   );
 }
-
 
 export default Catalog;
