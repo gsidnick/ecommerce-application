@@ -48,3 +48,43 @@
 .arrowDisabled {
   fill: rgba(0, 0, 0, 0.2);
 }
+
+@media (max-width: 630px) {
+
+  .slider {
+    width: 400px;
+  }
+
+  .port {
+    width: 400px;
+    height: 400px;
+  }
+
+  .image {
+    width: 360px;
+    height: 360px;
+  }
+
+}
+
+@media (max-width: 440px) {
+
+  .slider {
+    width: 300px;
+  }
+
+  .port {
+    width: 300px;
+    height: 300px;
+  }
+
+  .slide {
+    padding: 10px;
+  }
+
+  .image {
+    width: 280px;
+    height: 280px;
+  }
+
+}

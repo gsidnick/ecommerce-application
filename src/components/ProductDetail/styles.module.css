@@ -15,3 +15,23 @@
   color: #7f7f7f;
   text-decoration: line-through;
 }
+
+@media (max-width: 440px) {
+
+  .priceWrapper {
+    flex-direction: column;
+  }
+
+  .currentPrice {
+    font-size: 24px;
+  }
+
+  .oldPrice {
+    font-size: 14px;
+  }
+
+  .button {
+
+  }
+
+}

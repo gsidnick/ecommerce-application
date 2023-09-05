@@ -31,7 +31,7 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
       </div>
       <button
         type="button"
-        className="flex w-1/2 items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600"
+        className="flex w-full items-center justify-center rounded-md bg-blue-500 py-2 text-white hover:bg-blue-600 md:w-1/2"
       >
         To Cart
       </button>

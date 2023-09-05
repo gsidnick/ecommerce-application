@@ -7,3 +7,29 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+
+  .layout {
+    display: grid;
+    grid-template-columns: none;
+    grid-template-rows: 1fr auto;
+    grid-auto-flow: dense;
+  }
+
+  .slider {
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  .details {
+    grid-row: 1;
+  }
+
+}

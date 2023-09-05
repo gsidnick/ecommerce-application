@@ -54,9 +54,13 @@ const ProductPage = ({ product }: ProductProps): ReactElement => {
   return (
     <section className={styles.productdetail}>
       <div className={styles.container}>
-        <div className="grid grid-cols-2 gap-4">
-          <ProductSlider images={images} />
-          <ProductDetail details={details} />
+        <div className={styles.layout}>
+          <div className={styles.slider}>
+            <ProductSlider images={images} />
+          </div>
+          <div className={styles.details}>
+            <ProductDetail details={details} />
+          </div>
         </div>
       </div>
     </section>
