@@ -15,6 +15,8 @@ import {
   FRACTION_DIGIT,
   FRACTION_DIGITS_COUNT_DEFAULT,
 } from './constants';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { setVariantOfCurrentProduct } from '@/store/slices/productsSlice';
 
 import styles from './styles.module.css';
 
@@ -49,6 +51,8 @@ const ProductCard: FC<ProductCardProps> = (props) => {
 
   const [activeVariantId, setActiveVariantId] =
     useState<number>(MAIN_VARIANT_ID);
+
+  const dispatch = useAppDispatch();
 
   const briefDescription = `${description
     .slice(PRODUCT_DESCRIPTION_SLICE_FROM, PRODUCT_DESCRIPTION_SLICE_TO)
@@ -169,8 +173,12 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     return activeVariantOldPrice;
   };
 
+  const handleCardClick = (): void => {
+    dispatch(setVariantOfCurrentProduct(activeVariantId));
+  };
+
   return (
-    <Link href={`/product/${id}`}>
+    <Link href={`/product/${id}`} onClick={handleCardClick}>
       <div id={id} className={styles.cardWrapper}>
         <div className={`${styles.container} text-white`}>
           <div className={`${styles.imageWrapper} bg-white`}>
