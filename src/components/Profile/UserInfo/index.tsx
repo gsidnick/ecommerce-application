@@ -111,6 +111,7 @@ const UserInfo: FC<IUserInfoProps> = ({
     <>
       <Formik
         initialValues={initialValues}
+        enableReinitialize
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -128,6 +129,7 @@ const UserInfo: FC<IUserInfoProps> = ({
               <CustomInput
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 placeholder="**********"
                 disabled
               />

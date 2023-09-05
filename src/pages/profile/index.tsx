@@ -93,8 +93,8 @@ const ProfilePage: NextPage<AuthState> = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-full">
-      <div className="p-6 my-20 rounded w-96 bg-background-main shadow-modal">
+    <div className="flex h-full items-center justify-center">
+      <div className="my-20 w-96 rounded bg-background-main p-6 shadow-modal">
         <ProfileMenu
           activeContentIndex={activeContentIndex}
           setActiveContentIndex={setActiveContentIndex}

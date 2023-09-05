@@ -11,6 +11,7 @@ type InputProps = FieldHookConfig<string> & {
   isTrailingWhiteSpacesAllowed?: boolean;
   disabled?: boolean;
   label?: string;
+  autoComplete?: string;
 };
 
 const CustomInput: FC<InputProps> = (props) => {
@@ -23,6 +24,7 @@ const CustomInput: FC<InputProps> = (props) => {
     isWhiteSpacesAllowed,
     isTrailingWhiteSpacesAllowed,
     disabled,
+    autoComplete,
   } = props;
 
   const { setFieldTouched } = useFormikContext();
@@ -92,6 +94,7 @@ const CustomInput: FC<InputProps> = (props) => {
         type={visionPass ? 'text' : type}
         placeholder={placeholder}
         className={makeClassName()}
+        autoComplete={autoComplete}
         onChange={handleChange}
         disabled={disabled}
       />
@@ -126,6 +129,7 @@ CustomInput.defaultProps = {
   isTrailingWhiteSpacesAllowed: false,
   disabled: false,
   label: '',
+  autoComplete: '',
 };
 
 export default CustomInput;
