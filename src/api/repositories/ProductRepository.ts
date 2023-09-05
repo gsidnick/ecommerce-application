@@ -18,7 +18,8 @@ class ProductRepository {
     filter?: string[],
     sort?: string[],
     limit = DEFAULT_LIMIT,
-    offset = DEFAULT_OFFSET
+    offset = DEFAULT_OFFSET,
+    search?: string
   ): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> {
     const client = new AnonymousClient();
     const apiRoot = client.getApiRoot();
@@ -28,6 +29,7 @@ class ProductRepository {
         sort,
         limit,
         offset,
+        'text.en-US': search,
       },
     };
     const result = await apiRoot

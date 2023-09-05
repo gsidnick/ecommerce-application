@@ -29,11 +29,13 @@ export const getFilteredProducts = createAsyncThunk(
       sort,
       limit,
       offset,
+      search,
     }: {
       filter?: string[];
       sort?: string[];
       limit?: number;
       offset?: number;
+      search?: string;
     },
     { getState }
   ): Promise<ProductProjectionPagedQueryResponse> => {
@@ -48,6 +50,7 @@ export const getFilteredProducts = createAsyncThunk(
       cardsLimitPerPage,
       filterByBrand,
       priceSliderValues,
+      searchQuery,
     } = allState.filter;
     const allFiltersQueryString: string[] = [];
 
@@ -78,7 +81,6 @@ export const getFilteredProducts = createAsyncThunk(
       `variants.price.centAmount:range (${
         min * FRACTION_DIGITS_DEFAULT_MULT
       } to ${max * FRACTION_DIGITS_DEFAULT_MULT})`
-      // `variants.price.centAmount:range (0 to 90000000)`
     );
 
     const sortQueryString = sortBy.length ? sortBy : undefined;
@@ -88,6 +90,7 @@ export const getFilteredProducts = createAsyncThunk(
       sort: sort ?? sortQueryString,
       limit: limit ?? cardsLimitPerPage,
       offset: offset ?? offSet,
+      search: search ?? searchQuery,
     });
 
     return {
@@ -104,10 +107,12 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
       filter,
       sort,
       offset,
+      search,
     }: {
       filter?: string[];
       sort?: string[];
       offset?: number;
+      search?: string;
     },
     { getState }
   ): Promise<ProductProjectionPagedQueryResponse> => {
@@ -115,7 +120,7 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
 
     const allState = getState() as RootState;
 
-    const { filterCategory, sortBy, offSet, filterByBrand } = allState.filter;
+    const { filterCategory, sortBy, offSet, filterByBrand, priceSliderValues, searchQuery } = allState.filter;
     const allFiltersQueryString: string[] = [];
 
     const filterCategoryQueryString = filterCategory.length
@@ -140,9 +145,11 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
       );
     }
 
-    // const { min, max } = priceSliderValues;
+    const { min, max } = priceSliderValues;
     allFiltersQueryString.push(
-      `variants.price.centAmount:range (0 to 90000000)`
+      `variants.price.centAmount:range (${
+        min * FRACTION_DIGITS_DEFAULT_MULT
+      } to ${max * FRACTION_DIGITS_DEFAULT_MULT})`
     );
 
     const sortQueryString = sortBy.length ? sortBy : undefined;
@@ -152,6 +159,7 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
       sort: sort ?? sortQueryString,
       limit: 500,
       offset: offset ?? offSet,
+      search: search ?? searchQuery,
     });
 
     return {
@@ -176,6 +184,7 @@ export interface FilterState {
   offSet: number;
   cardsLimitPerPage: number;
   totalFilteredProducts: number;
+  searchQuery: string;
 }
 
 const initialState: FilterState = {
@@ -193,6 +202,7 @@ const initialState: FilterState = {
   offSet: 0,
   cardsLimitPerPage: 20,
   totalFilteredProducts: 0,
+  searchQuery: '',
 };
 
 enum ESlices {
@@ -287,6 +297,12 @@ export const filterSlice = createSlice({
         cardsLimitPerPage: 20,
       };
     },
+    setSearchQueryString(state: FilterState, action: PayloadAction<string>) {
+      return {
+        ...state,
+        searchQuery: action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -308,6 +324,7 @@ export const filterSlice = createSlice({
           ...state,
           filteredProducts: newFilteredProducts,
           totalFilteredProducts: total,
+          searchQuery: '',
         };
       }
     );
@@ -339,6 +356,7 @@ export const {
   setOffsetValue,
   setCardsLimitPerPage,
   resetAllFilters,
+  setSearchQueryString,
 } = filterSlice.actions;
 export const selectFilterState = (state: RootState): FilterState =>
   state.filter;

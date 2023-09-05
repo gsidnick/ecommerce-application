@@ -24,13 +24,15 @@ class ProductController {
     sort,
     limit = DEFAULT_LIMIT,
     offset = DEFAULT_OFFSET,
+    search = '',
   }: {
     filter?: string[];
     sort?: string[];
     limit?: number;
     offset?: number;
+    search?: string;
   }): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> {
-    return this.productRepository.getProducts(filter, sort, limit, offset);
+    return this.productRepository.getProducts(filter, sort, limit, offset, search);
   }
 }
 
