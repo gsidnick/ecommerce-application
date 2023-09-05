@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import styles from './styles.module.css';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 const FRACTION = 2;
 
@@ -17,8 +18,10 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
 
   return (
     <div className="pl-8 pr-8">
-      <div className="text-1xl mb-4 text-gray-600">{brand}</div>
-      <h1 className="mb-4 text-4xl">{name}</h1>
+      <Breadcrumbs className="mb-4" />
+      <h1 className="mb-4 text-3xl">
+        {brand} {name}
+      </h1>
       <p>{description}</p>
       <div className={styles.priceWrapper}>
         <span className={styles.currentPrice}>
