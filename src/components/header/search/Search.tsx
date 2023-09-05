@@ -31,7 +31,7 @@ function Search(): ReactElement {
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>): void => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
     console.log(event);
     if (event.which === ENTER_KEY_CODE || event.keyCode === ENTER_KEY_CODE) {
       void handleSearch();
