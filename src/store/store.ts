@@ -20,6 +20,7 @@ import {
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
 import authReducer, { authSlice } from '@/store/slices/authSlice';
 import menuReducer, { menuSlice } from '@/store/slices/menuSlice';
+import modalReducer, { modalSlice } from '@/store/slices/modalSlice';
 import productsReducer, { productsSlice } from '@/store/slices/productsSlice';
 import filterReducer, { filterSlice } from '@/store/slices/filterSlice';
 import storage from './helpers/storage';
@@ -27,6 +28,7 @@ import storage from './helpers/storage';
 const rootReducer = combineReducers({
   [authSlice.name]: authReducer,
   [menuSlice.name]: menuReducer,
+  [modalSlice.name]: modalReducer,
   [productsSlice.name]: productsReducer,
   [filterSlice.name]: filterReducer,
 });

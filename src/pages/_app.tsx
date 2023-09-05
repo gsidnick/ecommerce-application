@@ -9,8 +9,8 @@ import ToastNotification from '../components/ToastNotification';
 import { AuthGate } from '../components/AuthGate';
 import Container from '../components/Containter/Container';
 
-function App({ Component, ...rest }: AppProps): ReactElement {
-  const { store } = wrapper.useWrappedStore(rest);
+function App({ Component, pageProps }: AppProps): ReactElement {
+  const { store } = wrapper.useWrappedStore(pageProps);
   const { persistor } = store;
 
   return (
@@ -18,7 +18,7 @@ function App({ Component, ...rest }: AppProps): ReactElement {
       <PersistGate persistor={persistor} loading={<div>Loading</div>}>
         <AuthGate>
           <Container>
-            <Component {...rest} />
+            <Component {...pageProps} />
           </Container>
         </AuthGate>
         <ToastNotification />
