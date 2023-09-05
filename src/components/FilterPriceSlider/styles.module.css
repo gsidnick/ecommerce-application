@@ -1,0 +1,53 @@
+.priceFilterWrapper {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.priceTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.sliderWrapper {
+  width: 90%;
+  margin: 0 auto;
+  height: 20px;
+}
+
+.inputWrapper {
+  margin: 0 auto;
+}
+
+.inputText {
+  display: block;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+  padding: 0.375rem 0.75rem;
+  height: 32px;
+  border-radius: 5px;
+  color: #000000ee;
+  background-clip: padding-box;
+  border: 1px solid #bdbdbd;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.submitBtn {
+  width: 100%;
+  background-color: rgb(247, 239, 168);
+  color: rgb(51, 50, 50);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin: 10px 0px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.submitBtn:hover {
+  cursor: pointer;
+  background-color: #f09b1cee;
+}

@@ -1,0 +1,18 @@
+.brandsContainer {
+  max-height: 180px;
+  overflow-y: scroll;
+}
+
+.brandsContainer::-webkit-scrollbar {
+  width: 7px;
+  background-color: #f9f9fd;
+}
+
+.brandsContainer::-webkit-scrollbar-thumb {
+  background-color: #223c50;
+  border-radius: 10px;
+}
+
+.brandsContainer::-webkit-scrollbar-track {
+  background-color: orange;
+}

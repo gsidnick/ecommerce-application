@@ -96,6 +96,7 @@ class CustomerRepository {
   public async getCustomer(): Promise<ClientResponse<Customer>> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
+
     const result = await apiRoot
       .withProjectKey({ projectKey: this.projectKey })
       .me()
