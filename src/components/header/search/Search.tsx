@@ -1,10 +1,6 @@
-import {
-  ReactElement,
-  useState,
-  ChangeEvent,
-  KeyboardEvent,
-} from 'react';
+import { ReactElement, useState, ChangeEvent, KeyboardEvent } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import search from '@/assets/images/search-icon.png';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import {
@@ -20,6 +16,7 @@ const ENTER_KEY_CODE = 13;
 function Search(): ReactElement {
   const [searchValue, setSearchValue] = useState<string>('');
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setSearchValue(e.target.value);
@@ -29,11 +26,12 @@ function Search(): ReactElement {
     await dispatch(getFilteredProducts({}));
     await dispatch(getAllFilteredProductsWithoutLimit({}));
     dispatch(setSearchQueryString(searchValue));
+    if (router.pathname !== '/catalog') {
+      await router.push('/catalog');
+    }
   };
 
-  const handleKeyDown = (
-    event: KeyboardEvent<HTMLButtonElement>
-  ): void => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>): void => {
     console.log(event);
     if (event.which === ENTER_KEY_CODE || event.keyCode === ENTER_KEY_CODE) {
       void handleSearch();
