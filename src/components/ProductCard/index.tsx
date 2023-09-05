@@ -185,7 +185,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
             <picture>
               <img
                 src={getActiveVariantImage()}
-                alt="sdfsdsf"
+                alt={name}
                 className={styles.image}
               />
             </picture>

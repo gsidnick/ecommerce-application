@@ -58,14 +58,14 @@ const FilteredProductContainer = (
   return (
     <div>
       <div
-        className={`${styles.gridItemContainer} grid grid-cols-5 gap-4`}
+        className={styles.gridItemContainer}
       >
         {filteredProducts.length &&
           filteredProducts.map((product) => {
             const { id, name, description, masterVariant, variants } = product;
 
             return (
-              <div key={id} className={styles.gridItemContainer}>
+              <div key={id} className={styles.gridItemWrapper}>
                 <ProductCard
                   id={id}
                   img={
