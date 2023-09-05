@@ -14,11 +14,13 @@ const hydrateAction = createAction<SliceTypes>(HYDRATE);
 export interface ProductsState {
   products: [];
   categories: ICategoryWithSubcategories[];
+  variantIdOfCurrentProduct: number;
 }
 
 const initialState: ProductsState = {
   products: [],
   categories: [],
+  variantIdOfCurrentProduct: 1,
 };
 
 export const getAllCategories = createAsyncThunk(
@@ -46,6 +48,15 @@ export const productsSlice = createSlice({
       return {
         ...state,
         products: action.payload,
+      };
+    },
+    setVariantOfCurrentProduct(
+      state: ProductsState,
+      action: PayloadAction<number>
+    ) {
+      return {
+        ...state,
+        variantIdOfCurrentProduct: action.payload,
       };
     },
   },
@@ -77,7 +88,8 @@ export const productsSlice = createSlice({
   },
 });
 
-export const { setStateProducts } = productsSlice.actions;
+export const { setStateProducts, setVariantOfCurrentProduct } =
+  productsSlice.actions;
 export const selectProductState = (state: RootState): ProductsState =>
   state.products;
 
