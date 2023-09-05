@@ -10,10 +10,11 @@
     "test": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:ci": "jest --ci",
+    "type-check": "tsc --noEmit",
     "prettier": "prettier --check \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|css)\"",
     "prettier:fix": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|yml|yaml|md|css)\"",
     "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "pre-commit": "type-check && lint-staged"
   },
   "dependencies": {
     "@commercetools/platform-sdk": "^4.11.0",
