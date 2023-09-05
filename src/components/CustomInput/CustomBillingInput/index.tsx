@@ -6,6 +6,7 @@ type InputProps = FieldHookConfig<string> & {
   isBillingIdenticalAsShipping?: boolean;
   isWhiteSpacesAllowed?: boolean;
   isTrailingWhiteSpacesAllowed?: boolean;
+  disabled?: boolean;
 };
 
 const CustomBillingInput: FC<InputProps> = (props) => {
@@ -15,6 +16,7 @@ const CustomBillingInput: FC<InputProps> = (props) => {
     isWhiteSpacesAllowed,
     isTrailingWhiteSpacesAllowed,
     isBillingIdenticalAsShipping,
+    disabled,
   } = props;
 
   const { setFieldTouched, setFieldValue } = useFormikContext();
@@ -74,14 +76,21 @@ const CustomBillingInput: FC<InputProps> = (props) => {
         {...field}
         type={type}
         placeholder={placeholder}
+        disabled={disabled}
         className={
           type === 'checkbox'
             ? 'rounded-md border border-neutral-800 bg-background-main p-2 text-white focus:border-neutral-500 focus:outline-none'
-            : 'w-full rounded-md border border-neutral-800 bg-background-main p-2 pl-3 pr-3 text-white focus:border-neutral-500 focus:outline-none'
+            : `w-full rounded-md border border-neutral-800 bg-background-main p-2 pl-3 pr-3 ${
+                disabled ? 'text-neutral-400' : 'text-white'
+              } focus:border-neutral-500 focus:outline-none`
         }
         onChange={handleOnChangeBillingAddress}
       />
-      {error ? <p className="text-red-500">{touched && error}</p> : ''}
+      {error && !disabled ? (
+        <p className="text-red-500">{touched && error}</p>
+      ) : (
+        ''
+      )}
     </>
   );
 };
@@ -90,6 +99,7 @@ CustomBillingInput.defaultProps = {
   isBillingIdenticalAsShipping: false,
   isWhiteSpacesAllowed: true,
   isTrailingWhiteSpacesAllowed: false,
+  disabled: false,
 };
 
 export default CustomBillingInput;

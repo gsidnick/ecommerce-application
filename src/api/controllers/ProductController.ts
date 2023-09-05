@@ -19,12 +19,17 @@ class ProductController {
     return this.productRepository.getProductByID(id);
   }
 
-  public async getProducts(
-    filter?: string[],
-    sort?: string[],
+  public async getProducts({
+    filter,
+    sort,
     limit = DEFAULT_LIMIT,
-    offset = DEFAULT_OFFSET
-  ): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> {
+    offset = DEFAULT_OFFSET,
+  }: {
+    filter?: string[];
+    sort?: string[];
+    limit?: number;
+    offset?: number;
+  }): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> {
     return this.productRepository.getProducts(filter, sort, limit, offset);
   }
 }
