@@ -14,9 +14,23 @@ import {
 } from '@/store/slices/filterSlice';
 import { getAllCategories } from '@/store/slices/productsSlice';
 import styles from './styles.module.css';
-import { DEFAULT_LIMIT } from '@/api/constants';
+import {
+  WIDTH_MAX,
+  WIDTH_XL,
+  WIDTH_LG,
+  WIDTH_MD,
+  WIDTH_SM,
+  WIDTH_MIN,
+  NUMBER_ITEMS_PER_PAGE_MAX,
+  NUMBER_ITEMS_PER_PAGE_XL,
+  NUMBER_ITEMS_PER_PAGE_LG,
+  NUMBER_ITEMS_PER_PAGE_MD,
+  NUMBER_ITEMS_PER_PAGE_SM,
+  NUMBER_ITEMS_PER_PAGE_MIN,
+} from './constants';
 import { extractAllBrands } from '@/helpers/productsHelpers';
 import CategoryBreadcrumbs from '@/components/CategoryBreadcrumbs';
+import useWidth from '@/hooks/useWidth';
 
 function Catalog(): ReactElement {
   const dispatch = useAppDispatch();
@@ -30,6 +44,9 @@ function Catalog(): ReactElement {
   } = useAppSelector(selectFilterState);
   const [brands, setBrands] = useState<string[]>([]);
   const filterBlockRef = useRef<HTMLDivElement>(null);
+
+  const width = useWidth();
+  console.log(width);
 
   useEffect(() => {
     const fetchProducts = (): void => {
@@ -77,6 +94,31 @@ function Catalog(): ReactElement {
     filterBlockRef.current?.classList.toggle(styles.transl);
   };
 
+  const getItemsPerPage = (): number => {
+    if (width > WIDTH_MAX) {
+      return NUMBER_ITEMS_PER_PAGE_MAX;
+    }
+    if (width > WIDTH_XL && width <= WIDTH_MAX) {
+      return NUMBER_ITEMS_PER_PAGE_XL;
+    }
+    if (width > WIDTH_LG && width <= WIDTH_XL) {
+      return NUMBER_ITEMS_PER_PAGE_LG;
+    }
+    if (width > WIDTH_MD && width <= WIDTH_LG) {
+      return NUMBER_ITEMS_PER_PAGE_MD;
+    }
+    if (width > WIDTH_SM && width <= WIDTH_MD) {
+      return NUMBER_ITEMS_PER_PAGE_SM;
+    }
+    if (width > WIDTH_MIN && width <= WIDTH_SM) {
+      return NUMBER_ITEMS_PER_PAGE_MD;
+    }
+    if (width <= WIDTH_MIN) {
+      return NUMBER_ITEMS_PER_PAGE_MIN;
+    }
+    return NUMBER_ITEMS_PER_PAGE_MAX;
+  };
+
   return (
     <div className={styles.container}>
       <div className="h-full bg-background-main">
@@ -96,7 +138,9 @@ function Catalog(): ReactElement {
           className="absolute left-[-300px]  z-50 h-full w-[50px] bg-background-main md:relative md:left-0 md:w-[300px]"
         >
           <SideBar className="w-72 flex-none" />
-          <div className={`${styles.filterPanelWrapper} text-white`}>
+          <div
+            className={`${styles.filterPanelWrapper} bg-background-main text-white`}
+          >
             <FilterPanelContainer filteredBrands={brands} />
           </div>
         </div>
@@ -107,7 +151,7 @@ function Catalog(): ReactElement {
           <SortButtonsPanel productsCount={totalFilteredProducts} />
           <FilteredProductContainer
             filteredProducts={filteredProducts}
-            itemsPerPage={DEFAULT_LIMIT}
+            itemsPerPage={getItemsPerPage()}
           />
         </div>
       </div>

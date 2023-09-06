@@ -31,6 +31,8 @@
   color: #000000ee;
   background-clip: padding-box;
   border: 1px solid #bdbdbd;
+  border: none;
+  outline: none;
   transition:
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
@@ -51,4 +53,8 @@
 .submitBtn:hover {
   cursor: pointer;
   background-color: #f09b1cee;
+}
+
+.inputError {
+  border: 1px solid red;
 }

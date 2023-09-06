@@ -78,11 +78,13 @@ export const getFilteredProducts = createAsyncThunk(
     }
 
     const { min, max } = priceSliderValues;
-    allFiltersQueryString.push(
-      `variants.price.centAmount:range (${
-        min * FRACTION_DIGITS_DEFAULT_MULT
-      } to ${max * FRACTION_DIGITS_DEFAULT_MULT})`
-    );
+    if (min && max) {
+      allFiltersQueryString.push(
+        `variants.price.centAmount:range (${
+          Number(min) * FRACTION_DIGITS_DEFAULT_MULT
+        } to ${Number(max) * FRACTION_DIGITS_DEFAULT_MULT})`
+      );
+    }
 
     const sortQueryString = sortBy.length ? sortBy : undefined;
 
@@ -154,11 +156,13 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
     }
 
     const { min, max } = priceSliderValues;
-    allFiltersQueryString.push(
-      `variants.price.centAmount:range (${
-        min * FRACTION_DIGITS_DEFAULT_MULT
-      } to ${max * FRACTION_DIGITS_DEFAULT_MULT})`
-    );
+    if (min && max) {
+      allFiltersQueryString.push(
+        `variants.price.centAmount:range (${
+          Number(min) * FRACTION_DIGITS_DEFAULT_MULT
+        } to ${Number(max) * FRACTION_DIGITS_DEFAULT_MULT})`
+      );
+    }
 
     const sortQueryString = sortBy.length ? sortBy : undefined;
 
@@ -184,8 +188,8 @@ export interface FilterState {
   filterByBrand: string[];
   filterCategory: string;
   priceSliderValues: {
-    min: number;
-    max: number;
+    min: string;
+    max: string;
   };
   filterPaginationPage: number;
   sortBy: string[];
@@ -203,8 +207,8 @@ const initialState: FilterState = {
   filterByBrand: [],
   filterCategory: '',
   priceSliderValues: {
-    min: 0,
-    max: 10000000000,
+    min: '',
+    max: '',
   },
   filterPaginationPage: 0,
   sortBy: [],
@@ -238,13 +242,13 @@ export const filterSlice = createSlice({
         filterPaginationPage: 0,
       };
     },
-    setMinSliderValue(state: FilterState, action: PayloadAction<number>) {
+    setMinSliderValue(state: FilterState, action: PayloadAction<string>) {
       return {
         ...state,
         priceSliderValues: { ...state.priceSliderValues, min: action.payload },
       };
     },
-    setMaxSliderValue(state: FilterState, action: PayloadAction<number>) {
+    setMaxSliderValue(state: FilterState, action: PayloadAction<string>) {
       return {
         ...state,
         priceSliderValues: { ...state.priceSliderValues, max: action.payload },
@@ -297,8 +301,8 @@ export const filterSlice = createSlice({
         filterByBrand: [],
         filterCategory: '',
         priceSliderValues: {
-          min: 0,
-          max: 10000000000,
+          min: '',
+          max: '',
         },
         filterPaginationPage: 0,
         sortBy: [],
