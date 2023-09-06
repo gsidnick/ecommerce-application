@@ -46,7 +46,6 @@ function Catalog(): ReactElement {
   const filterBlockRef = useRef<HTMLDivElement>(null);
 
   const width = useWidth();
-  console.log(width);
 
   useEffect(() => {
     const fetchProducts = (): void => {

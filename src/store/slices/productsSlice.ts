@@ -28,7 +28,6 @@ export const getAllCategories = createAsyncThunk(
   async (): Promise<ICategoryWithSubcategories[]> => {
     const productController = new CategoryController();
     const response = await productController.getCategoriesWithSubcategories();
-    console.log('response fetchAllCategories', response);
 
     return response;
   }
