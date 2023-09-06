@@ -19,6 +19,8 @@ function ButtonsGroup(): ReactElement {
 
   const handleOpenBurgerMenu = (): void => {
     dispatch(setStateBurgerMenu(true));
+    const body = document.querySelector('body');
+    body?.classList.add('modal');
   };
 
   const handleRedirectToSignUp = (): void => {
