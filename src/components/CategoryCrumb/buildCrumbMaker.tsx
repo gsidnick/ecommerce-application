@@ -1,12 +1,10 @@
-import React, { ReactElement } from 'react';
-import { ICategoryWithSubcategories } from '@/api/types';
-import CategoryCrumb from '@/components/CategoryCrumb';
+import { ICategory, ICategoryWithSubcategories } from '@/api/types';
 
 type BreadcrumbsMaker = (id: string, cat: ICategoryWithSubcategories[]) => void;
 
 export const buildBreadcrumbsMaker = (
   input: ICategoryWithSubcategories[],
-  output: ReactElement[]
+  output: ICategory[]
 ): BreadcrumbsMaker => {
   const initial = input;
   const makeCrumb = (
@@ -15,7 +13,8 @@ export const buildBreadcrumbsMaker = (
   ): void => {
     categoriesScope.forEach((category) => {
       if (category.id === categoryID) {
-        output.push(<CategoryCrumb id={category.id} name={category.name} />);
+        const { id, name } = category;
+        output.push({ id, name });
         if (category.parent) {
           makeCrumb(category.parent, initial);
         }

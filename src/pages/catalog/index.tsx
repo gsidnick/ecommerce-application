@@ -28,7 +28,9 @@ function Catalog(): ReactElement {
     filterPaginationPage,
     priceSliderValues: { min, max },
   } = useAppSelector(selectFilterState);
-  const [brands, setBrands] = useState<string[]>(extractAllBrands(filteredAllProducts));
+  const [brands, setBrands] = useState<string[]>(
+    extractAllBrands(filteredAllProducts)
+  );
   const filterBlockRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,7 +65,6 @@ function Catalog(): ReactElement {
   useEffect(() => {
     const brandsArr = extractAllBrands(filteredAllProducts);
     setBrands(brandsArr);
-    console.log('brandsArr', brandsArr);
   }, [filteredAllProducts]);
 
   useEffect(() => {
