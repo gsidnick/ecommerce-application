@@ -4,11 +4,11 @@ import {
   createAction,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
-import { ReactElement } from 'react';
 import { HYDRATE } from 'next-redux-wrapper';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { RootState } from '@/store/store';
 import ProductController from '@/api/controllers/ProductController';
+import { ICategory } from '@/api/types';
 
 const hydrateAction = createAction<SliceTypes>(HYDRATE);
 
@@ -197,7 +197,7 @@ export interface FilterState {
   cardsLimitPerPage: number;
   totalFilteredProducts: number;
   searchQuery: string;
-  filterBreadcrumbs: ReactElement[];
+  filterBreadcrumbs: ICategory[];
 }
 
 const initialState: FilterState = {
@@ -318,7 +318,7 @@ export const filterSlice = createSlice({
     },
     setFilterBreadCrumbs(
       state: FilterState,
-      action: PayloadAction<ReactElement[]>
+      action: PayloadAction<ICategory[]>
     ) {
       return {
         ...state,

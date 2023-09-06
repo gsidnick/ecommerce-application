@@ -29,6 +29,8 @@ const BurgerMenu: NextPage = () => {
 
   const closeMenu = (): void => {
     dispatch(setStateBurgerMenu(false));
+    const body = document.querySelector('body');
+    body?.classList.remove('modal');
   };
 
   const handleNavigate = (link: string) => (): void => {
@@ -46,12 +48,13 @@ const BurgerMenu: NextPage = () => {
   };
 
   return (
-    <div
-      className={styles.menu}
-      role="button"
-      onClick={closeMenu}
-      aria-hidden="true"
-    >
+    <>
+      <div
+        className={styles.menu}
+        role="button"
+        onClick={closeMenu}
+        aria-hidden="true"
+       />
       <div className={styles.menuWrapper}>
         <div className={styles.menuContent} role="button">
           <div className={`${styles.menuHeader} p-2`}>
@@ -126,7 +129,7 @@ const BurgerMenu: NextPage = () => {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

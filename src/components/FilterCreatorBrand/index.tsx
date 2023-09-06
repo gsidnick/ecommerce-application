@@ -42,7 +42,7 @@ const FilterCreatorBrand = (props: IFilterCreatorBrand): ReactElement => {
 
   useEffect(() => {
     setActiveBrands(brandsFiltered);
-  }, [filterCategory]);
+  }, [filterCategory, brandsFiltered]);
 
   return (
     <ul className={styles.brandsContainer}>

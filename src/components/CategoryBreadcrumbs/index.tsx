@@ -8,6 +8,7 @@ import {
 } from '@/store/slices/filterSlice';
 import styles from './styles.module.css';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
+import CategoryCrumb from '@/components/CategoryCrumb';
 
 const CategoryBreadcrumbs = (): ReactElement => {
   const { filterBreadcrumbs } = useAppSelector(selectFilterState);
@@ -23,7 +24,10 @@ const CategoryBreadcrumbs = (): ReactElement => {
       <Link className={styles.link} href="/catalog" onClick={linkHandler}>
         Catalog
       </Link>
-      {filterBreadcrumbs.map((crumb) => crumb)}
+      {filterBreadcrumbs.map(({ id, name }) => {
+        const key = `crumb${id}`;
+        return <CategoryCrumb key={key} id={id} name={name} />;
+      })}
     </div>
   );
 };
