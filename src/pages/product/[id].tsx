@@ -5,6 +5,8 @@ import ProductController from '@/api/controllers/ProductController';
 import ProductDetail from '@/components/ProductDetail';
 import ProductSlider from '@/components/ProductSlider';
 import styles from './styles.module.css';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { selectProductState } from '@/store/slices/productsSlice';
 
 const MAIN_VARIANT_ID = 1;
 const FIRST_ELEMENT = 0;
@@ -20,7 +22,8 @@ interface Brand {
 }
 
 const ProductPage = ({ product }: ProductProps): ReactElement => {
-  const currentVariant = 1;
+  const { variantIdOfCurrentProduct } = useAppSelector(selectProductState);
+  const currentVariant = variantIdOfCurrentProduct;
   const details = {
     name: product.name['en-US'],
     description: product.description ? product.description['en-US'] : '',
