@@ -16,7 +16,7 @@ import {
   FRACTION_DIGITS_COUNT_DEFAULT,
 } from './constants';
 
-import styles from './styles.module.css';
+import styles from './styles.module.scss';
 
 interface IFilteredProductContainer {
   filteredProducts: ProductProjection[];
@@ -37,7 +37,6 @@ const FilteredProductContainer = (
   const router = useRouter();
 
   const handlePageChange = (selectedItem: { selected: number }): void => {
-
     window.scrollTo(ZERO_INDEX, ZERO_INDEX);
     dispatch(setFilterPaginationPage(selectedItem.selected));
   };
@@ -57,9 +56,7 @@ const FilteredProductContainer = (
 
   return (
     <div>
-      <div
-        className={styles.gridItemContainer}
-      >
+      <div className={styles.gridItemContainer}>
         {filteredProducts.length &&
           filteredProducts.map((product) => {
             const { id, name, description, masterVariant, variants } = product;

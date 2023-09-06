@@ -1,5 +1,6 @@
-import { ReactElement, useEffect, useState } from 'react';
-// import { useRouter } from 'next/router';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import SideBar from '../../components/SideBar';
 import FilterPanelContainer from '@/components/FilterPanelContainer';
 import SortButtonsPanel from '@/components/SortButtonsPanel';
@@ -12,7 +13,7 @@ import {
   selectFilterState,
 } from '@/store/slices/filterSlice';
 import { getAllCategories } from '@/store/slices/productsSlice';
-import styles from './styles.module.css';
+import styles from './styles.module.scss';
 import { DEFAULT_LIMIT } from '@/api/constants';
 import { extractAllBrands } from '@/helpers/productsHelpers';
 import CategoryBreadcrumbs from '@/components/CategoryBreadcrumbs';
@@ -28,6 +29,7 @@ function Catalog(): ReactElement {
     priceSliderValues: { min, max },
   } = useAppSelector(selectFilterState);
   const [brands, setBrands] = useState<string[]>([]);
+  const filterBlockRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchProducts = (): void => {
@@ -71,15 +73,35 @@ function Catalog(): ReactElement {
     getProducts();
   }, [filterPaginationPage, min, max]);
 
+  const filterToggleHandler = (): void => {
+    filterBlockRef.current?.classList.toggle(styles.transl);
+  };
+
   return (
     <div className="flex justify-between ">
-      <div>
-        <SideBar className="w-72 flex-none" />
-        <div className={`${styles.filterPanelWrapper} text-white`}>
-          <FilterPanelContainer filteredBrands={brands} />
+      <div className="h-full bg-background-main">
+        <div className="h-[56px] bg-background-main p-3">
+          <span
+            onClick={filterToggleHandler}
+            className="block text-lg text-white cursor-pointer whitespace-nowrap bg-background-main md:hidden"
+          >
+            Show filter
+          </span>
+          <span className="hidden text-lg text-white whitespace-nowrap bg-background-main md:block">
+            Filters
+          </span>
+        </div>
+        <div
+          ref={filterBlockRef}
+          className="absolute left-[-300px]  z-50 h-full w-[50px] bg-background-main md:relative md:left-0 md:w-[300px]"
+        >
+          <SideBar className="flex-none w-72" />
+          <div className={`${styles.filterPanelWrapper} text-white`}>
+            <FilterPanelContainer filteredBrands={brands} />
+          </div>
         </div>
       </div>
-      <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 px-5">
+      <div className="flex flex-wrap justify-between flex-1 gap-2 px-5 mb-8">
         <div className="flex-1">
           <CategoryBreadcrumbs />
           <SortButtonsPanel productsCount={totalFilteredProducts} />
