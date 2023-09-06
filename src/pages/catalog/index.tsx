@@ -27,7 +27,7 @@ import {
   NUMBER_ITEMS_PER_PAGE_MD,
   NUMBER_ITEMS_PER_PAGE_SM,
   NUMBER_ITEMS_PER_PAGE_MIN,
-} from './constants';
+} from '@/components/FilteredProductContainer/constants';
 import { extractAllBrands } from '@/helpers/productsHelpers';
 import CategoryBreadcrumbs from '@/components/CategoryBreadcrumbs';
 import useWidth from '@/hooks/useWidth';
