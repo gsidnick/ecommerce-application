@@ -211,7 +211,7 @@ const initialState: FilterState = {
     max: '',
   },
   filterPaginationPage: 0,
-  sortBy: [],
+  sortBy: ['price asc'],
   offSet: 0,
   cardsLimitPerPage: 20,
   totalFilteredProducts: 0,
