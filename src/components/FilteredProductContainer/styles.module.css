@@ -1,0 +1,89 @@
+.gridItemContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.paginateContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 55px auto;
+  justify-content: center;
+}
+
+.paginateContainer li {
+  cursor: pointer;
+  margin: 10px 5px;
+}
+
+.paginateContainer li a {
+  font-family: 'Poppins', serif;
+  color: grey;
+  padding: 8px 14px;
+  border: 2px solid grey;
+  border-radius: 50%;
+  width: 15px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.paginateContainer li a:hover {
+  background-color: rgb(80, 80, 80);
+}
+
+.activeLinkClassName {
+  color: black !important;
+  border: none !important;
+  background-color: white;
+}
+
+.noItems {
+  color: #ffffff;
+}
+
+@media screen and (max-width: 1919px) {
+
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+}
+
+@media screen and (max-width: 1599px) {
+
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+}
+
+@media screen and (max-width: 1199px) {
+
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+}
+
+@media screen and (max-width: 991px) {
+
+  .gridItemContainer {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media screen and (max-width: 767px) {
+
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+}
+
+@media screen and (max-width: 567px) {
+
+  .gridItemContainer {
+    grid-template-columns: 1fr;
+  }
+
+}

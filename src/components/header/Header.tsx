@@ -9,6 +9,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectMenuState } from '@/store/slices/menuSlice';
 import BurgerMenu from './BurgerMenu';
 import logo from '@/assets/images/logo/logo-orange.png';
+import styles from './styles.module.css';
 
 function Header(): ReactElement {
   const { isBurgerMenuOpen } = useAppSelector(selectMenuState);
@@ -17,7 +18,7 @@ function Header(): ReactElement {
     <header className="bg-gray-dark">
       <div className="h-167 container mx-auto flex max-w-screen-xl items-center justify-around px-4 py-6">
         <Search />
-        <div className="w-40 md:w-72">
+        <div className={styles.logo}>
           <Link href="/">
             <Image src={logo} alt="logo" />
           </Link>

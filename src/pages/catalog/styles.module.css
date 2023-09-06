@@ -1,3 +1,9 @@
+.container {
+  display: grid;
+  grid-template-columns: 300px auto;
+  gap: 20px;
+}
+
 .filterPanelWrapper {
   width: 300px;
   /*transform: translateX(-300px);
@@ -8,4 +14,13 @@
   transform: translateX(300px);
   transition: transform 330ms ease;
   width: 300px;
+}
+
+@media (max-width: 767px) {
+
+  .container {
+    display: grid;
+    grid-template-columns: auto;
+  }
+
 }

@@ -16,7 +16,7 @@ import {
   FRACTION_DIGITS_COUNT_DEFAULT,
 } from './constants';
 
-import styles from './styles.module.scss';
+import styles from './styles.module.css';
 
 interface IFilteredProductContainer {
   filteredProducts: ProductProjection[];
