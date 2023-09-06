@@ -1,14 +1,18 @@
-import React, { useState, ReactElement } from 'react';
+import React, { useState, ReactElement, ReactNode, useEffect } from 'react';
 // import Slider from 'rc-slider';
 // import { useDebouncedCallback } from 'use-debounce';
 // import { ProductProjection } from '@commercetools/platform-sdk';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-// import { useAppSelector } from '@/hooks/useAppSelector';
+import { useAppSelector } from '@/hooks/useAppSelector';
 import {
+  selectFilterState,
   setMinSliderValue,
   setMaxSliderValue,
 } from '@/store/slices/filterSlice';
 // import { extractAllPrices } from '../../helpers/productsHelpers';
+import { numberSchema } from '@/validation/schemas';
 
 import 'rc-slider/assets/index.css';
 import styles from './styles.module.scss';
@@ -24,11 +28,24 @@ import styles from './styles.module.scss';
 // const FilterPriceSlider = ({
 //   productsItems,
 // }: IFilterPriceSlider): ReactElement => {
+
+const initialValues: { minPrice: string; maxPrice: string } = {
+  minPrice: '',
+  maxPrice: '',
+};
 const FilterPriceSlider = (): ReactElement => {
   const dispatch = useAppDispatch();
 
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
+
+  const {
+    priceSliderValues: { min, max },
+    filteredProducts,
+    filterCategory,
+  } = useAppSelector(selectFilterState);
+
+  // const { handleReset } = useFormikContext();
 
   // const minFilterPriceGlobal = useAppSelector(
   //   (state) => state.filter.priceSliderValues.min
@@ -77,46 +94,87 @@ const FilterPriceSlider = (): ReactElement => {
     const { name, value } = event.target;
     if (name === 'minPrice') {
       setMinPrice(value);
+      // dispatch(setMinSliderValue(value));
     }
     if (name === 'maxPrice') {
       setMaxPrice(value);
+      // dispatch(setMaxSliderValue(value));
     }
   };
 
-  const handleSubmit = (): void => {
-    dispatch(setMinSliderValue(Number(minPrice)));
-    dispatch(setMaxSliderValue(Number(maxPrice)));
+  const handleSubmit = (values: {
+    minPrice: string;
+    maxPrice: string;
+  }): void => {
+    dispatch(setMinSliderValue(values.minPrice));
+    dispatch(setMaxSliderValue(values.maxPrice));
   };
+
+  const validationSchema = Yup.object({
+    minPrice: numberSchema,
+    maxPrice: numberSchema,
+  });
+
+  useEffect(() => {
+    setMinPrice(min);
+    setMaxPrice(max);
+    // handleReset();
+  }, [min, max, filteredProducts, filterCategory]);
 
   return (
     <div className={styles.priceFilterWrapper}>
       <p className={styles.priceTitle}>Price</p>
-      <div
-        className={`${styles.inputWrapper} text-white-200 items-left flex justify-center gap-2`}
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
       >
-        <input
-          type="text"
-          name="minPrice"
-          value={minPrice}
-          onChange={handleChangePrice}
-          className={`${styles.inputText} w-[60px] text-black`}
-        />
-        <span>-</span>
-        <input
-          type="text"
-          name="maxPrice"
-          value={maxPrice}
-          onChange={handleChangePrice}
-          className={`${styles.inputText} w-[60px] text-black`}
-        />
-        <button
-          type="button"
-          onClick={handleSubmit}
-          className={styles.submitBtn}
-        >
-          OK
-        </button>
-      </div>
+        {({
+          // values,
+          // resetForm,
+          handleChange,
+          errors,
+        }): ReactNode => (
+          <Form>
+            <div
+              className={`${styles.inputWrapper} text-white-200 items-left flex justify-center gap-2`}
+            >
+              <input
+                type="text"
+                name="minPrice"
+                value={minPrice}
+                onChange={(e): void => {
+                  handleChange(e);
+                  handleChangePrice(e);
+                }}
+                className={`${styles.inputText} ${
+                  errors.minPrice ? styles.inputError : ''
+                } w-[60px] text-black`}
+              />
+              <span>-</span>
+              <input
+                type="text"
+                name="maxPrice"
+                value={maxPrice}
+                onChange={(e): void => {
+                  handleChange(e);
+                  handleChangePrice(e);
+                }}
+                className={`${styles.inputText} ${
+                  errors.maxPrice ? styles.inputError : ''
+                } w-[60px] text-black`}
+              />
+              <button
+                type="submit"
+                // onClick={handleSubmit}
+                className={styles.submitBtn}
+              >
+                OK
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
       {/* <div className="flex items-center justify-around h-16 text-xl font-bold text-white-200">
         <p>{priceValue[INDEX_BEGIN]}</p>
 

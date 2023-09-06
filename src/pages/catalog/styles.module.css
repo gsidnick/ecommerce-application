@@ -6,8 +6,6 @@
 
 .filterPanelWrapper {
   width: 300px;
-  /*transform: translateX(-300px);
-  transition: transform 330ms ease;*/
 }
 
 .transl {
@@ -17,10 +15,8 @@
 }
 
 @media (max-width: 767px) {
-
   .container {
     display: grid;
     grid-template-columns: auto;
   }
-
 }
