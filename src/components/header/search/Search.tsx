@@ -41,8 +41,7 @@ function Search(): ReactElement {
   };
 
   return (
-    <div className="hidden items-center justify-center gap-2 md:flex">
-      <Image src={search} alt="search" />
+    <div className="flex items-center justify-center gap-2">
       <div className={styles.searchInputWrapper}>
         <input
           type="text"
@@ -57,7 +56,7 @@ function Search(): ReactElement {
         className={`${styles.searchButton} text-white`}
         onClick={(): void => handleSearch()}
       >
-        SEARCH
+        <Image src={search} alt="search" />
       </button>
     </div>
   );

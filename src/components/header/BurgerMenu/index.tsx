@@ -14,10 +14,9 @@ import { menu as menuData } from '../menu/menuData';
 import { selectMenuState, setStateBurgerMenu } from '@/store/slices/menuSlice';
 import CustomerController from '@/api/controllers/CustomerController';
 import CloseIcon from '@/components/ui/icons/CloseIcon';
-import logo from '@/assets/images/logo/logo-orange.png';
-
-import styles from './BurgerMenu.module.css';
 import { ERoute } from '@/data/routes';
+import logo from '@/assets/images/logo/logo-orange.png';
+import styles from './styles.module.css';
 
 const BurgerMenu: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -88,7 +87,7 @@ const BurgerMenu: NextPage = () => {
                   onClick={handleNavigate(ERoute.profile)}
                 >
                   <div className="p-3">
-                    <p>Profile</p>
+                    <p>PROFILE</p>
                   </div>
                 </li>
                 <li
@@ -97,29 +96,33 @@ const BurgerMenu: NextPage = () => {
                   onClick={handleLogOut}
                 >
                   <div className="p-3">
-                    <p>Log Out</p>
+                    <p>LOG OUT</p>
                   </div>
                 </li>
               </>
             )}
-            <li
-              key="log-in"
-              className="w-full opacity-75 hover:bg-indigo-500"
-              onClick={handleNavigate(ERoute.login)}
-            >
-              <div className="p-3">
-                <p>Log In</p>
-              </div>
-            </li>
-            <li
-              key="sign-up"
-              className="w-full opacity-75 hover:bg-indigo-500"
-              onClick={handleNavigate(ERoute.signup)}
-            >
-              <div className="p-3">
-                <p>Sign Up</p>
-              </div>
-            </li>
+            {!authState && (
+              <>
+                <li
+                  key="log-in"
+                  className="w-full opacity-75 hover:bg-indigo-500"
+                  onClick={handleNavigate(ERoute.login)}
+                >
+                  <div className="p-3">
+                    <p>LOG IN</p>
+                  </div>
+                </li>
+                <li
+                  key="sign-up"
+                  className="w-full opacity-75 hover:bg-indigo-500"
+                  onClick={handleNavigate(ERoute.signup)}
+                >
+                  <div className="p-3">
+                    <p>SIGN UP</p>
+                  </div>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

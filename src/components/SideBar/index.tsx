@@ -9,7 +9,6 @@ import {
 } from '@/store/slices/filterSlice';
 import { ICategoryWithSubcategories } from '@/api/types';
 import { buildBreadcrumbsMaker } from '@/components/CategoryCrumb/buildCrumbMaker';
-
 import styles from './styles.module.css';
 
 const SideBar = (): ReactElement => {
@@ -77,6 +76,7 @@ const SideBar = (): ReactElement => {
   return (
     <div className={styles.categoriesWrapper}>
       <nav className="flex w-full flex-col justify-between">
+        <p className={styles.titleWrapper}>Search</p>
         <p className={styles.titleWrapper}>Categories</p>
         <div className="w-full text-white">{renderMenu(categories)}</div>
       </nav>

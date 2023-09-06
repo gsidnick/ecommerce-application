@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import Link from 'next/link';
 
 import Image from 'next/image';
@@ -16,14 +16,18 @@ function Header(): ReactElement {
 
   return (
     <header className="bg-gray-dark">
-      <div className="h-167 container mx-auto flex max-w-screen-xl items-center justify-around px-4 py-6">
-        <Search />
+      <div className={styles.container}>
+        <div className={styles.search}>
+          <Search />
+        </div>
         <div className={styles.logo}>
           <Link href="/">
             <Image src={logo} alt="logo" />
           </Link>
         </div>
-        <ButtonsGroup />
+        <div className={styles.buttonsGroup}>
+          <ButtonsGroup />
+        </div>
       </div>
       <NavMenu />
       {isBurgerMenuOpen && <BurgerMenu />}
