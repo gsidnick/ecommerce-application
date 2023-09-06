@@ -11,7 +11,7 @@ import {
 // import { extractAllPrices } from '../../helpers/productsHelpers';
 
 import 'rc-slider/assets/index.css';
-import styles from './styles.module.css';
+import styles from './styles.module.scss';
 
 // interface IFilterPriceSlider {
 //   productsItems: ProductProjection[];
@@ -92,30 +92,32 @@ const FilterPriceSlider = (): ReactElement => {
     <div className={styles.priceFilterWrapper}>
       <p className={styles.priceTitle}>Price</p>
       <div
-        className={`${styles.inputWrapper} text-white-200 flex h-16 w-36 items-center justify-center gap-2`}
+        className={`${styles.inputWrapper} text-white-200 items-left flex justify-center gap-2`}
       >
         <input
           type="text"
           name="minPrice"
           value={minPrice}
-          style={{ width: '100px' }}
           onChange={handleChangePrice}
-          className={`${styles.inputText} text-black`}
+          className={`${styles.inputText} w-[60px] text-black`}
         />
         <span>-</span>
         <input
           type="text"
           name="maxPrice"
           value={maxPrice}
-          style={{ width: '100px' }}
           onChange={handleChangePrice}
-          className={`${styles.inputText} text-black`}
+          className={`${styles.inputText} w-[60px] text-black`}
         />
-        <button type="button" onClick={handleSubmit} className={styles.submitBtn}>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className={styles.submitBtn}
+        >
           OK
         </button>
       </div>
-      {/* <div className="text-white-200 flex h-16 items-center justify-around text-xl font-bold">
+      {/* <div className="flex items-center justify-around h-16 text-xl font-bold text-white-200">
         <p>{priceValue[INDEX_BEGIN]}</p>
 
         <span>-</span>

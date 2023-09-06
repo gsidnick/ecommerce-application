@@ -1,5 +1,6 @@
-import { ReactElement, useEffect, useState } from 'react';
-// import { useRouter } from 'next/router';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import SideBar from '../../components/SideBar';
 import FilterPanelContainer from '@/components/FilterPanelContainer';
 import SortButtonsPanel from '@/components/SortButtonsPanel';
@@ -28,6 +29,7 @@ function Catalog(): ReactElement {
     priceSliderValues: { min, max },
   } = useAppSelector(selectFilterState);
   const [brands, setBrands] = useState<string[]>([]);
+  const filterBlockRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchProducts = (): void => {
@@ -71,12 +73,32 @@ function Catalog(): ReactElement {
     getProducts();
   }, [filterPaginationPage, min, max]);
 
+  const filterToggleHandler = (): void => {
+    filterBlockRef.current?.classList.toggle(styles.transl);
+  };
+
   return (
-    <div className="flex justify-between ">
-      <div>
-        <SideBar className="w-72 flex-none" />
-        <div className={`${styles.filterPanelWrapper} text-white`}>
-          <FilterPanelContainer filteredBrands={brands} />
+    <div className={styles.container}>
+      <div className="h-full bg-background-main">
+        <div className="h-[56px] bg-background-main p-3">
+          <span
+            onClick={filterToggleHandler}
+            className="block cursor-pointer whitespace-nowrap bg-background-main text-lg text-white md:hidden"
+          >
+            Show filter
+          </span>
+          <span className="hidden whitespace-nowrap bg-background-main text-lg text-white md:block">
+            Filters
+          </span>
+        </div>
+        <div
+          ref={filterBlockRef}
+          className="absolute left-[-300px]  z-50 h-full w-[50px] bg-background-main md:relative md:left-0 md:w-[300px]"
+        >
+          <SideBar className="w-72 flex-none" />
+          <div className={`${styles.filterPanelWrapper} text-white`}>
+            <FilterPanelContainer filteredBrands={brands} />
+          </div>
         </div>
       </div>
       <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 px-5">
