@@ -4,6 +4,7 @@ import {
   createAction,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
+import { ReactElement } from 'react';
 import { HYDRATE } from 'next-redux-wrapper';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { RootState } from '@/store/store';
@@ -120,7 +121,14 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
 
     const allState = getState() as RootState;
 
-    const { filterCategory, sortBy, offSet, filterByBrand, priceSliderValues, searchQuery } = allState.filter;
+    const {
+      filterCategory,
+      sortBy,
+      offSet,
+      filterByBrand,
+      priceSliderValues,
+      searchQuery,
+    } = allState.filter;
     const allFiltersQueryString: string[] = [];
 
     const filterCategoryQueryString = filterCategory.length
@@ -185,6 +193,7 @@ export interface FilterState {
   cardsLimitPerPage: number;
   totalFilteredProducts: number;
   searchQuery: string;
+  filterBreadcrumbs: ReactElement[];
 }
 
 const initialState: FilterState = {
@@ -203,6 +212,7 @@ const initialState: FilterState = {
   cardsLimitPerPage: 20,
   totalFilteredProducts: 0,
   searchQuery: '',
+  filterBreadcrumbs: [],
 };
 
 enum ESlices {
@@ -302,6 +312,15 @@ export const filterSlice = createSlice({
         searchQuery: action.payload,
       };
     },
+    setFilterBreadCrumbs(
+      state: FilterState,
+      action: PayloadAction<ReactElement[]>
+    ) {
+      return {
+        ...state,
+        filterBreadcrumbs: action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -356,6 +375,7 @@ export const {
   setCardsLimitPerPage,
   resetAllFilters,
   setSearchQueryString,
+  setFilterBreadCrumbs,
 } = filterSlice.actions;
 export const selectFilterState = (state: RootState): FilterState =>
   state.filter;
