@@ -27,14 +27,12 @@ export interface IChangePassProps {
   isOpen: boolean;
   email: string;
   closeModal: () => void;
-  version: number;
 }
 
 const PasswordChangeModal: FC<IChangePassProps> = ({
   isOpen,
   email,
   closeModal,
-  version,
 }: IChangePassProps) => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -42,16 +40,22 @@ const PasswordChangeModal: FC<IChangePassProps> = ({
   const handleSubmit = (values: IPasswordProps): void => {
     setIsLoading(true);
 
-    const changePassAction: MyCustomerChangePassword = {
-      version,
-      currentPassword: values.currentPassword,
-      newPassword: values.newPassword,
-    };
+    let currentVersion;
 
     const changePass = async (): Promise<void> => {
       const customerController = new CustomerController();
 
-      await customerController.changeCustomerPassword(changePassAction);
+      currentVersion = (await customerController.getCustomer()).body?.version;
+
+      if (currentVersion) {
+        const changePassAction: MyCustomerChangePassword = {
+          version: currentVersion,
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword,
+        };
+
+        await customerController.changeCustomerPassword(changePassAction);
+      }
 
       customerController.logoutCustomer();
 

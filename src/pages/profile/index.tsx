@@ -32,16 +32,10 @@ const ProfilePage: NextPage<AuthState> = () => {
     shippingAddressIds: [],
   });
 
-  const [profileVersion, setProfileVersion] = useState<number>(INIT_ZERO);
-
   const tabData = [
     {
       component: (
-        <UserInfo
-          inEditMode={inEditMode}
-          initialValues={initialValues}
-          version={profileVersion}
-        />
+        <UserInfo inEditMode={inEditMode} initialValues={initialValues} />
       ),
     },
     {
@@ -80,8 +74,6 @@ const ProfilePage: NextPage<AuthState> = () => {
           defaultShippingAddressId: response.defaultShippingAddressId ?? '',
           shippingAddressIds: response.shippingAddressIds ?? [],
         });
-
-        setProfileVersion(response?.version ?? INIT_ZERO);
       })
       .catch(() => {});
   }, []);
@@ -93,8 +85,8 @@ const ProfilePage: NextPage<AuthState> = () => {
   };
 
   return (
-    <div className="flex h-full items-center justify-center">
-      <div className="my-20 w-96 rounded bg-background-main p-6 shadow-modal">
+    <div className="flex items-center justify-center h-full">
+      <div className="p-6 my-20 rounded w-96 bg-background-main shadow-modal">
         <ProfileMenu
           activeContentIndex={activeContentIndex}
           setActiveContentIndex={setActiveContentIndex}

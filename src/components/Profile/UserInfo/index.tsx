@@ -14,9 +14,9 @@ import { ClientResponse } from '@commercetools/sdk-client-v2';
 import CustomInput from '../../CustomInput';
 import { dateSchema, emailSchema, nameSchema } from '@/validation/schemas';
 import Loader from '../../ui/loader/Loader';
-import CustomerRepository from '../../../api/repositories/CustomerRepository';
 import { RegisterProps } from '../../../types';
 import PasswordChangeModal from '../ChangePassword';
+import CustomerController from '../../../api/controllers/CustomerController';
 
 export type ProfileChangableProps = Pick<
   RegisterProps,
@@ -26,16 +26,13 @@ export type ProfileChangableProps = Pick<
 interface IUserInfoProps {
   inEditMode: boolean;
   initialValues: ProfileChangableProps;
-  version: number;
 }
 
 const UserInfo: FC<IUserInfoProps> = ({
   inEditMode,
   initialValues,
-  version,
 }: IUserInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [profileVersion, setProfileVersion] = useState(version);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = (): void => {
@@ -56,8 +53,10 @@ const UserInfo: FC<IUserInfoProps> = ({
   const handleSubmit = (values: ProfileChangableProps): void => {
     setIsLoading(true);
 
+    let currentVersion;
+
     const updateUser = async (): Promise<ClientResponse<Customer>> => {
-      const customerRepo = new CustomerRepository();
+      const customerController = new CustomerController();
 
       const updateEmail: MyCustomerChangeEmailAction = {
         action: 'changeEmail',
@@ -86,18 +85,23 @@ const UserInfo: FC<IUserInfoProps> = ({
         updateBirthday,
       ];
 
-      const response = await customerRepo.updateCustomer({
-        version: profileVersion,
-        actions,
-      });
+      currentVersion = (await customerController.getCustomer()).body?.version;
 
-      return response;
+      if (currentVersion) {
+        const response = await customerController.updateCustomer({
+          version: currentVersion,
+          actions,
+        });
+
+        return response;
+      }
+
+      throw Error("Can't read data");
     };
 
     updateUser()
-      .then((response) => {
+      .then(() => {
         toast.success('Changing was succesful');
-        setProfileVersion(response.body?.version ?? profileVersion);
       })
       .catch(() => {
         toast.error('Error in changing profile');
@@ -190,7 +194,6 @@ const UserInfo: FC<IUserInfoProps> = ({
         isOpen={isModalOpen}
         email={initialValues.email}
         closeModal={closeModal}
-        version={version}
       />
     </>
   );
