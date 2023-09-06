@@ -7,7 +7,7 @@ import {
   setFilterBreadCrumbs,
   setFilterCategory,
 } from '@/store/slices/filterSlice';
-import { ICategoryWithSubcategories } from '@/api/types';
+import { ICategories, ICategoryWithSubcategories } from '@/api/types';
 import { buildBreadcrumbsMaker } from '@/components/CategoryCrumb/buildCrumbMaker';
 import styles from './styles.module.css';
 
@@ -30,7 +30,7 @@ const SideBar = (): ReactElement => {
     menuElement: ICategoryWithSubcategories
   ): void => {
     dispatch(setFilterCategory(menuElement.id));
-    const breadcrumbs: ReactElement[] = [];
+    const breadcrumbs: ICategories[] = [];
     const makeBreadcrumbs = buildBreadcrumbsMaker(categories, breadcrumbs);
     makeBreadcrumbs(menuElement.id, categories);
     dispatch(setFilterBreadCrumbs(breadcrumbs.reverse()));

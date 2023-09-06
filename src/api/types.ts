@@ -106,3 +106,8 @@ export interface ICategoryWithSubcategories {
   parent?: string;
   subcategories?: ICategoryWithSubcategories[];
 }
+
+export interface ICategories {
+  id: string;
+  name: string;
+}
