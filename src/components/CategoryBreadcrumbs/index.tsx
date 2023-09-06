@@ -24,9 +24,10 @@ const CategoryBreadcrumbs = (): ReactElement => {
       <Link className={styles.link} href="/catalog" onClick={linkHandler}>
         Catalog
       </Link>
-      {filterBreadcrumbs.map(({ id, name }) => (
-        <CategoryCrumb id={id} name={name} />
-      ))}
+      {filterBreadcrumbs.map(({ id, name }) => {
+        const key = `crumb${id}`;
+        return <CategoryCrumb key={key} id={id} name={name} />;
+      })}
     </div>
   );
 };
