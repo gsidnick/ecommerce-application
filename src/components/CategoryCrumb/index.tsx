@@ -8,6 +8,7 @@ import styles from './styles.module.css';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectProductState } from '@/store/slices/productsSlice';
 import { buildBreadcrumbsMaker } from '@/components/CategoryCrumb/buildCrumbMaker';
+import { ICategory } from '@/api/types';
 
 interface CrumbProps {
   id: string;
@@ -19,7 +20,7 @@ function CategoryCrumb({ id, name }: CrumbProps): ReactElement {
   const dispatch = useAppDispatch();
   const crumbHandler = (): void => {
     dispatch(setFilterCategory(id));
-    const breadcrumbs: ReactElement[] = [];
+    const breadcrumbs: ICategory[] = [];
     const makeBreadcrumbs = buildBreadcrumbsMaker(categories, breadcrumbs);
     makeBreadcrumbs(id, categories);
     dispatch(setFilterBreadCrumbs(breadcrumbs.reverse()));

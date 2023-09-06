@@ -1,10 +1,10 @@
-import { ICategories, ICategoryWithSubcategories } from '@/api/types';
+import { ICategory, ICategoryWithSubcategories } from '@/api/types';
 
 type BreadcrumbsMaker = (id: string, cat: ICategoryWithSubcategories[]) => void;
 
 export const buildBreadcrumbsMaker = (
   input: ICategoryWithSubcategories[],
-  output: ICategories[]
+  output: ICategory[]
 ): BreadcrumbsMaker => {
   const initial = input;
   const makeCrumb = (

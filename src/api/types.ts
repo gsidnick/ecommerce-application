@@ -107,7 +107,7 @@ export interface ICategoryWithSubcategories {
   subcategories?: ICategoryWithSubcategories[];
 }
 
-export interface ICategories {
+export interface ICategory {
   id: string;
   name: string;
 }
