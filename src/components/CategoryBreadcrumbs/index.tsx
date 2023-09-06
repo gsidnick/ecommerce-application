@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import Link from 'next/link';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import {
+  resetAllFilters,
   selectFilterState,
   setFilterBreadCrumbs,
 } from '@/store/slices/filterSlice';
@@ -13,6 +14,7 @@ const CategoryBreadcrumbs = (): ReactElement => {
   const dispatch = useAppDispatch();
 
   const linkHandler = (): void => {
+    dispatch(resetAllFilters());
     dispatch(setFilterBreadCrumbs([]));
   };
 
