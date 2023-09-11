@@ -57,6 +57,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'error',
     'no-debugger': 'off',
     'no-console': 0,
+    'no-void': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/jsx-uses-react': 'off',
     'react/jsx-props-no-spreading': 'off',

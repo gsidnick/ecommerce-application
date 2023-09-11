@@ -14,10 +14,9 @@ import { menu as menuData } from '../menu/menuData';
 import { selectMenuState, setStateBurgerMenu } from '@/store/slices/menuSlice';
 import CustomerController from '@/api/controllers/CustomerController';
 import CloseIcon from '@/components/ui/icons/CloseIcon';
-import logo from '@/assets/images/logo/logo-orange.png';
-
-import styles from './BurgerMenu.module.css';
 import { ERoute } from '@/data/routes';
+import logo from '@/assets/images/logo/logo-orange.png';
+import styles from './styles.module.css';
 
 const BurgerMenu: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +29,8 @@ const BurgerMenu: NextPage = () => {
 
   const closeMenu = (): void => {
     dispatch(setStateBurgerMenu(false));
+    const body = document.querySelector('body');
+    body?.classList.remove('modal');
   };
 
   const handleNavigate = (link: string) => (): void => {
@@ -47,12 +48,13 @@ const BurgerMenu: NextPage = () => {
   };
 
   return (
-    <div
-      className={styles.menu}
-      role="button"
-      onClick={closeMenu}
-      aria-hidden="true"
-    >
+    <>
+      <div
+        className={styles.menu}
+        role="button"
+        onClick={closeMenu}
+        aria-hidden="true"
+       />
       <div className={styles.menuWrapper}>
         <div className={styles.menuContent} role="button">
           <div className={`${styles.menuHeader} p-2`}>
@@ -81,38 +83,53 @@ const BurgerMenu: NextPage = () => {
               </li>
             ))}
             {authState && (
-              <li
-                key="log-out"
-                className="w-full opacity-75 hover:bg-indigo-500"
-                onClick={handleLogOut}
-              >
-                <div className="p-3">
-                  <p>Log Out</p>
-                </div>
-              </li>
+              <>
+                <li
+                  key="profile"
+                  className="w-full opacity-75 hover:bg-indigo-500"
+                  onClick={handleNavigate(ERoute.profile)}
+                >
+                  <div className="p-3">
+                    <p>PROFILE</p>
+                  </div>
+                </li>
+                <li
+                  key="log-out"
+                  className="w-full opacity-75 hover:bg-indigo-500"
+                  onClick={handleLogOut}
+                >
+                  <div className="p-3">
+                    <p>LOG OUT</p>
+                  </div>
+                </li>
+              </>
             )}
-            <li
-              key="log-in"
-              className="w-full opacity-75 hover:bg-indigo-500"
-              onClick={handleNavigate(ERoute.login)}
-            >
-              <div className="p-3">
-                <p>Log In</p>
-              </div>
-            </li>
-            <li
-              key="sign-up"
-              className="w-full opacity-75 hover:bg-indigo-500"
-              onClick={handleNavigate(ERoute.signup)}
-            >
-              <div className="p-3">
-                <p>Sign Up</p>
-              </div>
-            </li>
+            {!authState && (
+              <>
+                <li
+                  key="log-in"
+                  className="w-full opacity-75 hover:bg-indigo-500"
+                  onClick={handleNavigate(ERoute.login)}
+                >
+                  <div className="p-3">
+                    <p>LOG IN</p>
+                  </div>
+                </li>
+                <li
+                  key="sign-up"
+                  className="w-full opacity-75 hover:bg-indigo-500"
+                  onClick={handleNavigate(ERoute.signup)}
+                >
+                  <div className="p-3">
+                    <p>SIGN UP</p>
+                  </div>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -19,6 +19,8 @@ function ButtonsGroup(): ReactElement {
 
   const handleOpenBurgerMenu = (): void => {
     dispatch(setStateBurgerMenu(true));
+    const body = document.querySelector('body');
+    body?.classList.add('modal');
   };
 
   const handleRedirectToSignUp = (): void => {
@@ -32,36 +34,53 @@ function ButtonsGroup(): ReactElement {
       <div className="flex items-center justify-center">
         <Image src={cart} alt="cart" className="mr-8" />
         {authState && (
-          <button
-            type="button"
-            className="hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
-            onClick={(): void => {
-              new CustomerController().logoutCustomer();
-              dispatch(resetAuthState());
-              toast.success('You have successfully logged out');
-            }}
-          >
-            Log out
-          </button>
+          <>
+            <button
+              type="button"
+              className="hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
+              onClick={(): void => {
+                router.push(ERoute.profile).catch((error) => {
+                  toast.error(error as string);
+                });
+              }}
+            >
+              Profile
+            </button>
+            <button
+              type="button"
+              className="ml-2 hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
+              onClick={(): void => {
+                new CustomerController().logoutCustomer();
+                dispatch(resetAuthState());
+                toast.success('You have successfully logged out');
+              }}
+            >
+              Log out
+            </button>
+          </>
         )}
-        <button
-          type="button"
-          className="hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
-          onClick={(): void => {
-            router.push(ERoute.login).catch((error) => {
-              toast.error(error as string);
-            });
-          }}
-        >
-          Log In
-        </button>
-        <button
-          type="button"
-          onClick={handleRedirectToSignUp}
-          className="ml-1 hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
-        >
-          Sign Up
-        </button>
+        {!authState && (
+          <>
+            <button
+              type="button"
+              className="hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
+              onClick={(): void => {
+                router.push(ERoute.login).catch((error) => {
+                  toast.error(error as string);
+                });
+              }}
+            >
+              Log In
+            </button>
+            <button
+              type="button"
+              onClick={handleRedirectToSignUp}
+              className="ml-2 hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
+            >
+              Sign Up
+            </button>
+          </>
+        )}
         <div
           className={styles.burgerButton}
           role="button"
@@ -71,12 +90,6 @@ function ButtonsGroup(): ReactElement {
         >
           <span className={styles.burgerSpan} />
         </div>
-      </div>
-      <div
-        style={authState ? { color: 'green' } : { color: 'red' }}
-        className="flex justify-center"
-      >
-        {authState ? 'Logged In' : 'Not Logged In'}
       </div>
     </div>
   );

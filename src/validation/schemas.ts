@@ -56,3 +56,7 @@ export const getPostcodeSchema = (country: PostcodeName): Yup.StringSchema =>
   Yup.string()
     .matches(postcodes[country].pattern, postcodes[country].message)
     .required('Required');
+
+export const numberSchema = Yup.string()
+  .matches(/^[0-9]+$/, '')
+  .required('');

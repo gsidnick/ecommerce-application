@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.selectWrapper {
+  width: 180px;
+}
+
+.select {
+  width: 100%;
+}

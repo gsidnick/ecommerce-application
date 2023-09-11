@@ -38,7 +38,9 @@ export interface ExistingTokenFlowOptions {
 }
 
 export interface IApiLoginResult {
-  apiResult: ClientResponse<CustomerSignInResult> | ClientResponse<ClientResult>;
+  apiResult:
+    | ClientResponse<CustomerSignInResult>
+    | ClientResponse<ClientResult>;
   token: TokenStore | null;
 }
 
@@ -96,4 +98,16 @@ export enum HttpStatus {
 export interface LoginProps {
   email: string;
   password: string;
+}
+
+export interface ICategoryWithSubcategories {
+  id: string;
+  name: string;
+  parent?: string;
+  subcategories?: ICategoryWithSubcategories[];
+}
+
+export interface ICategory {
+  id: string;
+  name: string;
 }

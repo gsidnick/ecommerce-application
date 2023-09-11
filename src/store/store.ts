@@ -20,11 +20,17 @@ import {
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore';
 import authReducer, { authSlice } from '@/store/slices/authSlice';
 import menuReducer, { menuSlice } from '@/store/slices/menuSlice';
+import modalReducer, { modalSlice } from '@/store/slices/modalSlice';
+import productsReducer, { productsSlice } from '@/store/slices/productsSlice';
+import filterReducer, { filterSlice } from '@/store/slices/filterSlice';
 import storage from './helpers/storage';
 
 const rootReducer = combineReducers({
   [authSlice.name]: authReducer,
   [menuSlice.name]: menuReducer,
+  [modalSlice.name]: modalReducer,
+  [productsSlice.name]: productsReducer,
+  [filterSlice.name]: filterReducer,
 });
 
 export interface IPersistorStore {
@@ -70,6 +76,7 @@ export const makeStore = (): ToolkitStore & IPersistorStore => {
 };
 
 export type RootState = ReturnType<typeof rootReducer>;
+
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
 export type ClientStore = ReturnType<typeof setupStore>;
@@ -82,3 +89,4 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 >;
 
 export const wrapper = createWrapper<AppStore>(makeStore);
+export const store = makeStore();
