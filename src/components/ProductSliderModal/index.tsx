@@ -6,7 +6,7 @@ import { ArrowProps } from '@/components/slider/types';
 import styles from './styles.module.css';
 
 interface ProductSliderModalProps {
-  images: string[];
+  images: string[] | null;
   current: number;
 }
 
@@ -78,7 +78,7 @@ const ProductSliderModal = ({
       </button>
       <div className={styles.slider}>
         <div ref={sliderRef} className="keen-slider">
-          {images.map((image) => (
+          {images?.map((image) => (
             <div className={`keen-slider__slide ${styles.slide}`} key={image}>
               <picture>
                 <img

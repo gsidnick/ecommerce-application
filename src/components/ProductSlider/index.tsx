@@ -18,7 +18,7 @@ import { selectModalState, setModalState } from '@/store/slices/modalSlice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 
 interface ProductSliderProps {
-  images: string[];
+  images: string[] | null;
 }
 
 const FIRST_SLIDE = 0;
@@ -132,7 +132,7 @@ const ProductSlider = ({ images }: ProductSliderProps): ReactElement => {
         onClick={openModalHandler}
         className="keen-slider"
       >
-        {images.map((image) => (
+        {images?.map((image) => (
           <div className={`keen-slider__slide ${styles.slide}`} key={image}>
             <picture>
               <img
@@ -147,7 +147,7 @@ const ProductSlider = ({ images }: ProductSliderProps): ReactElement => {
 
       <div className={styles.navigationWrapper}>
         <div ref={thumbnailRef} className="keen-slider thumbnail">
-          {images.map((image) => (
+          {images?.map((image) => (
             <div className={`keen-slider__slide ${styles.slide}`} key={image}>
               <picture>
                 <img src={`${image}?w=100&h=100`} alt="thumb" />

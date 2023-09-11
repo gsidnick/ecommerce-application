@@ -1,69 +1,104 @@
-import React, { ReactElement } from 'react';
-import { GetServerSideProps } from 'next';
-import { ProductProjection, ProductVariant } from '@commercetools/platform-sdk';
-import ProductController from '@/api/controllers/ProductController';
-import ProductDetail from '@/components/ProductDetail';
-import ProductSlider from '@/components/ProductSlider';
-import styles from './styles.module.css';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { ProductVariant } from '@commercetools/platform-sdk';
+import { useRouter } from 'next/router';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectProductState } from '@/store/slices/productsSlice';
+import ProductController from '@/api/controllers/ProductController';
+import ProductDetail from '@/components/ProductDetail';
+import { MAIN_VARIANT_ID } from '@/components/ProductCard/constants';
+import ProductSlider from '@/components/ProductSlider';
+import styles from './styles.module.css';
 
-const MAIN_VARIANT_ID = 1;
 const FIRST_ELEMENT = 0;
 const HANDRED = 100;
 
-interface ProductProps {
-  product: ProductProjection;
-}
-
-interface Brand {
-  key: string;
-  label: string;
-}
-
-const ProductPage = ({ product }: ProductProps): ReactElement => {
-  const { variantIdOfCurrentProduct } = useAppSelector(selectProductState);
-  const currentVariant = variantIdOfCurrentProduct;
-  const details = {
-    name: product.name['en-US'],
-    description: product.description ? product.description['en-US'] : '',
-    brand: '',
+const ProductPage = (): ReactElement => {
+  const productController = new ProductController();
+  const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState<string[] | null>(null);
+  const [details, setDetails] = useState({
+    name: '',
+    description: '',
     price: 0,
     discount: 0,
-  };
-  let variant: ProductVariant;
+  });
+  const router = useRouter();
+  const { isReady } = router;
+  const { id } = router.query;
+  const { variantIdOfCurrentProduct: currentVariant } =
+    useAppSelector(selectProductState);
 
-  if (currentVariant === MAIN_VARIANT_ID) {
-    variant = product.masterVariant;
-  } else {
-    [variant] = product.variants.filter((item) => item.id === currentVariant);
-  }
+  useEffect(() => {
+    if (isReady && id && typeof id === 'string') {
+      productController
+        .getProduct(id)
+        .then((response) => {
+          const product = response.body;
 
-  const images = variant.images ? variant.images.map((item) => item.url) : [];
+          if (product) {
+            const name = product.name['en-US'];
+            const description = product.description
+              ? product.description['en-US']
+              : '';
 
-  if (variant.prices) {
-    details.price = variant.prices[FIRST_ELEMENT].value.centAmount / HANDRED;
-    if (variant.prices[FIRST_ELEMENT].discounted) {
-      details.discount =
-        variant.prices[FIRST_ELEMENT].discounted.value.centAmount / HANDRED;
+            let variant: ProductVariant;
+            if (currentVariant === MAIN_VARIANT_ID) {
+              variant = product.masterVariant;
+            } else {
+              [variant] = product.variants.filter(
+                (item) => item.id === currentVariant
+              );
+            }
+
+            let price = 0;
+            let discount = 0;
+            if (variant.prices) {
+              price = variant.prices[FIRST_ELEMENT].value.centAmount / HANDRED;
+              if (variant.prices[FIRST_ELEMENT].discounted) {
+                discount =
+                  variant.prices[FIRST_ELEMENT].discounted.value.centAmount /
+                  HANDRED;
+              }
+            }
+
+            const variantImages = variant.images
+              ? variant.images.map((item) => item.url)
+              : null;
+
+            setImages(variantImages);
+
+            setDetails({
+              name,
+              description,
+              price,
+              discount,
+            });
+
+            setLoading(false);
+          }
+        })
+        .catch(() => {
+          void router.push('/404');
+        });
     }
-  }
+  }, [isReady, id]);
 
-  if (variant.attributes) {
-    const [brand] = variant.attributes.filter((item) => item.name === 'brand');
-    const value = brand.value as Brand;
-    details.brand = value.label;
-  }
   return (
     <section className={styles.productdetail}>
       <div className={styles.container}>
         <div className={styles.layout}>
-          <div className={styles.slider}>
-            <ProductSlider images={images} />
-          </div>
-          <div className={styles.details}>
-            <ProductDetail details={details} />
-          </div>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <>
+              <div className={styles.slider}>
+                <ProductSlider images={images} />
+              </div>
+              <div className={styles.details}>
+                <ProductDetail details={details} />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>
@@ -71,24 +106,3 @@ const ProductPage = ({ product }: ProductProps): ReactElement => {
 };
 
 export default ProductPage;
-
-export const getServerSideProps: GetServerSideProps<ProductProps> = async (
-  context
-) => {
-  const productID = context.params?.id as string;
-  const productController = new ProductController();
-  try {
-    const response = await productController.getProduct(productID);
-    const product = response.body;
-    if (!product) throw new Error('Product Not Found');
-    return {
-      props: {
-        product,
-      },
-    };
-  } catch {
-    return {
-      notFound: true,
-    };
-  }
-};
