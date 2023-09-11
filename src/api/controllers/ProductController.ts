@@ -13,12 +13,6 @@ class ProductController {
     this.productRepository = new ProductRepository();
   }
 
-  public async getProduct(
-    id: string
-  ): Promise<ClientResponse<ProductProjection>> {
-    return this.productRepository.getProductByID(id);
-  }
-
   public async getProducts({
     filter,
     sort,
@@ -32,7 +26,25 @@ class ProductController {
     offset?: number;
     search?: string;
   }): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> {
-    return this.productRepository.getProducts(filter, sort, limit, offset, search);
+    return this.productRepository.getProducts(
+      filter,
+      sort,
+      limit,
+      offset,
+      search
+    );
+  }
+
+  public async getProductByID(
+    id: string
+  ): Promise<ClientResponse<ProductProjection>> {
+    return this.productRepository.getProductByID(id);
+  }
+
+  public async getProductByKey(
+    key: string
+  ): Promise<ClientResponse<ProductProjection>> {
+    return this.productRepository.getProductByKey(key);
   }
 }
 

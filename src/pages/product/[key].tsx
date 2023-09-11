@@ -24,14 +24,14 @@ const ProductPage = (): ReactElement => {
   });
   const router = useRouter();
   const { isReady } = router;
-  const { id } = router.query;
+  const { key } = router.query;
   const { variantIdOfCurrentProduct: currentVariant } =
     useAppSelector(selectProductState);
 
   useEffect(() => {
-    if (isReady && id && typeof id === 'string') {
+    if (isReady && key && typeof key === 'string') {
       productController
-        .getProduct(id)
+        .getProductByKey(key)
         .then((response) => {
           const product = response.body;
 
@@ -81,7 +81,7 @@ const ProductPage = (): ReactElement => {
           void router.push('/404');
         });
     }
-  }, [isReady, id]);
+  }, [isReady, key]);
 
   return (
     <section className={styles.productdetail}>

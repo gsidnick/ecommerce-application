@@ -58,6 +58,22 @@ class ProductRepository {
       .execute();
     return result as ClientResponse<ProductProjection>;
   }
+
+  public async getProductByKey(
+    key: string
+  ): Promise<ClientResponse<ProductProjection>> {
+    const client = new AnonymousClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .productProjections()
+      .withKey({ key })
+      .get()
+      .execute();
+    return result as ClientResponse<ProductProjection>;
+  }
 }
 
 export default ProductRepository;
