@@ -89,8 +89,15 @@ class CustomerRepository {
     }
   }
 
-  public logoutCustomer(): void {
+  public async logoutCustomer(): Promise<void> {
     this.tokenService.removeToken();
+    const client = new AnonymousClient();
+    const apiRoot = client.getApiRoot();
+
+    await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .get()
+      .execute();
   }
 
   public async getCustomer(): Promise<ClientResponse<Customer>> {

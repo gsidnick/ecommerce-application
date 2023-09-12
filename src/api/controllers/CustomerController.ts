@@ -30,8 +30,8 @@ class CustomerController {
     return this.customerRepository.loginCustomer(userData);
   }
 
-  public logoutCustomer(): void {
-    this.customerRepository.logoutCustomer();
+  public async logoutCustomer(): Promise<void> {
+    return this.customerRepository.logoutCustomer();
   }
 
   public async getCustomer(): Promise<ClientResponse<Customer>> {
