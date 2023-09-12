@@ -121,6 +121,20 @@ class CartRepository {
     return customerCarts.length;
   }
 
+  public async getCart(): Promise<Cart> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .activeCart()
+      .get()
+      .execute();
+    return result.body;
+  }
+
   private async getCartIDAndVersion(): Promise<{
     ID: string;
     version: number;
