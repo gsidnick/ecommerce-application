@@ -59,12 +59,14 @@ const FilteredProductContainer = (
       <div className={styles.gridItemContainer}>
         {filteredProducts.length &&
           filteredProducts.map((product) => {
-            const { id, name, description, masterVariant, variants } = product;
+            const { id, key, name, description, masterVariant, variants } =
+              product;
 
             return (
               <div key={id} className={styles.gridItemWrapper}>
                 <ProductCard
                   id={id}
+                  productKey={key ?? ''}
                   img={
                     masterVariant.images?.length
                       ? masterVariant.images[ZERO_INDEX].url

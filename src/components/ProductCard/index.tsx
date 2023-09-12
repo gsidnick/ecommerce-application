@@ -22,6 +22,7 @@ import styles from './styles.module.css';
 
 interface ProductCardProps {
   id: string;
+  productKey: string;
   img: string;
   name: string;
   model: string;
@@ -37,6 +38,7 @@ interface ProductCardProps {
 const ProductCard: FC<ProductCardProps> = (props) => {
   const {
     id,
+    productKey,
     img,
     name,
     model,
@@ -178,7 +180,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
   };
 
   return (
-    <Link href={`/product/${id}`} onClick={handleCardClick}>
+    <Link href={`/product/${productKey}`} onClick={handleCardClick}>
       <div id={id} className={styles.cardWrapper}>
         <div className={`${styles.container} text-white`}>
           <div className={`${styles.imageWrapper} bg-white`}>

@@ -8,20 +8,17 @@ interface ProductDetailProps {
   details: {
     name: string;
     description: string;
-    brand: string;
     price: number;
     discount: number;
   };
 }
 const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
-  const { name, description, price, discount, brand } = details;
+  const { name, description, price, discount } = details;
 
   return (
     <div className="pl-8 pr-8">
       <Breadcrumbs className="mb-4" />
-      <h1 className="mb-4 text-3xl">
-        {brand} {name}
-      </h1>
+      <h1 className="mb-4 text-3xl">{name}</h1>
       <p>{description}</p>
       <div className={styles.priceWrapper}>
         <span className={styles.currentPrice}>
