@@ -10,6 +10,24 @@ class CartRepository {
     this.projectKey = getProjectKey();
   }
 
+  public async getProducts(): Promise<LineItem[]> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID } = await this.getCartIDAndVersion();
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .get()
+      .execute();
+
+    return result.body.lineItems;
+  }
+
   public async addProduct(productId: string): Promise<void> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();

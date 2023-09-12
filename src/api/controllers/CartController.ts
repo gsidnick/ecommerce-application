@@ -1,3 +1,4 @@
+import { LineItem } from '@commercetools/platform-sdk';
 import CartRepository from '@/api/repositories/CartRepository';
 
 class CartController {
@@ -5,6 +6,10 @@ class CartController {
 
   constructor() {
     this.cartRepository = new CartRepository();
+  }
+
+  public async getProducts(): Promise<LineItem[]> {
+    return this.cartRepository.getProducts();
   }
 
   public async addProduct(productId: string): Promise<void> {
