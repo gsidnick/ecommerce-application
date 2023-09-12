@@ -57,13 +57,15 @@ class CustomerRepository {
   public async loginCustomer(
     userData: UserCredentialData
   ): Promise<IApiLoginResult> {
-    const client = new AuthClient(userData);
-    const apiRoot = client.getApiRoot();
+    const tokenClient = new TokenClient();
+    const authClient = new AuthClient(userData);
+    const tokenApiRoot = tokenClient.getApiRoot();
+    const authApiRoot = authClient.getApiRoot();
 
     try {
       const { email, password } = userData;
 
-      const apiResult = await apiRoot
+      const tokenApiResult = await tokenApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
@@ -73,12 +75,21 @@ class CustomerRepository {
           body: {
             email,
             password,
+            activeCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
         .execute();
 
+      await authApiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .get()
+        .execute();
+
       return {
-        apiResult: apiResult as ClientResponse<CustomerSignInResult>,
+        apiResult: tokenApiResult as ClientResponse<CustomerSignInResult>,
         token: this.tokenService.getToken(),
       };
     } catch (error) {
