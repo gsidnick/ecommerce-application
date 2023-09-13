@@ -61,14 +61,10 @@ class CustomerRepository {
   public async loginCustomer(
     userData: UserCredentialData
   ): Promise<IApiLoginResult> {
-    const tokenClient = new TokenClient();
-    const authClient = new AuthClient(userData);
-    const tokenApiRoot = tokenClient.getApiRoot();
-    const authApiRoot = authClient.getApiRoot();
-
     try {
       const { email, password } = userData;
-
+      const tokenClient = new TokenClient();
+      const tokenApiRoot = tokenClient.getApiRoot();
       const tokenApiResult = await tokenApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
@@ -84,6 +80,8 @@ class CustomerRepository {
         })
         .execute();
 
+      const authClient = new AuthClient(userData);
+      const authApiRoot = authClient.getApiRoot();
       await authApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
