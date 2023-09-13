@@ -1,4 +1,4 @@
-import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ClientResponse, TokenStore } from '@commercetools/sdk-client-v2';
 import {
   Customer,
   MyCustomerChangePassword,
@@ -48,6 +48,10 @@ class CustomerController {
     data: MyCustomerChangePassword
   ): Promise<ClientResponse<Customer>> {
     return this.customerRepository.changeCustomerPassword(data);
+  }
+
+  public async createAnonymousCustomer(): Promise<TokenStore> {
+    return this.customerRepository.createAnonymousCustomer();
   }
 }
 

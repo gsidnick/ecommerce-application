@@ -1,4 +1,8 @@
-import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import {
+  ClientResponse,
+  ClientResult,
+  TokenStore,
+} from '@commercetools/sdk-client-v2';
 import {
   Customer,
   CustomerSignInResult,
@@ -102,13 +106,7 @@ class CustomerRepository {
 
   public async logoutCustomer(): Promise<void> {
     this.tokenService.removeToken();
-    const client = new AnonymousClient();
-    const apiRoot = client.getApiRoot();
-
-    await apiRoot
-      .withProjectKey({ projectKey: this.projectKey })
-      .get()
-      .execute();
+    void (await this.createAnonymousCustomer());
   }
 
   public async getCustomer(): Promise<ClientResponse<Customer>> {
@@ -150,6 +148,18 @@ class CustomerRepository {
       .post({ body: data })
       .execute();
     return result as ClientResponse<Customer>;
+  }
+
+  public async createAnonymousCustomer(): Promise<TokenStore> {
+    const client = new AnonymousClient();
+    const apiRoot = client.getApiRoot();
+
+    await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .get()
+      .execute();
+
+    return this.tokenService.getToken();
   }
 }
 
