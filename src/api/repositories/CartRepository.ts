@@ -1,6 +1,8 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
 import TokenClient from '@/api/client/TokenClient';
+import { MASTER_VARIANT_ID } from '@/constants';
 
 class CartRepository {
   private readonly projectKey: string;
@@ -27,12 +29,20 @@ class CartRepository {
     return result.body.lineItems;
   }
 
-  public async addProduct(productId: string): Promise<void> {
+  public async addProduct({
+    productId,
+    quantity,
+    variantId = MASTER_VARIANT_ID,
+  }: {
+    productId: string;
+    quantity: number;
+    variantId?: number;
+  }): Promise<Cart | undefined> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
     const { ID, version } = await this.getCartIDAndVersion();
 
-    await apiRoot
+    const result = await apiRoot
       .withProjectKey({
         projectKey: this.projectKey,
       })
@@ -42,25 +52,31 @@ class CartRepository {
       .post({
         body: {
           version,
-          actions: [
-            { action: 'addLineItem', productId, variantId: 1, quantity: 1 },
-          ],
+          actions: [{ action: 'addLineItem', productId, variantId, quantity }],
         },
       })
       .execute();
+
+    return (result as ClientResponse<Cart>).body;
   }
 
-  public async removeProduct(productId: string): Promise<void> {
+  public async removeProduct({
+    productId,
+    quantity,
+  }: {
+    productId: string;
+    quantity: number;
+  }): Promise<Cart | undefined> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
     const { ID, version } = await this.getCartIDAndVersion();
     const lineItem = await this.getLineItemByProductID(productId);
 
     if (!lineItem) {
-      return;
+      return undefined;
     }
 
-    await apiRoot
+    const result = await apiRoot
       .withProjectKey({
         projectKey: this.projectKey,
       })
@@ -71,11 +87,17 @@ class CartRepository {
         body: {
           version,
           actions: [
-            { action: 'removeLineItem', lineItemId: lineItem.id, quantity: 1 },
+            {
+              action: 'removeLineItem',
+              lineItemId: lineItem.id,
+              quantity,
+            },
           ],
         },
       })
       .execute();
+
+    return (result as ClientResponse<Cart>).body;
   }
 
   public async createCart(): Promise<void> {

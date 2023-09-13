@@ -1,5 +1,6 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import CartRepository from '@/api/repositories/CartRepository';
+import { MASTER_VARIANT_ID } from '@/constants';
 
 class CartController {
   private cartRepository: CartRepository;
@@ -20,12 +21,26 @@ class CartController {
     return this.cartRepository.getProducts();
   }
 
-  public async addProduct(productId: string): Promise<void> {
-    void (await this.cartRepository.addProduct(productId));
+  public async addProduct({
+    productId,
+    quantity,
+    variantId = MASTER_VARIANT_ID,
+  }: {
+    productId: string;
+    quantity: number;
+    variantId?: number;
+  }): Promise<Cart | undefined> {
+    return this.cartRepository.addProduct({ productId, variantId, quantity });
   }
 
-  public async removeProduct(productId: string): Promise<void> {
-    void (await this.cartRepository.removeProduct(productId));
+  public async removeProduct({
+    productId,
+    quantity,
+  }: {
+    productId: string;
+    quantity: number;
+  }): Promise<Cart | undefined> {
+    return this.cartRepository.removeProduct({ productId, quantity });
   }
 }
 export default CartController;

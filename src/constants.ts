@@ -26,3 +26,4 @@ export const PRODUCT_DESCRIPTION_SLICE_FROM = 0;
 export const PRODUCT_DESCRIPTION_SLICE_TO = 80;
 
 export const IMMEDIATE_INVOKE = 100;
+export const MASTER_VARIANT_ID = 1;
