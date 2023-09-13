@@ -1,4 +1,3 @@
-import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { getProjectKey } from '@/api/helpers/options';
 import TokenClient from '@/api/client/TokenClient';
@@ -79,10 +78,11 @@ class CartRepository {
       .execute();
   }
 
-  public async createCart(): Promise<ClientResponse<Cart>> {
+  public async createCart(): Promise<void> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
-    const result = await apiRoot
+
+    await apiRoot
       .withProjectKey({
         projectKey: this.projectKey,
       })
@@ -90,7 +90,6 @@ class CartRepository {
       .carts()
       .post({ body: { currency: 'USD', country: 'US' } })
       .execute();
-    return result as ClientResponse<Cart>;
   }
 
   public async getCountCustomerCarts(): Promise<number> {

@@ -12,17 +12,15 @@ class CartController {
     return this.cartRepository.getCart();
   }
 
+  public async createCart(): Promise<void> {
+    return this.cartRepository.createCart();
+  }
+
   public async getProducts(): Promise<LineItem[]> {
     return this.cartRepository.getProducts();
   }
 
   public async addProduct(productId: string): Promise<void> {
-    const isCartExist = !!(await this.cartRepository.getCountCustomerCarts());
-
-    if (!isCartExist) {
-      await this.cartRepository.createCart();
-    }
-
     void (await this.cartRepository.addProduct(productId));
   }
 
