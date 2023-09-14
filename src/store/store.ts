@@ -24,6 +24,7 @@ import modalReducer, { modalSlice } from '@/store/slices/modalSlice';
 import productsReducer, { productsSlice } from '@/store/slices/productsSlice';
 import filterReducer, { filterSlice } from '@/store/slices/filterSlice';
 import storage from './helpers/storage';
+import basketReducer, { basketSlice } from '@/store/slices/basketSlice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: authReducer,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   [modalSlice.name]: modalReducer,
   [productsSlice.name]: productsReducer,
   [filterSlice.name]: filterReducer,
+  [basketSlice.name]: basketReducer,
 });
 
 export interface IPersistorStore {
