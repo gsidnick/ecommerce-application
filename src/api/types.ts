@@ -112,10 +112,8 @@ export interface ICategory {
   name: string;
 }
 
-export interface BasketItem {
-  itemId: string;
-  itemName: string;
+export interface CartItem {
+  productId: string;
   quantity: number;
-  price: number;
-  discountedPrice: number;
+  variantId?: string;
 }
