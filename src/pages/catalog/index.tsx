@@ -3,6 +3,7 @@
 import { ReactElement, useEffect, useRef, useState } from 'react';
 import SideBar from '../../components/SideBar';
 import FilterPanelContainer from '@/components/FilterPanelContainer';
+import Loading from '@/components/Loading';
 import SortButtonsPanel from '@/components/SortButtonsPanel';
 import FilteredProductContainer from '@/components/FilteredProductContainer';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
@@ -41,6 +42,7 @@ function Catalog(): ReactElement {
     filteredAllProducts,
     filterPaginationPage,
     priceSliderValues: { min, max },
+    isLoading,
   } = useAppSelector(selectFilterState);
   const [brands, setBrands] = useState<string[]>(
     extractAllBrands(filteredAllProducts)
@@ -122,6 +124,11 @@ function Catalog(): ReactElement {
 
   return (
     <div className={styles.container}>
+      {isLoading && (
+        <div className={styles.loadingWrapper}>
+          <Loading />
+        </div>
+      )}
       <div className="h-full bg-background-main">
         <div className="h-[56px] bg-background-main p-3">
           <span

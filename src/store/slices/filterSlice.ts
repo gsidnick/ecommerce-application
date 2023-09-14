@@ -65,7 +65,7 @@ export const getFilteredProducts = createAsyncThunk(
 
     if (filterByBrand.length) {
       let res = '';
-      filterByBrand.forEach((brand) => {
+      filterByBrand.forEach((brand: string) => {
         res = `${res}"${brand}",`;
       });
 
@@ -198,6 +198,7 @@ export interface FilterState {
   totalFilteredProducts: number;
   searchQuery: string;
   filterBreadcrumbs: ICategory[];
+  isLoading: boolean;
 }
 
 const initialState: FilterState = {
@@ -217,6 +218,7 @@ const initialState: FilterState = {
   totalFilteredProducts: 0,
   searchQuery: '',
   filterBreadcrumbs: [],
+  isLoading: false,
 };
 
 enum ESlices {
@@ -334,6 +336,10 @@ export const filterSlice = createSlice({
         ...action.payload.filter,
       })
     );
+    builder.addCase(getFilteredProducts.pending, (state) => ({
+      ...state,
+      isLoading: true,
+    }));
     builder.addCase(
       getFilteredProducts.fulfilled,
       (
@@ -347,6 +353,7 @@ export const filterSlice = createSlice({
           filteredProducts: newFilteredProducts,
           totalFilteredProducts: total,
           searchQuery: '',
+          isLoading: false,
         };
       }
     );

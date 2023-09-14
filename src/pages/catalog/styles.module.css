@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 300px auto;
   gap: 20px;
+  position: relative;
 }
 
 .filterPanelWrapper {
@@ -12,6 +13,19 @@
   transform: translateX(300px);
   transition: transform 330ms ease;
   width: 300px;
+}
+
+.loadingWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  color: #42a4ff;
 }
 
 @media (max-width: 767px) {
