@@ -50,7 +50,7 @@ function ButtonsGroup(): ReactElement {
               type="button"
               className="ml-2 hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
               onClick={(): void => {
-                new CustomerController().logoutCustomer();
+                void new CustomerController().logoutCustomer();
                 dispatch(resetAuthState());
                 toast.success('You have successfully logged out');
               }}

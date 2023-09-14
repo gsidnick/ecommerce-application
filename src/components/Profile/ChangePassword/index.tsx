@@ -57,7 +57,7 @@ const PasswordChangeModal: FC<IChangePassProps> = ({
         await customerController.changeCustomerPassword(changePassAction);
       }
 
-      customerController.logoutCustomer();
+      void customerController.logoutCustomer();
 
       await customerController
         .loginCustomer({
@@ -150,8 +150,8 @@ const PasswordChangeModal: FC<IChangePassProps> = ({
       contentLabel="Change Password"
       style={customStyles}
     >
-      <div className="flex items-center justify-center h-full">
-        <div className="p-6 my-20 rounded w-96 bg-background-main shadow-modal">
+      <div className="flex h-full items-center justify-center">
+        <div className="my-20 w-96 rounded bg-background-main p-6 shadow-modal">
           <h1 className="mb-4 text-2xl font-semibold text-white">
             Change password
           </h1>
@@ -194,7 +194,7 @@ const PasswordChangeModal: FC<IChangePassProps> = ({
                 </button>
                 <button
                   type="button"
-                  className="flex items-center justify-center w-full py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
+                  className="flex w-full items-center justify-center rounded-md bg-red-500 py-2 text-white hover:bg-red-600"
                   onClick={closeModal}
                 >
                   Discard

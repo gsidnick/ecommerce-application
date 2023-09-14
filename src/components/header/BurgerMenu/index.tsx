@@ -41,7 +41,7 @@ const BurgerMenu: NextPage = () => {
   };
 
   const handleLogOut = (): void => {
-    new CustomerController().logoutCustomer();
+    void new CustomerController().logoutCustomer();
     dispatch(resetAuthState());
     closeMenu();
     toast.success('You have successfully logged out');
@@ -54,7 +54,7 @@ const BurgerMenu: NextPage = () => {
         role="button"
         onClick={closeMenu}
         aria-hidden="true"
-       />
+      />
       <div className={styles.menuWrapper}>
         <div className={styles.menuContent} role="button">
           <div className={`${styles.menuHeader} p-2`}>
