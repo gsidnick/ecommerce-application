@@ -16,6 +16,63 @@ class CartRepository {
     this.projectKey = getProjectKey();
   }
 
+  public async addDiscountCode(code: string): Promise<Cart | undefined> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await this.getCartIDAndVersion();
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions: [{ action: 'addDiscountCode', code }],
+        },
+      })
+      .execute();
+
+    return (result as ClientResponse<Cart>).body;
+  }
+
+  public async removeDiscountCode(code: string): Promise<Cart | undefined> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await this.getCartIDAndVersion();
+
+    const promocodeID = await this.getPromocodeID(code);
+
+    if (promocodeID) {
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'removeDiscountCode',
+                discountCode: { typeId: 'discount-code', id: promocodeID },
+              },
+            ],
+          },
+        })
+        .execute();
+
+      return (result as ClientResponse<Cart>).body;
+    }
+
+    return undefined;
+  }
+
   public async getTotalPrice(): Promise<CentPrecisionMoney | undefined> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
@@ -263,6 +320,21 @@ class CartRepository {
     const { lineItems } = result.body;
 
     return lineItems.find((item) => item.productId === productId);
+  }
+
+  private async getPromocodeID(code: string): Promise<string | undefined> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .discountCodes()
+      .get()
+      .execute();
+    const { results } = result.body;
+    const promocode = results.find((item) => item.code === code);
+    return promocode?.id;
   }
 }
 

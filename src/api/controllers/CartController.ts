@@ -66,5 +66,13 @@ class CartController {
   }): Promise<Cart | undefined> {
     return this.cartRepository.removeProduct({ productId, quantity });
   }
+
+  public async addDiscountCode(code: string): Promise<Cart | undefined> {
+    return this.cartRepository.addDiscountCode(code);
+  }
+
+  public async removeDiscountCode(code: string): Promise<Cart | undefined> {
+    return this.cartRepository.removeDiscountCode(code);
+  }
 }
 export default CartController;
