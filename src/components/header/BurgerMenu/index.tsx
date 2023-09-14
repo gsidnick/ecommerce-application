@@ -82,6 +82,15 @@ const BurgerMenu: NextPage = () => {
                 </div>
               </li>
             ))}
+            <li
+              key="basket"
+              className="w-full opacity-75 hover:bg-indigo-500"
+              onClick={handleNavigate(ERoute.basket)}
+            >
+              <div className="p-3">
+                <p>BASKET</p>
+              </div>
+            </li>
             {authState && (
               <>
                 <li
