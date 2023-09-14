@@ -27,3 +27,5 @@ export const PRODUCT_DESCRIPTION_SLICE_TO = 80;
 
 export const IMMEDIATE_INVOKE = 100;
 export const MASTER_VARIANT_ID = 1;
+export const POSITION_DIGIT_COEFFICIENT = 10;
+export const EMPTY_PRICE = 0;

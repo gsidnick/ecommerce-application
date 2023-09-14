@@ -1,4 +1,8 @@
-import { Cart, LineItem } from '@commercetools/platform-sdk';
+import {
+  Cart,
+  CentPrecisionMoney,
+  LineItem,
+} from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
 import TokenClient from '@/api/client/TokenClient';
@@ -9,6 +13,23 @@ class CartRepository {
 
   constructor() {
     this.projectKey = getProjectKey();
+  }
+
+  public async getTotalPrice(): Promise<CentPrecisionMoney | undefined> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID } = await this.getCartIDAndVersion();
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .get()
+      .execute();
+
+    return (result as ClientResponse<Cart>).body?.totalPrice;
   }
 
   public async getProducts(): Promise<LineItem[]> {
@@ -111,6 +132,22 @@ class CartRepository {
       .me()
       .carts()
       .post({ body: { currency: 'USD', country: 'US' } })
+      .execute();
+  }
+
+  public async deleteCart(): Promise<void> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await this.getCartIDAndVersion();
+
+    await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .delete({ queryArgs: { version } })
       .execute();
   }
 

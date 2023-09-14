@@ -1,6 +1,10 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import CartRepository from '@/api/repositories/CartRepository';
-import { MASTER_VARIANT_ID } from '@/constants';
+import {
+  EMPTY_PRICE,
+  MASTER_VARIANT_ID,
+  POSITION_DIGIT_COEFFICIENT,
+} from '@/constants';
 
 class CartController {
   private cartRepository: CartRepository;
@@ -9,12 +13,28 @@ class CartController {
     this.cartRepository = new CartRepository();
   }
 
+  public async getTotalPrice(): Promise<number> {
+    const price = await this.cartRepository.getTotalPrice();
+
+    if (!price) {
+      return EMPTY_PRICE;
+    }
+
+    const { centAmount, fractionDigits } = price;
+    return centAmount / POSITION_DIGIT_COEFFICIENT ** fractionDigits;
+  }
+
   public async getCart(): Promise<Cart> {
     return this.cartRepository.getCart();
   }
 
   public async createCart(): Promise<void> {
     return this.cartRepository.createCart();
+  }
+
+  public async deleteCart(): Promise<void> {
+    void (await this.cartRepository.deleteCart());
+    void (await this.cartRepository.createCart());
   }
 
   public async getProducts(): Promise<LineItem[]> {
