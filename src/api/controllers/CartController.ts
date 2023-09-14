@@ -37,6 +37,10 @@ class CartController {
     void (await this.cartRepository.createCart());
   }
 
+  public async clearCart(): Promise<Cart | undefined> {
+    return this.cartRepository.clearCart();
+  }
+
   public async getProducts(): Promise<LineItem[]> {
     return this.cartRepository.getProducts();
   }

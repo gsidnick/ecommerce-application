@@ -2,6 +2,7 @@ import {
   Cart,
   CentPrecisionMoney,
   LineItem,
+  MyCartUpdateAction,
 } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
@@ -149,6 +150,39 @@ class CartRepository {
       .withId({ ID })
       .delete({ queryArgs: { version } })
       .execute();
+  }
+
+  public async clearCart(): Promise<Cart | undefined> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await this.getCartIDAndVersion();
+    const lineItems = await this.getProducts();
+    if (!lineItems.length) {
+      return undefined;
+    }
+
+    const actions: MyCartUpdateAction[] = lineItems.map((item) => ({
+      action: 'changeLineItemQuantity',
+      lineItemId: item.id,
+      quantity: 0,
+    }));
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions,
+        },
+      })
+      .execute();
+
+    return (result as ClientResponse<Cart>).body;
   }
 
   public async getCountCustomerCarts(): Promise<number> {
