@@ -44,7 +44,7 @@ class CartRepository {
     const apiRoot = client.getApiRoot();
     const { ID, version } = await this.getCartIDAndVersion();
     const isDiscountApplied = await this.isDiscountsApplied();
-    console.log(isDiscountApplied);
+
     if (isDiscountApplied) {
       const promocodeID = await this.getPromocodeID(code);
       if (promocodeID) {
