@@ -1,4 +1,8 @@
-import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import {
+  ClientResponse,
+  ClientResult,
+  TokenStore,
+} from '@commercetools/sdk-client-v2';
 import {
   Customer,
   CustomerSignInResult,
@@ -57,13 +61,11 @@ class CustomerRepository {
   public async loginCustomer(
     userData: UserCredentialData
   ): Promise<IApiLoginResult> {
-    const client = new AuthClient(userData);
-    const apiRoot = client.getApiRoot();
-
     try {
       const { email, password } = userData;
-
-      const apiResult = await apiRoot
+      const tokenClient = new TokenClient();
+      const tokenApiRoot = tokenClient.getApiRoot();
+      const tokenApiResult = await tokenApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
@@ -73,12 +75,23 @@ class CustomerRepository {
           body: {
             email,
             password,
+            activeCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
         .execute();
 
+      const authClient = new AuthClient(userData);
+      const authApiRoot = authClient.getApiRoot();
+      await authApiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .get()
+        .execute();
+
       return {
-        apiResult: apiResult as ClientResponse<CustomerSignInResult>,
+        apiResult: tokenApiResult as ClientResponse<CustomerSignInResult>,
         token: this.tokenService.getToken(),
       };
     } catch (error) {
@@ -89,8 +102,9 @@ class CustomerRepository {
     }
   }
 
-  public logoutCustomer(): void {
+  public async logoutCustomer(): Promise<void> {
     this.tokenService.removeToken();
+    void (await this.createAnonymousCustomer());
   }
 
   public async getCustomer(): Promise<ClientResponse<Customer>> {
@@ -132,6 +146,18 @@ class CustomerRepository {
       .post({ body: data })
       .execute();
     return result as ClientResponse<Customer>;
+  }
+
+  public async createAnonymousCustomer(): Promise<TokenStore> {
+    const client = new AnonymousClient();
+    const apiRoot = client.getApiRoot();
+
+    await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .get()
+      .execute();
+
+    return this.tokenService.getToken();
   }
 }
 

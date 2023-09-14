@@ -9,6 +9,7 @@ import {
   getProjectKey,
 } from '@/api/helpers/options';
 import { UserCredentialData } from '@/api/types';
+import TokenService from '@/api/services/TokenService';
 
 class AuthClient {
   private readonly clientBuilder: ClientBuilder;
@@ -26,6 +27,8 @@ class AuthClient {
 
   private getClient(userData: UserCredentialData): Client {
     const projectKey = getProjectKey();
+    const tokenService = new TokenService();
+    tokenService.removeToken();
     const authMiddlewareOptions = getAuthMiddlewareOptions(userData);
     const httpMiddlewareOptions = getHttpMiddlewareOptions();
     return this.clientBuilder

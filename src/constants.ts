@@ -16,7 +16,6 @@ export const MAX_DATE = new Date(
       MILLISECONDS_IN_SECOND
 );
 
-
 export const EMPTY_DATA = 0;
 export const SECONDS_TO_REDIRECT = 5;
 export const SECONDS_STEP_TO_REDIRECT = 1;
@@ -25,3 +24,8 @@ export const SECONDS_EDGE_TO_REDIRECT = 0;
 
 export const PRODUCT_DESCRIPTION_SLICE_FROM = 0;
 export const PRODUCT_DESCRIPTION_SLICE_TO = 80;
+
+export const IMMEDIATE_INVOKE = 100;
+export const MASTER_VARIANT_ID = 1;
+export const POSITION_DIGIT_COEFFICIENT = 10;
+export const EMPTY_PRICE = 0;

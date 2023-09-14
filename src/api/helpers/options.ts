@@ -15,6 +15,7 @@ import {
 } from '@/api/constants';
 
 export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOptions {
+  const tokenService = new TokenService();
   return {
     host: AUTH_URL,
     projectKey: PROJECT_KEY,
@@ -23,6 +24,10 @@ export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOpti
       clientSecret: CLIENT_SECRET,
     },
     scopes: SCOPES,
+    tokenCache: {
+      get: () => tokenService.getToken(),
+      set: (cache) => tokenService.setToken(cache),
+    },
     fetch,
   };
 }
