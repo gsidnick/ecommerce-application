@@ -1,4 +1,5 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
 import CartRepository from '@/api/repositories/CartRepository';
 import {
   EMPTY_PRICE,
@@ -28,7 +29,7 @@ class CartController {
     return this.cartRepository.getCart();
   }
 
-  public async createCart(): Promise<void> {
+  public async createCart(): Promise<ClientResponse<Cart>> {
     return this.cartRepository.createCart();
   }
 

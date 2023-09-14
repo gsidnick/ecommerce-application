@@ -122,11 +122,11 @@ class CartRepository {
     return (result as ClientResponse<Cart>).body;
   }
 
-  public async createCart(): Promise<void> {
+  public async createCart(): Promise<ClientResponse<Cart>> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
 
-    await apiRoot
+    const cart = await apiRoot
       .withProjectKey({
         projectKey: this.projectKey,
       })
@@ -134,6 +134,8 @@ class CartRepository {
       .carts()
       .post({ body: { currency: 'USD', country: 'US' } })
       .execute();
+
+    return cart as ClientResponse<Cart>;
   }
 
   public async deleteCart(): Promise<void> {
