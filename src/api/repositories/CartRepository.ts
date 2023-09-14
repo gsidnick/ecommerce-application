@@ -43,31 +43,33 @@ class CartRepository {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
     const { ID, version } = await this.getCartIDAndVersion();
+    const isDiscountApplied = await this.isDiscountsApplied();
+    console.log(isDiscountApplied);
+    if (isDiscountApplied) {
+      const promocodeID = await this.getPromocodeID(code);
+      if (promocodeID) {
+        const result = await apiRoot
+          .withProjectKey({
+            projectKey: this.projectKey,
+          })
+          .me()
+          .carts()
+          .withId({ ID })
+          .post({
+            body: {
+              version,
+              actions: [
+                {
+                  action: 'removeDiscountCode',
+                  discountCode: { typeId: 'discount-code', id: promocodeID },
+                },
+              ],
+            },
+          })
+          .execute();
 
-    const promocodeID = await this.getPromocodeID(code);
-
-    if (promocodeID) {
-      const result = await apiRoot
-        .withProjectKey({
-          projectKey: this.projectKey,
-        })
-        .me()
-        .carts()
-        .withId({ ID })
-        .post({
-          body: {
-            version,
-            actions: [
-              {
-                action: 'removeDiscountCode',
-                discountCode: { typeId: 'discount-code', id: promocodeID },
-              },
-            ],
-          },
-        })
-        .execute();
-
-      return (result as ClientResponse<Cart>).body;
+        return (result as ClientResponse<Cart>).body;
+      }
     }
 
     return undefined;
@@ -335,6 +337,21 @@ class CartRepository {
     const { results } = result.body;
     const promocode = results.find((item) => item.code === code);
     return promocode?.id;
+  }
+
+  private async isDiscountsApplied(): Promise<boolean> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .activeCart()
+      .get()
+      .execute();
+
+    return !!result.body.discountCodes.length;
   }
 }
 
