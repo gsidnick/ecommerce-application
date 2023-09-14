@@ -121,6 +121,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       (variant) => variant.id === activeVariantId
     );
     const activeVariantImage = activeVariant?.images?.length
+    // ? `${activeVariant?.images[FIRST_IMAGE_INDEX].url}?fit=fill&w=220`
       ? activeVariant?.images[FIRST_IMAGE_INDEX].url
       : '';
 
@@ -179,6 +180,16 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     dispatch(setVariantOfCurrentProduct(activeVariantId));
   };
 
+  const handleAddToCart = (
+    e: MouseEvent<HTMLDivElement>,
+    productId: string
+  ): void => {
+    e.stopPropagation();
+    e.preventDefault();
+    dispatch(setVariantOfCurrentProduct(activeVariantId));
+    console.log('productId', productId);
+  };
+
   return (
     <Link href={`/product/${productKey}`} onClick={handleCardClick}>
       <div id={id} className={styles.cardWrapper}>
@@ -223,12 +234,15 @@ const ProductCard: FC<ProductCardProps> = (props) => {
                   {currency} {getActiveVariantDiscountPrice()}
                 </p>
               </div>
-              {/* <div
+              <div
                 role="button"
                 className={`${styles.button} rounded-md bg-slate-500 text-white`}
+                onClick={(e): void => handleAddToCart(e, id)}
+                tabIndex={0}
+                aria-hidden="true"
               >
                 Add to cart
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
