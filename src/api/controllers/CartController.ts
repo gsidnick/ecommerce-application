@@ -27,20 +27,19 @@ class CartController {
     return centAmount / POSITION_DIGIT_COEFFICIENT ** fractionDigits;
   }
 
-  public async getCart(): Promise<Cart> {
+  public async getCart(): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.getCart();
   }
 
-  public async createCart(): Promise<void> {
+  public async createCart(): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.createCart();
   }
 
-  public async deleteCart(): Promise<void> {
-    void (await this.cartRepository.deleteCart());
-    void (await this.cartRepository.createCart());
+  public async deleteCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    return this.cartRepository.deleteCart();
   }
 
-  public async clearCart(): Promise<Cart | undefined> {
+  public async clearCart(): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.clearCart();
   }
 

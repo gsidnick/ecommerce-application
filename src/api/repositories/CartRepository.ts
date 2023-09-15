@@ -227,67 +227,80 @@ class CartRepository {
     }
   }
 
-  public async createCart(): Promise<void> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
+  public async createCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
 
-    await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .post({ body: { currency: 'USD', country: 'US' } })
-      .execute();
-  }
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .post({ body: { currency: 'USD', country: 'US' } })
+        .execute();
 
-  public async deleteCart(): Promise<void> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-
-    await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .delete({ queryArgs: { version } })
-      .execute();
-  }
-
-  public async clearCart(): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-    const lineItems = await this.getProducts();
-    if (!lineItems.length) {
-      return undefined;
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
     }
+  }
 
-    const actions: MyCartUpdateAction[] = lineItems.map((item) => ({
-      action: 'changeLineItemQuantity',
-      lineItemId: item.id,
-      quantity: 0,
-    }));
+  public async deleteCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
 
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions,
-        },
-      })
-      .execute();
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .delete({ queryArgs: { version } })
+        .execute();
 
-    return (result as ClientResponse<Cart>).body;
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
+  }
+
+  public async clearCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      const lineItems = await this.getProducts();
+
+      const actions: MyCartUpdateAction[] = lineItems.map((item) => ({
+        action: 'changeLineItemQuantity',
+        lineItemId: item.id,
+        quantity: 0,
+      }));
+
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions,
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
   public async getCountCustomerCarts(): Promise<number> {
@@ -318,18 +331,24 @@ class CartRepository {
     return customerCarts.length;
   }
 
-  public async getCart(): Promise<Cart> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .activeCart()
-      .get()
-      .execute();
-    return result.body;
+  public async getCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .activeCart()
+        .get()
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
   private async getCartIDAndVersion(): Promise<{
