@@ -207,13 +207,18 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       });
   };
 
-  const isProductInCart = userCartProducts.some(
-    (product) =>
-      product.productId === id && product.variant.id === activeVariantId
-  );
+  const isProductInCart = userCartProducts
+    ? userCartProducts.some(
+        (product) =>
+          product.productId === id && product.variant.id === activeVariantId
+      )
+    : false;
 
   return (
-    <Link href={`/product/${productKey}?variantId=${activeVariantId}`} onClick={handleCardClick}>
+    <Link
+      href={`/product/${productKey}?variantId=${activeVariantId}`}
+      onClick={handleCardClick}
+    >
       <div id={id} className={styles.cardWrapper}>
         <div className={`${styles.container} text-white`}>
           <div className={`${styles.imageWrapper} bg-white`}>

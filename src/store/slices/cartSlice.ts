@@ -14,20 +14,24 @@ const hydrateAction = createAction<SliceTypes>(HYDRATE);
 const ZERO_PRICE = 0;
 const ZERO_QUANTITY = 0;
 
+export interface IProductItem {
+  productId: string;
+  quantity: number;
+  variantId?: number;
+}
+
+export interface ICartItems {
+  totalPrice: CentPrecisionMoney;
+  lineItems: LineItem[];
+}
+
 export const addProductToCart = createAsyncThunk(
   'cart/addProductToCart',
   async ({
     productId,
     quantity,
     variantId,
-  }: {
-    productId: string;
-    quantity: number;
-    variantId?: number;
-  }): Promise<{
-    totalPrice: CentPrecisionMoney;
-    lineItems: LineItem[];
-  }> => {
+  }: IProductItem): Promise<ICartItems> => {
     const cartController = new CartController();
 
     const response = await cartController.addProduct({
@@ -59,19 +63,16 @@ export const removeProductLinesFromCart = createAsyncThunk(
       quantity?: number | null;
     },
     { getState }
-  ): Promise<{
-    totalPrice: CentPrecisionMoney;
-    lineItems: LineItem[];
-  }> => {
+  ): Promise<ICartItems> => {
     let productsToRemoveCount: number;
     if (quantity) {
       productsToRemoveCount = quantity;
     } else {
       const allState = getState() as RootState;
       const { userCartProducts } = allState.cart;
-      productsToRemoveCount = userCartProducts.find(
-        (item) => item.productId === productId
-      )?.quantity ?? ZERO_QUANTITY;
+      productsToRemoveCount =
+        userCartProducts.find((item) => item.productId === productId)
+          ?.quantity ?? ZERO_QUANTITY;
     }
     const cartController = new CartController();
 
@@ -168,4 +169,7 @@ export const cartSlice = createSlice({
 
 export const { setCartProducts } = cartSlice.actions;
 export const selectCartState = (state: RootState): CartState => state.cart;
+export const getCartProducts = (state: RootState): LineItem[] =>
+  state.cart.userCartProducts;
+
 export default cartSlice.reducer;
