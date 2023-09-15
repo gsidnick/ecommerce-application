@@ -19,7 +19,8 @@ import {
 } from './constants';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setVariantOfCurrentProduct } from '@/store/slices/productsSlice';
-import { addProductToCart } from '@/store/slices/cartSlice';
+import { addProductToCart, selectCartState } from '@/store/slices/cartSlice';
+import { useAppSelector } from '@/hooks/useAppSelector';
 import { convertPriceToFractionDigits } from '@/helpers/convertPrice';
 
 import styles from './styles.module.css';
@@ -59,6 +60,8 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     useState<number>(MAIN_VARIANT_ID);
 
   const dispatch = useAppDispatch();
+
+  const { userCartProducts } = useAppSelector(selectCartState);
 
   const briefDescription = `${description
     .slice(PRODUCT_DESCRIPTION_SLICE_FROM, PRODUCT_DESCRIPTION_SLICE_TO)
@@ -180,13 +183,12 @@ const ProductCard: FC<ProductCardProps> = (props) => {
   };
 
   const handleAddToCart = (
-    e: MouseEvent<HTMLDivElement>,
+    e: MouseEvent<HTMLButtonElement>,
     productId: string
   ): void => {
     e.stopPropagation();
     e.preventDefault();
     dispatch(setVariantOfCurrentProduct(activeVariantId));
-    console.log('productId', productId);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     dispatch(
@@ -205,8 +207,13 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       });
   };
 
+  const isProductInCart = userCartProducts.some(
+    (product) =>
+      product.productId === id && product.variant.id === activeVariantId
+  );
+
   return (
-    <Link href={`/product/${productKey}`} onClick={handleCardClick}>
+    <Link href={`/product/${productKey}?variantId=${activeVariantId}`} onClick={handleCardClick}>
       <div id={id} className={styles.cardWrapper}>
         <div className={`${styles.container} text-white`}>
           <div className={`${styles.imageWrapper} bg-white`}>
@@ -249,15 +256,16 @@ const ProductCard: FC<ProductCardProps> = (props) => {
                   {currency} {getActiveVariantDiscountPrice()}
                 </p>
               </div>
-              <div
-                role="button"
+              <button
+                type="button"
                 className={`${styles.button} rounded-md bg-slate-500 text-white`}
                 onClick={(e): void => handleAddToCart(e, id)}
                 tabIndex={0}
                 aria-hidden="true"
+                disabled={isProductInCart}
               >
-                Add to cart
-              </div>
+                {isProductInCart ? 'In Cart' : 'Add to cart'}
+              </button>
             </div>
           </div>
         </div>
