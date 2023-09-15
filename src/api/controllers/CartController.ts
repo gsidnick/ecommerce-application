@@ -16,17 +16,6 @@ class CartController {
     this.cartRepository = new CartRepository();
   }
 
-  public async getTotalPrice(): Promise<number> {
-    const price = await this.cartRepository.getTotalPrice();
-
-    if (!price) {
-      return EMPTY_PRICE;
-    }
-
-    const { centAmount, fractionDigits } = price;
-    return centAmount / POSITION_DIGIT_COEFFICIENT ** fractionDigits;
-  }
-
   public async getCart(): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.getCart();
   }
@@ -89,6 +78,17 @@ class CartController {
     code: string
   ): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.removeDiscountCode(code);
+  }
+
+  public async getTotalPrice(): Promise<number> {
+    const price = await this.cartRepository.getTotalPrice();
+
+    if (!price) {
+      return EMPTY_PRICE;
+    }
+
+    const { centAmount, fractionDigits } = price;
+    return centAmount / POSITION_DIGIT_COEFFICIENT ** fractionDigits;
   }
 
   public async getOriginalTotalPrice(): Promise<number> {
