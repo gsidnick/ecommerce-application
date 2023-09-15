@@ -14,3 +14,4 @@ export const DOUBLE_LENGTH = 2;
 export const DEFAULT_LIMIT = 20;
 export const DEFAULT_OFFSET = 0;
 export const NOT_FOUND_ERROR = 404;
+export const EMPTY_DISCOUNTS = 0;

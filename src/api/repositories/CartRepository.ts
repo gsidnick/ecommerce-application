@@ -9,6 +9,7 @@ import { getProjectKey } from '@/api/helpers/options';
 import TokenClient from '@/api/client/TokenClient';
 import NotFoundError from '@/api/errors/NotFoundError';
 import { MASTER_VARIANT_ID } from '@/constants';
+import { EMPTY_DISCOUNTS } from '@/api/constants';
 
 class CartRepository {
   private readonly projectKey: string;
@@ -17,63 +18,69 @@ class CartRepository {
     this.projectKey = getProjectKey();
   }
 
-  public async addDiscountCode(code: string): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
+  public async addDiscountCode(
+    code: string
+  ): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
 
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions: [{ action: 'addDiscountCode', code }],
-        },
-      })
-      .execute();
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [{ action: 'addDiscountCode', code }],
+          },
+        })
+        .execute();
 
-    return (result as ClientResponse<Cart>).body;
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
-  public async removeDiscountCode(code: string): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-    const isDiscountApplied = await this.isDiscountsApplied();
-
-    if (isDiscountApplied) {
+  public async removeDiscountCode(
+    code: string
+  ): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      void (await this.isDiscountsApplied());
       const promocodeID = await this.getPromocodeID(code);
-      if (promocodeID) {
-        const result = await apiRoot
-          .withProjectKey({
-            projectKey: this.projectKey,
-          })
-          .me()
-          .carts()
-          .withId({ ID })
-          .post({
-            body: {
-              version,
-              actions: [
-                {
-                  action: 'removeDiscountCode',
-                  discountCode: { typeId: 'discount-code', id: promocodeID },
-                },
-              ],
-            },
-          })
-          .execute();
 
-        return (result as ClientResponse<Cart>).body;
-      }
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'removeDiscountCode',
+                discountCode: { typeId: 'discount-code', id: promocodeID },
+              },
+            ],
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
     }
-
-    return undefined;
   }
 
   public async getTotalPrice(): Promise<CentPrecisionMoney | undefined> {
@@ -365,7 +372,7 @@ class CartRepository {
     return lineItem;
   }
 
-  private async getPromocodeID(code: string): Promise<string | undefined> {
+  private async getPromocodeID(code: string): Promise<string> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
@@ -377,12 +384,18 @@ class CartRepository {
       .execute();
     const { results } = result.body;
     const promocode = results.find((item) => item.code === code);
-    return promocode?.id;
+
+    if (!promocode) {
+      throw new NotFoundError('No specified promo code in the cart');
+    }
+
+    return promocode.id;
   }
 
   private async isDiscountsApplied(): Promise<boolean> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
+
     const result = await apiRoot
       .withProjectKey({
         projectKey: this.projectKey,
@@ -392,6 +405,9 @@ class CartRepository {
       .get()
       .execute();
 
+    if (result.body.discountCodes.length === EMPTY_DISCOUNTS) {
+      throw new NotFoundError('No promo codes applied');
+    }
     return !!result.body.discountCodes.length;
   }
 }

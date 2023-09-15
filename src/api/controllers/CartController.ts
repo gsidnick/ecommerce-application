@@ -79,11 +79,15 @@ class CartController {
     return this.cartRepository.updateProduct({ productId, quantity });
   }
 
-  public async addDiscountCode(code: string): Promise<Cart | undefined> {
+  public async addDiscountCode(
+    code: string
+  ): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.addDiscountCode(code);
   }
 
-  public async removeDiscountCode(code: string): Promise<Cart | undefined> {
+  public async removeDiscountCode(
+    code: string
+  ): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.removeDiscountCode(code);
   }
 
