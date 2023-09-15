@@ -1,6 +1,8 @@
 import { FC, useState, MouseEvent } from 'react';
 import Link from 'next/link';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { ProductVariant, Attribute } from '@commercetools/platform-sdk';
+import { toast } from 'react-toastify';
 import {
   PRODUCT_DESCRIPTION_SLICE_FROM,
   PRODUCT_DESCRIPTION_SLICE_TO,
@@ -12,11 +14,13 @@ import {
   FIRST_IMAGE_INDEX,
   PRICE_ARRAY_DEFAULT_LENGTH,
   DEFAULT_PRICE,
-  FRACTION_DIGIT,
   FRACTION_DIGITS_COUNT_DEFAULT,
+  ADD_TO_CART_DEFAULT_QUANTITY,
 } from './constants';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { setVariantOfCurrentProduct } from '@/store/slices/productsSlice';
+import { addProductToCart } from '@/store/slices/cartSlice';
+import { convertPriceToFractionDigits } from '@/helpers/convertPrice';
 
 import styles from './styles.module.css';
 
@@ -121,32 +125,24 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       (variant) => variant.id === activeVariantId
     );
     const activeVariantImage = activeVariant?.images?.length
-    // ? `${activeVariant?.images[FIRST_IMAGE_INDEX].url}?fit=fill&w=220`
-      ? activeVariant?.images[FIRST_IMAGE_INDEX].url
+      ? // ? `${activeVariant?.images[FIRST_IMAGE_INDEX].url}?fit=fill&w=220`
+        activeVariant?.images[FIRST_IMAGE_INDEX].url
       : '';
 
     return activeVariantImage;
   };
 
-  const cutCentAmount = (
-    priceToCut = DEFAULT_PRICE,
-    fractionDigitsProp = FRACTION_DIGITS_COUNT_DEFAULT
-  ): number | string => {
-    const fractionNumber = FRACTION_DIGIT ** fractionDigitsProp;
-    const result = (priceToCut / fractionNumber).toFixed(fractionDigits);
-
-    return result;
-  };
-
   const getActiveVariantDiscountPrice = (): number => {
     if (activeVariantId === MAIN_VARIANT_ID) {
-      return Number(cutCentAmount(price ?? DEFAULT_PRICE, fractionDigits));
+      return Number(
+        convertPriceToFractionDigits(price ?? DEFAULT_PRICE, fractionDigits)
+      );
     }
     const activeProductVariant = variants.find(
       (variant) => variant.id === activeVariantId
     );
     const activeVariantDiscountPrice = activeProductVariant?.prices?.length
-      ? cutCentAmount(
+      ? convertPriceToFractionDigits(
           activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].discounted
             ?.value.centAmount,
           activeProductVariant?.prices[PRICE_ARRAY_DEFAULT_LENGTH].discounted
@@ -159,13 +155,16 @@ const ProductCard: FC<ProductCardProps> = (props) => {
 
   const getActiveVariantPrice = (): number | string => {
     if (activeVariantId === MAIN_VARIANT_ID) {
-      return cutCentAmount(oldPrice, FRACTION_DIGITS_COUNT_DEFAULT);
+      return convertPriceToFractionDigits(
+        oldPrice,
+        FRACTION_DIGITS_COUNT_DEFAULT
+      );
     }
     const activeProductVariant = variants.find(
       (variant) => variant.id === activeVariantId
     );
     const activeVariantOldPrice = activeProductVariant?.prices?.length
-      ? cutCentAmount(
+      ? convertPriceToFractionDigits(
           activeProductVariant.prices[PRICE_ARRAY_DEFAULT_LENGTH].value
             .centAmount,
           activeProductVariant.prices[PRICE_ARRAY_DEFAULT_LENGTH].value
@@ -188,6 +187,22 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     e.preventDefault();
     dispatch(setVariantOfCurrentProduct(activeVariantId));
     console.log('productId', productId);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    dispatch(
+      addProductToCart({
+        productId,
+        quantity: ADD_TO_CART_DEFAULT_QUANTITY,
+        variantId: activeVariantId,
+      })
+    )
+      .then(unwrapResult)
+      .then(() => {
+        toast.success('Product added to cart');
+      })
+      .catch(() => {
+        toast.error('Error adding product to cart');
+      });
   };
 
   return (
