@@ -181,6 +181,46 @@ class CartRepository {
     return (result as ClientResponse<Cart>).body;
   }
 
+  public async updateProduct({
+    productId,
+    quantity,
+  }: {
+    productId: string;
+    quantity: number;
+  }): Promise<Cart | undefined> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const { ID, version } = await this.getCartIDAndVersion();
+    const lineItem = await this.getLineItemByProductID(productId);
+
+    if (!lineItem) {
+      return undefined;
+    }
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .carts()
+      .withId({ ID })
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: 'changeLineItemQuantity',
+              lineItemId: lineItem.id,
+              quantity,
+            },
+          ],
+        },
+      })
+      .execute();
+
+    return (result as ClientResponse<Cart>).body;
+  }
+
   public async createCart(): Promise<void> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
