@@ -12,6 +12,7 @@ import CartController from '@/api/controllers/CartController';
 const hydrateAction = createAction<SliceTypes>(HYDRATE);
 
 const ZERO_PRICE = 0;
+const ZERO_QUANTITY = 0;
 
 export const addProductToCart = createAsyncThunk(
   'cart/addProductToCart',
@@ -33,6 +34,50 @@ export const addProductToCart = createAsyncThunk(
       productId,
       quantity,
       variantId,
+    });
+
+    return {
+      totalPrice: response?.totalPrice ?? {
+        centAmount: ZERO_PRICE,
+        currencyCode: 'USD',
+        fractionDigits: 2,
+        type: 'centPrecision',
+      },
+      lineItems: response?.lineItems ?? [],
+    };
+  }
+);
+
+export const removeProductLinesFromCart = createAsyncThunk(
+  'cart/removeProductLinesFromCart',
+  async (
+    {
+      productId,
+      quantity,
+    }: {
+      productId: string;
+      quantity?: number | null;
+    },
+    { getState }
+  ): Promise<{
+    totalPrice: CentPrecisionMoney;
+    lineItems: LineItem[];
+  }> => {
+    let productsToRemoveCount: number;
+    if (quantity) {
+      productsToRemoveCount = quantity;
+    } else {
+      const allState = getState() as RootState;
+      const { userCartProducts } = allState.cart;
+      productsToRemoveCount = userCartProducts.find(
+        (item) => item.productId === productId
+      )?.quantity ?? ZERO_QUANTITY;
+    }
+    const cartController = new CartController();
+
+    const response = await cartController.removeProduct({
+      productId,
+      quantity: quantity ?? productsToRemoveCount,
     });
 
     return {
@@ -84,6 +129,24 @@ export const cartSlice = createSlice({
     );
     builder.addCase(
       addProductToCart.fulfilled,
+      (
+        state: CartState,
+        action: PayloadAction<{
+          totalPrice: CentPrecisionMoney;
+          lineItems: LineItem[];
+        }>
+      ): CartState => {
+        const { totalPrice, lineItems } = action.payload;
+        const newCartProducts = [...lineItems];
+        return {
+          ...state,
+          userCartProducts: newCartProducts,
+          totalCartPrice: totalPrice.centAmount,
+        };
+      }
+    );
+    builder.addCase(
+      removeProductLinesFromCart.fulfilled,
       (
         state: CartState,
         action: PayloadAction<{

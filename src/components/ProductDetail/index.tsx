@@ -4,7 +4,11 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import styles from './styles.module.css';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { selectCartState, addProductToCart } from '@/store/slices/cartSlice';
+import {
+  selectCartState,
+  addProductToCart,
+  removeProductLinesFromCart,
+} from '@/store/slices/cartSlice';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 
@@ -54,6 +58,21 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
       });
   };
 
+  const handleRemoveFromCart = (e: MouseEvent<HTMLButtonElement>): void => {
+    console.log('remove from cart');
+    e.stopPropagation();
+    e.preventDefault();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    dispatch(removeProductLinesFromCart({ productId: id }))
+      .then(unwrapResult)
+      .then(() => {
+        toast.info('Product deleted from cart');
+      })
+      .catch(() => {
+        toast.error('Error deleting product from cart');
+      });
+  };
+
   const isInCart = userCartProducts.some(
     (item) =>
       item.productKey === key[KEY_PRODUCT_INDEX] &&
@@ -71,18 +90,29 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
         </span>
         <span className={styles.oldPrice}>USD {price.toFixed(FRACTION)}</span>
       </div>
-      <button
-        type="button"
-        onClick={handleAddToCart}
-        className={`flex w-full items-center justify-center rounded-md ${
-          isInCart
-            ? 'bg-lime-500 hover:bg-lime-600'
-            : 'bg-blue-500 hover:bg-blue-600'
-        } py-2 text-white  disabled:cursor-not-allowed disabled:opacity-50 md:w-1/2`}
-        disabled={isInCart}
-      >
-        {isInCart ? 'In Cart' : 'To Cart'}
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className={`flex w-1/3 items-center justify-center rounded-md ${
+            isInCart
+              ? 'bg-lime-500 hover:bg-lime-600'
+              : 'bg-blue-500 hover:bg-blue-600'
+          } py-2 text-white  disabled:cursor-not-allowed disabled:opacity-50 md:w-1/3`}
+          disabled={isInCart}
+        >
+          {isInCart ? 'In Cart' : 'To Cart'}
+        </button>
+        {isInCart && (
+          <button
+            type="button"
+            className="flex w-1/3 items-center justify-center rounded-md bg-red-500 py-2 text-white hover:bg-red-600  disabled:cursor-not-allowed disabled:opacity-50 md:w-1/3"
+            onClick={handleRemoveFromCart}
+          >
+            Delete from cart
+          </button>
+        )}
+      </div>
     </div>
   );
 };
