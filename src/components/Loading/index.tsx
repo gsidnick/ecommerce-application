@@ -1,9 +1,7 @@
 import { ReactElement } from 'react';
 import { BallTriangle } from 'react-loader-spinner';
 
-const Loading = (): ReactElement => {
-  console.log('Loading...');
-  return (
+const Loading = (): ReactElement => (
     <div className="text-white w-full h-full">
       <BallTriangle
         height={100}
@@ -24,6 +22,5 @@ const Loading = (): ReactElement => {
       />
     </div>
   );
-};
 
 export default Loading;

@@ -22,7 +22,7 @@ function Header(): ReactElement {
         </div>
         <div className={styles.logo}>
           <Link href="/">
-            <Image src={logo} alt="logo" />
+            <Image src={logo} alt="logo" priority/>
           </Link>
         </div>
         <div className={styles.buttonsGroup}>
