@@ -7,6 +7,7 @@ import {
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
 import TokenClient from '@/api/client/TokenClient';
+import NotFoundError from '@/api/errors/NotFoundError';
 import { MASTER_VARIANT_ID } from '@/constants';
 
 class CartRepository {
@@ -371,9 +372,7 @@ class CartRepository {
     };
   }
 
-  private async getLineItemByProductID(
-    productId: string
-  ): Promise<LineItem | undefined> {
+  private async getLineItemByProductID(productId: string): Promise<LineItem> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
@@ -385,8 +384,13 @@ class CartRepository {
       .get()
       .execute();
     const { lineItems } = result.body;
+    const lineItem = lineItems.find((item) => item.productId === productId);
 
-    return lineItems.find((item) => item.productId === productId);
+    if (!lineItem) {
+      throw new NotFoundError('No specified line item in the cart');
+    }
+
+    return lineItem;
   }
 
   private async getPromocodeID(code: string): Promise<string | undefined> {
