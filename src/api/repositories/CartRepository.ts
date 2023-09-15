@@ -304,34 +304,6 @@ class CartRepository {
     }
   }
 
-  public async getCountCustomerCarts(): Promise<number> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-
-    const customer = await apiRoot
-      .withProjectKey({ projectKey: this.projectKey })
-      .me()
-      .get()
-      .execute();
-
-    const customerId = customer.body.id;
-
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .get()
-      .execute();
-
-    const customerCarts = result.body.results.filter(
-      (item) => item.customerId === customerId
-    );
-
-    return customerCarts.length;
-  }
-
   public async getCart(): Promise<ClientResponse<Cart | ClientResult>> {
     try {
       const client = new TokenClient();
