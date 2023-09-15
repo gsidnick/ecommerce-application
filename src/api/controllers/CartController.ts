@@ -2,8 +2,10 @@ import { Cart, LineItem } from '@commercetools/platform-sdk';
 import CartRepository from '@/api/repositories/CartRepository';
 import {
   EMPTY_PRICE,
+  INITIAL_PRICE,
   MASTER_VARIANT_ID,
   POSITION_DIGIT_COEFFICIENT,
+  TWO_FRACTION_DIGIT,
 } from '@/constants';
 
 class CartController {
@@ -73,6 +75,23 @@ class CartController {
 
   public async removeDiscountCode(code: string): Promise<Cart | undefined> {
     return this.cartRepository.removeDiscountCode(code);
+  }
+
+  public async getOriginalTotalPrice(): Promise<number> {
+    const lineItems = await this.getProducts();
+
+    const originalTotalPrice = lineItems.reduce((acc, item) => {
+      let price = 0;
+      if (item.price.discounted) {
+        const { centAmount, fractionDigits } = item.price.discounted.value;
+        price =
+          (centAmount * item.quantity) /
+          POSITION_DIGIT_COEFFICIENT ** fractionDigits;
+      }
+      return acc + price;
+    }, INITIAL_PRICE);
+
+    return Number(originalTotalPrice.toFixed(TWO_FRACTION_DIGIT));
   }
 }
 export default CartController;
