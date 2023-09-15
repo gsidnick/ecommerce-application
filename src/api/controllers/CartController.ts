@@ -1,4 +1,5 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import CartRepository from '@/api/repositories/CartRepository';
 import {
   EMPTY_PRICE,
@@ -67,6 +68,16 @@ class CartController {
     quantity: number;
   }): Promise<Cart | undefined> {
     return this.cartRepository.removeProduct({ productId, quantity });
+  }
+
+  public async updateProduct({
+    productId,
+    quantity,
+  }: {
+    productId: string;
+    quantity: number;
+  }): Promise<ClientResponse<Cart | ClientResult>> {
+    return this.cartRepository.updateProduct({ productId, quantity });
   }
 
   public async addDiscountCode(code: string): Promise<Cart | undefined> {
