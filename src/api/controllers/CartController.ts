@@ -56,7 +56,7 @@ class CartController {
     productId: string;
     quantity: number;
     variantId?: number;
-  }): Promise<Cart | undefined> {
+  }): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.addProduct({ productId, variantId, quantity });
   }
 
@@ -66,7 +66,7 @@ class CartController {
   }: {
     productId: string;
     quantity: number;
-  }): Promise<Cart | undefined> {
+  }): Promise<ClientResponse<Cart | ClientResult>> {
     return this.cartRepository.removeProduct({ productId, quantity });
   }
 

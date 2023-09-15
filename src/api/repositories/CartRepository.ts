@@ -4,7 +4,7 @@ import {
   LineItem,
   MyCartUpdateAction,
 } from '@commercetools/platform-sdk';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
 import TokenClient from '@/api/client/TokenClient';
 import { MASTER_VARIANT_ID } from '@/constants';
@@ -118,27 +118,33 @@ class CartRepository {
     productId: string;
     quantity: number;
     variantId?: number;
-  }): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
+  }): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
 
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions: [{ action: 'addLineItem', productId, variantId, quantity }],
-        },
-      })
-      .execute();
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              { action: 'addLineItem', productId, variantId, quantity },
+            ],
+          },
+        })
+        .execute();
 
-    return (result as ClientResponse<Cart>).body;
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
   public async removeProduct({
@@ -147,38 +153,38 @@ class CartRepository {
   }: {
     productId: string;
     quantity: number;
-  }): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-    const lineItem = await this.getLineItemByProductID(productId);
+  }): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      const lineItem = await this.getLineItemByProductID(productId);
 
-    if (!lineItem) {
-      return undefined;
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'removeLineItem',
+                lineItemId: lineItem.id,
+                quantity,
+              },
+            ],
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
     }
-
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions: [
-            {
-              action: 'removeLineItem',
-              lineItemId: lineItem.id,
-              quantity,
-            },
-          ],
-        },
-      })
-      .execute();
-
-    return (result as ClientResponse<Cart>).body;
   }
 
   public async updateProduct({
@@ -187,38 +193,38 @@ class CartRepository {
   }: {
     productId: string;
     quantity: number;
-  }): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-    const lineItem = await this.getLineItemByProductID(productId);
+  }): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      const lineItem = await this.getLineItemByProductID(productId);
 
-    if (!lineItem) {
-      return undefined;
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'changeLineItemQuantity',
+                lineItemId: lineItem.id,
+                quantity,
+              },
+            ],
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
     }
-
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions: [
-            {
-              action: 'changeLineItemQuantity',
-              lineItemId: lineItem.id,
-              quantity,
-            },
-          ],
-        },
-      })
-      .execute();
-
-    return (result as ClientResponse<Cart>).body;
   }
 
   public async createCart(): Promise<void> {
