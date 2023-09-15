@@ -92,7 +92,7 @@ class CartController {
   }
 
   public async getOriginalTotalPrice(): Promise<number> {
-    const lineItems = await this.getProducts();
+    const lineItems = await this.cartRepository.getProducts();
 
     const originalTotalPrice = lineItems.reduce((acc, item) => {
       let price = 0;
