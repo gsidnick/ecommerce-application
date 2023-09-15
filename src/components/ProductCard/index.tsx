@@ -213,7 +213,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
   );
 
   return (
-    <Link href={`/product/${productKey}`} onClick={handleCardClick}>
+    <Link href={`/product/${productKey}?variantId=${activeVariantId}`} onClick={handleCardClick}>
       <div id={id} className={styles.cardWrapper}>
         <div className={`${styles.container} text-white`}>
           <div className={`${styles.imageWrapper} bg-white`}>
