@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import ProductController from '@/api/controllers/ProductController';
 import ProductDetail from '@/components/ProductDetail';
 import { MAIN_VARIANT_ID } from '@/components/ProductCard/constants';
@@ -10,7 +11,6 @@ import styles from './styles.module.css';
 
 const FIRST_ELEMENT = 0;
 const PRODUCT_KEY_PATH_INDEX = 0;
-const PRODUCT_VARIANT_PATH_INDEX = 1;
 const HANDRED = 100;
 
 const ProductPage = (): ReactElement => {
@@ -27,8 +27,11 @@ const ProductPage = (): ReactElement => {
   const router = useRouter();
   const { isReady } = router;
   const { key = [] } = router.query;
-  const currentVariant = key[PRODUCT_VARIANT_PATH_INDEX]
-    ? Number(key[PRODUCT_VARIANT_PATH_INDEX])
+  const searchParams = useSearchParams();
+  const variantId = searchParams.get('variantId');
+
+  const currentVariant = variantId
+    ? Number(variantId)
     : MAIN_VARIANT_ID;
 
   useEffect(() => {

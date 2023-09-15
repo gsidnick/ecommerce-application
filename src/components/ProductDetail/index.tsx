@@ -1,5 +1,6 @@
 import React, { ReactElement, MouseEvent } from 'react';
 import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import styles from './styles.module.css';
@@ -15,7 +16,6 @@ import { useAppDispatch } from '@/hooks/useAppDispatch';
 const FRACTION = 2;
 const ADD_TO_CART_DEFAULT_QUANTITY = 1;
 const KEY_PRODUCT_INDEX = 0;
-const KEY_VARIANT_INDEX = 1;
 const DEFAULT_VARIANT_ID = 1;
 
 interface ProductDetailProps {
@@ -36,6 +36,9 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
 
   const router = useRouter();
   const { key = [] } = router.query;
+  const searchParams = useSearchParams();
+
+  const variantId = searchParams.get('variantId');
 
   const handleAddToCart = (e: MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
@@ -46,7 +49,7 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
       addProductToCart({
         productId: id,
         quantity: ADD_TO_CART_DEFAULT_QUANTITY,
-        variantId: Number(key[KEY_VARIANT_INDEX]) || DEFAULT_VARIANT_ID,
+        variantId: Number(variantId) || DEFAULT_VARIANT_ID,
       })
     )
       .then(unwrapResult)
@@ -76,7 +79,7 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
   const isInCart = userCartProducts.some(
     (item) =>
       item.productKey === key[KEY_PRODUCT_INDEX] &&
-      item.variant.id === Number(key[KEY_VARIANT_INDEX])
+      item.variant.id === Number(variantId)
   );
 
   return (
