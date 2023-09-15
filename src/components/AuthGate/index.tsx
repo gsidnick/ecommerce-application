@@ -10,7 +10,7 @@ import {
   setRefreshToken,
   setToken,
 } from '@/store/slices/authSlice';
-import { setCartId } from '@/store/slices/cartSlice';
+// import { setCartId } from '@/store/slices/cartSlice';
 import CustomerController from '@/api/controllers/CustomerController';
 import CartController from '@/api/controllers/CartController';
 import { IMMEDIATE_INVOKE } from '@/constants';
@@ -39,8 +39,8 @@ export const AuthGate = ({
 
             cartController
               .createCart()
-              .then((cartResponse) => {
-                dispatch(setCartId(cartResponse.body?.id ?? ''));
+              .then(() => {
+                // dispatch(setCartId(cartResponse.body?.id ?? ''));
               })
               .catch(() => {});
           })

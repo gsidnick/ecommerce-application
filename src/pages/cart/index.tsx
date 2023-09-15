@@ -4,16 +4,18 @@ import { selectCartState } from '../../store/slices/cartSlice';
 import CartController from '../../api/controllers/CartController';
 import { CartItem } from '../../api/types';
 
+const EMPTY_CART_ITEMS = 0;
+
 function cart(): ReactElement {
   const [displayCartItems, setDisplayCartItems] = useState<CartItem[]>([]);
 
-  const { cartId, cartItems } = useAppSelector(selectCartState);
+  const { userCartProducts } = useAppSelector(selectCartState);
 
   useEffect(() => {
     // setcartItems([]);
     const cartController = new CartController();
 
-    if (cartId) {
+    if (userCartProducts.length > EMPTY_CART_ITEMS) {
       cartController
         .getCart()
         .then((response) => {
@@ -25,7 +27,7 @@ function cart(): ReactElement {
           console.log('error in getting cart');
         });
     }
-  }, [cartItems]);
+  }, [userCartProducts]);
 
   return (
     <>

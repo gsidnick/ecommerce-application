@@ -14,6 +14,8 @@ import ProductCard from '@/components/ProductCard';
 import {
   DEFAULT_VARIANT_PRICE,
   FRACTION_DIGITS_COUNT_DEFAULT,
+  DEFAULT_PAGE_TOTAL_COUNT,
+  ZERO_INDEX,
 } from './constants';
 
 import styles from './styles.module.css';
@@ -21,14 +23,15 @@ import styles from './styles.module.css';
 interface IFilteredProductContainer {
   filteredProducts: ProductProjection[];
   itemsPerPage: number;
-}
-const ZERO_INDEX = 0;
+};
 
 const FilteredProductContainer = (
   props: IFilteredProductContainer
 ): ReactElement => {
   const { filteredProducts, itemsPerPage } = props;
-  const [pagesTotalCount, setPagesTotalCount] = useState(ZERO_INDEX);
+  const [pagesTotalCount, setPagesTotalCount] = useState(
+    DEFAULT_PAGE_TOTAL_COUNT
+  );
 
   const { totalFilteredProducts, filterPaginationPage } =
     useAppSelector(selectFilterState);
