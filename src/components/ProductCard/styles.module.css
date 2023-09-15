@@ -142,6 +142,11 @@
   cursor: pointer;
 }
 
+.button:disabled {
+  background: #535353;
+  cursor: auto;
+}
+
 .imageWrapper {
   width: 100%;
   height: 400px;

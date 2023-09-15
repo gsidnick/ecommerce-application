@@ -23,7 +23,7 @@ import styles from './styles.module.css';
 interface IFilteredProductContainer {
   filteredProducts: ProductProjection[];
   itemsPerPage: number;
-};
+}
 
 const FilteredProductContainer = (
   props: IFilteredProductContainer
