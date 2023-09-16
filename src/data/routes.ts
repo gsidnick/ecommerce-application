@@ -4,4 +4,5 @@ export enum ERoute {
   'home' = '/',
   'profile' = '/profile',
   'cart' = '/cart',
+  'catalog' = '/catalog',
 }

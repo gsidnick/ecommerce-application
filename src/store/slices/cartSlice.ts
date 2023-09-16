@@ -5,7 +5,12 @@ import {
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import { LineItem, CentPrecisionMoney } from '@commercetools/platform-sdk';
+import {
+  LineItem,
+  CentPrecisionMoney,
+  Cart,
+} from '@commercetools/platform-sdk';
+import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { RootState } from '@/store/store';
 import CartController from '@/api/controllers/CartController';
 
@@ -41,13 +46,54 @@ export const addProductToCart = createAsyncThunk(
     });
 
     return {
-      totalPrice: response?.totalPrice ?? {
+      totalPrice: (response as ClientResponse<Cart>).body?.totalPrice ?? {
         centAmount: ZERO_PRICE,
         currencyCode: 'USD',
         fractionDigits: 2,
         type: 'centPrecision',
       },
-      lineItems: response?.lineItems ?? [],
+      lineItems: (response as ClientResponse<Cart>).body?.lineItems ?? [],
+    };
+  }
+);
+
+export const updateProductInCart = createAsyncThunk(
+  'cart/updateProductInCart',
+  async ({ productId, quantity }: IProductItem): Promise<ICartItems> => {
+    const cartController = new CartController();
+
+    const response = await cartController.updateProduct({
+      productId,
+      quantity,
+    });
+
+    return {
+      totalPrice: (response as ClientResponse<Cart>).body?.totalPrice ?? {
+        centAmount: ZERO_PRICE,
+        currencyCode: 'USD',
+        fractionDigits: 2,
+        type: 'centPrecision',
+      },
+      lineItems: (response as ClientResponse<Cart>).body?.lineItems ?? [],
+    };
+  }
+);
+
+export const updateCart = createAsyncThunk(
+  'cart/updateCart',
+  async (): Promise<ICartItems> => {
+    const cartController = new CartController();
+
+    const response = await cartController.getCart();
+
+    return {
+      totalPrice: (response as ClientResponse<Cart>).body?.totalPrice ?? {
+        centAmount: ZERO_PRICE,
+        currencyCode: 'USD',
+        fractionDigits: 2,
+        type: 'centPrecision',
+      },
+      lineItems: (response as ClientResponse<Cart>).body?.lineItems ?? [],
     };
   }
 );
@@ -82,13 +128,13 @@ export const removeProductLinesFromCart = createAsyncThunk(
     });
 
     return {
-      totalPrice: response?.totalPrice ?? {
+      totalPrice: (response as ClientResponse<Cart>).body?.totalPrice ?? {
         centAmount: ZERO_PRICE,
         currencyCode: 'USD',
         fractionDigits: 2,
         type: 'centPrecision',
       },
-      lineItems: response?.lineItems ?? [],
+      lineItems: (response as ClientResponse<Cart>).body?.lineItems ?? [],
     };
   }
 );
@@ -96,11 +142,13 @@ export const removeProductLinesFromCart = createAsyncThunk(
 export interface CartState {
   userCartProducts: LineItem[];
   totalCartPrice: number;
+  activePromocode: string;
 }
 
 const initialState: CartState = {
   userCartProducts: [],
   totalCartPrice: ZERO_PRICE,
+  activePromocode: '',
 };
 
 enum ESlices {
@@ -119,6 +167,12 @@ export const cartSlice = createSlice({
         userCartProducts: action.payload,
       };
     },
+    setPromocode(state: CartState, action: PayloadAction<string>) {
+      return {
+        ...state,
+        activePromocode: action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -130,6 +184,42 @@ export const cartSlice = createSlice({
     );
     builder.addCase(
       addProductToCart.fulfilled,
+      (
+        state: CartState,
+        action: PayloadAction<{
+          totalPrice: CentPrecisionMoney;
+          lineItems: LineItem[];
+        }>
+      ): CartState => {
+        const { totalPrice, lineItems } = action.payload;
+        const newCartProducts = [...lineItems];
+        return {
+          ...state,
+          userCartProducts: newCartProducts,
+          totalCartPrice: totalPrice.centAmount,
+        };
+      }
+    );
+    builder.addCase(
+      updateCart.fulfilled,
+      (
+        state: CartState,
+        action: PayloadAction<{
+          totalPrice: CentPrecisionMoney;
+          lineItems: LineItem[];
+        }>
+      ): CartState => {
+        const { totalPrice, lineItems } = action.payload;
+        const newCartProducts = [...lineItems];
+        return {
+          ...state,
+          userCartProducts: newCartProducts,
+          totalCartPrice: totalPrice.centAmount,
+        };
+      }
+    );
+    builder.addCase(
+      updateProductInCart.fulfilled,
       (
         state: CartState,
         action: PayloadAction<{
@@ -167,9 +257,13 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setCartProducts } = cartSlice.actions;
+export const { setCartProducts, setPromocode } = cartSlice.actions;
 export const selectCartState = (state: RootState): CartState => state.cart;
+export const getPromoCode = (state: RootState): string =>
+  state.cart.activePromocode;
 export const getCartProducts = (state: RootState): LineItem[] =>
   state.cart.userCartProducts;
+export const getCartTotal = (state: RootState): number =>
+  state.cart.totalCartPrice;
 
 export default cartSlice.reducer;

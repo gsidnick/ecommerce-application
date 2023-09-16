@@ -94,17 +94,22 @@ class CartController {
   public async getOriginalTotalPrice(): Promise<number> {
     const lineItems = await this.cartRepository.getProducts();
 
-    const originalTotalPrice = lineItems.reduce((acc, item) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const originalTotalPrice: number = lineItems.reduce((acc, item): number => {
       let price = 0;
+
       if (item.price.discounted) {
         const { centAmount, fractionDigits } = item.price.discounted.value;
+
         price =
           (centAmount * item.quantity) /
           POSITION_DIGIT_COEFFICIENT ** fractionDigits;
       }
+
       return acc + price;
     }, INITIAL_PRICE);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     return Number(originalTotalPrice.toFixed(TWO_FRACTION_DIGIT));
   }
 }
