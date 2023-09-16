@@ -4,16 +4,83 @@ import {
   LineItem,
   MyCartUpdateAction,
 } from '@commercetools/platform-sdk';
-import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
 import TokenClient from '@/api/client/TokenClient';
+import NotFoundError from '@/api/errors/NotFoundError';
 import { MASTER_VARIANT_ID } from '@/constants';
+import { EMPTY_DISCOUNTS } from '@/api/constants';
 
 class CartRepository {
   private readonly projectKey: string;
 
   constructor() {
     this.projectKey = getProjectKey();
+  }
+
+  public async addDiscountCode(
+    code: string
+  ): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [{ action: 'addDiscountCode', code }],
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
+  }
+
+  public async removeDiscountCode(
+    code: string
+  ): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      void (await this.isDiscountsApplied());
+      const promocodeID = await this.getPromocodeID(code);
+
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'removeDiscountCode',
+                discountCode: { typeId: 'discount-code', id: promocodeID },
+              },
+            ],
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
   public async getTotalPrice(): Promise<CentPrecisionMoney | undefined> {
@@ -59,27 +126,33 @@ class CartRepository {
     productId: string;
     quantity: number;
     variantId?: number;
-  }): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
+  }): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
 
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions: [{ action: 'addLineItem', productId, variantId, quantity }],
-        },
-      })
-      .execute();
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              { action: 'addLineItem', productId, variantId, quantity },
+            ],
+          },
+        })
+        .execute();
 
-    return (result as ClientResponse<Cart>).body;
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
   public async removeProduct({
@@ -88,145 +161,174 @@ class CartRepository {
   }: {
     productId: string;
     quantity: number;
-  }): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-    const lineItem = await this.getLineItemByProductID(productId);
+  }): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      const lineItem = await this.getLineItemByProductID(productId);
 
-    if (!lineItem) {
-      return undefined;
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'removeLineItem',
+                lineItemId: lineItem.id,
+                quantity,
+              },
+            ],
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
     }
-
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions: [
-            {
-              action: 'removeLineItem',
-              lineItemId: lineItem.id,
-              quantity,
-            },
-          ],
-        },
-      })
-      .execute();
-
-    return (result as ClientResponse<Cart>).body;
   }
 
-  public async createCart(): Promise<ClientResponse<Cart>> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
+  public async updateProduct({
+    productId,
+    quantity,
+  }: {
+    productId: string;
+    quantity: number;
+  }): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      const lineItem = await this.getLineItemByProductID(productId);
 
-    const cart = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .post({ body: { currency: 'USD', country: 'US' } })
-      .execute();
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'changeLineItemQuantity',
+                lineItemId: lineItem.id,
+                quantity,
+              },
+            ],
+          },
+        })
+        .execute();
 
-    return cart as ClientResponse<Cart>;
-  }
-
-  public async deleteCart(): Promise<void> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-
-    await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .delete({ queryArgs: { version } })
-      .execute();
-  }
-
-  public async clearCart(): Promise<Cart | undefined> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const { ID, version } = await this.getCartIDAndVersion();
-    const lineItems = await this.getProducts();
-    if (!lineItems.length) {
-      return undefined;
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
     }
-
-    const actions: MyCartUpdateAction[] = lineItems.map((item) => ({
-      action: 'changeLineItemQuantity',
-      lineItemId: item.id,
-      quantity: 0,
-    }));
-
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .withId({ ID })
-      .post({
-        body: {
-          version,
-          actions,
-        },
-      })
-      .execute();
-
-    return (result as ClientResponse<Cart>).body;
   }
 
-  public async getCountCustomerCarts(): Promise<number> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
+  public async createCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
 
-    const customer = await apiRoot
-      .withProjectKey({ projectKey: this.projectKey })
-      .me()
-      .get()
-      .execute();
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .post({ body: { currency: 'USD', country: 'US' } })
+        .execute();
 
-    const customerId = customer.body.id;
-
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .carts()
-      .get()
-      .execute();
-
-    const customerCarts = result.body.results.filter(
-      (item) => item.customerId === customerId
-    );
-
-    return customerCarts.length;
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
-  public async getCart(): Promise<Cart> {
-    const client = new TokenClient();
-    const apiRoot = client.getApiRoot();
-    const result = await apiRoot
-      .withProjectKey({
-        projectKey: this.projectKey,
-      })
-      .me()
-      .activeCart()
-      .get()
-      .execute();
-    return result.body;
+  public async deleteCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .delete({ queryArgs: { version } })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
+  }
+
+  public async clearCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+      const { ID, version } = await this.getCartIDAndVersion();
+      const lineItems = await this.getProducts();
+
+      const actions: MyCartUpdateAction[] = lineItems.map((item) => ({
+        action: 'changeLineItemQuantity',
+        lineItemId: item.id,
+        quantity: 0,
+      }));
+
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions,
+          },
+        })
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
+  }
+
+  public async getCart(): Promise<ClientResponse<Cart | ClientResult>> {
+    try {
+      const client = new TokenClient();
+      const apiRoot = client.getApiRoot();
+
+      const result = await apiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .activeCart()
+        .get()
+        .execute();
+
+      return result as ClientResponse<Cart>;
+    } catch (error) {
+      return error as ClientResponse<ClientResult>;
+    }
   }
 
   private async getCartIDAndVersion(): Promise<{
@@ -249,9 +351,7 @@ class CartRepository {
     };
   }
 
-  private async getLineItemByProductID(
-    productId: string
-  ): Promise<LineItem | undefined> {
+  private async getLineItemByProductID(productId: string): Promise<LineItem> {
     const client = new TokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
@@ -263,8 +363,52 @@ class CartRepository {
       .get()
       .execute();
     const { lineItems } = result.body;
+    const lineItem = lineItems.find((item) => item.productId === productId);
 
-    return lineItems.find((item) => item.productId === productId);
+    if (!lineItem) {
+      throw new NotFoundError('No specified line item in the cart');
+    }
+
+    return lineItem;
+  }
+
+  private async getPromocodeID(code: string): Promise<string> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .discountCodes()
+      .get()
+      .execute();
+    const { results } = result.body;
+    const promocode = results.find((item) => item.code === code);
+
+    if (!promocode) {
+      throw new NotFoundError('No specified promo code in the cart');
+    }
+
+    return promocode.id;
+  }
+
+  private async isDiscountsApplied(): Promise<boolean> {
+    const client = new TokenClient();
+    const apiRoot = client.getApiRoot();
+
+    const result = await apiRoot
+      .withProjectKey({
+        projectKey: this.projectKey,
+      })
+      .me()
+      .activeCart()
+      .get()
+      .execute();
+
+    if (result.body.discountCodes.length === EMPTY_DISCOUNTS) {
+      throw new NotFoundError('No promo codes applied');
+    }
+    return !!result.body.discountCodes.length;
   }
 }
 
