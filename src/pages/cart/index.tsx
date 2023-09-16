@@ -62,10 +62,7 @@ function cart(): ReactElement {
 
       cartController
         .getCart()
-        .then((response) => {
-          console.log(response);
-          console.log('get cart was successful');
-
+        .then(() => {
           setDisplayCartItems(userCartProducts);
         })
         .catch(() => {
@@ -181,8 +178,6 @@ function cart(): ReactElement {
 
         const response = await cartController.addDiscountCode(promocode);
 
-        console.log(response);
-
         if (response.statusCode === HttpStatus.OK) {
           toast.success('Promo applied successfully');
 
@@ -253,8 +248,6 @@ function cart(): ReactElement {
             <div className="flex flex-col justify-center">
               {userCartProducts.map((product) => {
                 const data = formatProductData(product);
-                console.log(product);
-                console.log(data);
 
                 return (
                   <div

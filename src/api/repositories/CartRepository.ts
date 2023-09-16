@@ -363,8 +363,6 @@ class CartRepository {
       .get()
       .execute();
     const { lineItems } = result.body;
-    console.log(productId);
-    console.log(lineItems);
     const lineItem = lineItems.find((item) => item.productId === productId);
 
     if (!lineItem) {
