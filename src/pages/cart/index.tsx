@@ -230,8 +230,8 @@ function cart(): ReactElement {
 
   return (
     <>
-      <h1 className="ml-2 text-white">HOME / CART</h1>
-      <main className="text-white">
+      <h1 className="ml-2">HOME / CART</h1>
+      <main className="">
         {displayCartItems && displayCartItems.length === EMPTY_CART_ITEMS && (
           <div className="flex h-[50vh] flex-col items-center justify-center">
             <h2>Cart is empty, add something!</h2>
@@ -252,7 +252,7 @@ function cart(): ReactElement {
                 return (
                   <div
                     key={product.id}
-                    className="flex flex-col pb-2 mt-4 text-white border-b-2 border-b-orange-main"
+                    className="flex flex-col pb-2 mt-4 border-b-2 border-b-orange-main"
                   >
                     <h3 className="mb-2">{data.name}</h3>
                     <div className="flex">
@@ -266,7 +266,7 @@ function cart(): ReactElement {
                         <div className="flex px-1 py-2 mx-2 mb-2 border border-gray-700 rounded-lg">
                           <button
                             type="button"
-                            className="mx-2 h-[20px] w-[20px] rounded-full bg-orange-main"
+                            className="mx-2 h-[20px] w-[20px] cursor-pointer rounded-full bg-orange-main text-xl leading-4"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={(): void =>
                               changeProductQuantity(
@@ -281,7 +281,7 @@ function cart(): ReactElement {
                           <div className="flex">{data.quantity}</div>
                           <button
                             type="button"
-                            className="mx-2 h-[20px] w-[20px] rounded-full bg-orange-main"
+                            className="mx-2 h-[20px] w-[20px] cursor-pointer rounded-full  bg-orange-main  text-xl leading-4"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={(): void =>
                               changeProductQuantity(
@@ -296,7 +296,7 @@ function cart(): ReactElement {
                         </div>
                         <button
                           type="button"
-                          className="self-center"
+                          className="self-center cursor-pointer"
                           onClick={(): void =>
                             removeProductFromCart(data.productId)
                           }
@@ -337,7 +337,7 @@ function cart(): ReactElement {
               })}
             </div>
             <div className="flex flex-row xs:flex-col md:flex-row lg:flex-col">
-              <div className="flex h-[213px] w-[352px] flex-col justify-around self-start rounded-[15px] border bg-neutral-900 p-4 text-white shadow">
+              <div className="flex h-[213px] w-[352px] flex-col justify-around self-start rounded-[15px] border border-gray-700  p-4  shadow">
                 <div className="border-b-2 border-b-orange-main">Total</div>
                 <div className="flex justify-between">
                   <span>Quantity: </span>
@@ -367,7 +367,7 @@ function cart(): ReactElement {
                   onSubmit={handleApplyPromocode}
                 >
                   <input
-                    className="mr-2 flex h-[40px] flex-grow rounded-xl p-2"
+                    className="border-1 mr-2 flex h-[40px] flex-grow rounded-xl border border-gray-700 p-2"
                     type="text"
                     name="promo"
                     placeholder="Enter promocode"
@@ -375,7 +375,7 @@ function cart(): ReactElement {
                   />
                   <button
                     type="submit"
-                    className="h-[40px] rounded-xl bg-orange-main p-2"
+                    className="h-[40px] rounded-xl bg-orange-main p-2 text-white"
                     disabled={isDisabledPromoInput}
                   >
                     Apply
