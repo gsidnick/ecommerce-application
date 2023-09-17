@@ -40,7 +40,6 @@ export const addProductToCart = createAsyncThunk(
     const cartController = new CartController();
 
     const allState = getState() as RootState;
-    console.log(allState);
 
     let { cartId } = allState.cart;
 
@@ -49,8 +48,6 @@ export const addProductToCart = createAsyncThunk(
         ((await cartController.createCart()) as ClientResponse<Cart>).body
           ?.id ?? '';
     }
-
-    console.log(cartId);
 
     const response = await cartController.addProduct({
       productId,
