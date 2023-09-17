@@ -218,6 +218,9 @@ function cart(): ReactElement {
         setCartTotal(ZERO);
         setcartTotalWithoutDiscount(ZERO);
         setDisplayCartItems([]);
+
+        void cartController.removeDiscountCode(activePromocode);
+
         setActivePromocode('');
 
         dispatch(setPromocode(''));
@@ -333,7 +336,7 @@ function cart(): ReactElement {
                       <div className="ml-2 flex w-[300px] flex-col items-end lg:ml-10">
                         {data.isDiscounted && (
                           <>
-                            <div className="flex">
+                            {/* <div className="flex">
                               Base price: ${' '}
                               <span className="line-through">
                                 {Math.round(data.price * CENTS_IN_DOLLAR) /
@@ -347,16 +350,16 @@ function cart(): ReactElement {
                                   data.price * data.quantity * CENTS_IN_DOLLAR
                                 ) / CENTS_IN_DOLLAR}
                               </span>
-                            </div>
+                                </div> */}
                             <div className="flex font-bold">
-                              Final price: ${' '}
+                              Price: ${' '}
                               <span className="">
                                 {Math.round(data.discountedPrice) /
                                   CENTS_IN_DOLLAR}
                               </span>
                             </div>
                             <div className="flex">
-                              <strong>Final total: $ {data.totalPrice}</strong>
+                              <strong>Total: $ {data.totalPrice}</strong>
                             </div>
                           </>
                         )}
