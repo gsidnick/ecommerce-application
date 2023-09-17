@@ -29,6 +29,7 @@ const EMPTY_CART_ITEMS = 0;
 const ZERO = 0;
 const CENTS_IN_DOLLAR = 100;
 const CART_STEP = 1;
+const DISCOUNT_DIFF = 0.5;
 
 function cart(): ReactElement {
   const [displayCartItems, setDisplayCartItems] = useState<CartItem[]>([]);
@@ -37,8 +38,8 @@ function cart(): ReactElement {
     useState(ZERO);
 
   const [cartProductsQty, setCartProductsQty] = useState(ZERO);
-  const [isDisabledPromoInput, setIsDisabledPromoInput] = useState<boolean>();
   const [activePromocode, setActivePromocode] = useState('');
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -49,6 +50,10 @@ function cart(): ReactElement {
   const userCartTotal = useAppSelector(getCartTotal);
   const storeActivePromocode = useAppSelector(getPromoCode);
   const activeCartId = useAppSelector(getCartId);
+
+  const [isDisabledPromoInput, setIsDisabledPromoInput] = useState<boolean>(
+    !!storeActivePromocode
+  );
 
   const cartController = new CartController();
 
@@ -202,7 +207,7 @@ function cart(): ReactElement {
         if (response.statusCode === HttpStatus.OK) {
           toast.success('Promo applied successfully');
 
-          setIsDisabledPromoInput(false);
+          // setIsDisabledPromoInput(false);
           dispatch(setPromocode(target.promo.value));
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -399,14 +404,26 @@ function cart(): ReactElement {
                   <span>{cartProductsQty} pcs.</span>
                 </div>
                 <div>
-                  <div className="flex justify-between">
-                    <span>Order total: </span>
-                    <span>$ {cartTotalWithoutDiscount}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Final total: </span>
-                    <span>$ {cartTotal}</span>
-                  </div>
+                  {cartTotalWithoutDiscount - cartTotal > DISCOUNT_DIFF && (
+                    <>
+                      <div className="flex justify-between">
+                        <span>Order total: </span>
+                        <span className="line-through">
+                          $ {cartTotalWithoutDiscount}
+                        </span>
+                      </div>
+                      <div className="flex justify-between font-bold">
+                        <span>Discounted total: </span>
+                        <span>$ {cartTotal}</span>
+                      </div>
+                    </>
+                  )}
+                  {cartTotalWithoutDiscount - cartTotal <= DISCOUNT_DIFF && (
+                    <div className="flex justify-between">
+                      <span>Order total: </span>
+                      <span className="">$ {cartTotalWithoutDiscount}</span>
+                    </div>
+                  )}
                   {activePromocode.length > ZERO && (
                     <div className="flex">
                       <span className="text-green-500">
@@ -425,7 +442,7 @@ function cart(): ReactElement {
                     className="border-1 mr-2 flex h-[40px] flex-grow rounded-xl border border-gray-700 p-2"
                     type="text"
                     name="promo"
-                    placeholder="Enter promocode"
+                    placeholder={activePromocode ?? 'Enter promocode'}
                     disabled={isDisabledPromoInput}
                   />
                   <button
@@ -440,7 +457,6 @@ function cart(): ReactElement {
                   <button
                     type="submit"
                     className="h-[40px] w-full rounded-xl bg-red-500 text-white"
-                    disabled={isDisabledPromoInput}
                   >
                     Clear cart
                   </button>
