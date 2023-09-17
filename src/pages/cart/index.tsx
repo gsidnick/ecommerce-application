@@ -25,6 +25,7 @@ import { CartItem, HttpStatus } from '../../api/types';
 import TrashIcon from '@/assets/images/trash-can.svg';
 import { ERoute } from '../../data/routes';
 import { ZERO_INDEX } from '../../components/FilteredProductContainer/constants';
+import ModalPrompt from '../../components/ModalPrompt';
 
 const EMPTY_CART_ITEMS = 0;
 const ZERO = 0;
@@ -40,6 +41,7 @@ function cart(): ReactElement {
   const [cartProductsQty, setCartProductsQty] = useState(ZERO);
   const [isDisabledPromoInput, setIsDisabledPromoInput] = useState<boolean>();
   const [activePromocode, setActivePromocode] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dispatch = useAppDispatch();
   const [isDisabledModifyButtons, setIsDisabledModifyButtons] =
@@ -211,9 +213,7 @@ function cart(): ReactElement {
     void applyPromo();
   };
 
-  const handleClearCart = (e: FormEvent): void => {
-    e.preventDefault();
-
+  const handleClearCart = (): void => {
     cartController
       .clearCart()
       .then(() => {
@@ -232,6 +232,26 @@ function cart(): ReactElement {
       .catch(() => {
         console.log('Unable to clear cart');
       });
+  };
+
+  const handleOpenModal = (e: FormEvent): void => {
+    e.preventDefault();
+
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmClick = (): void => {
+    console.log('Confirm button clicked');
+
+    handleClearCart();
+
+    setIsModalOpen(false);
+  };
+
+  const handleCancelClick = (): void => {
+    console.log('Cancel button clicked');
+
+    setIsModalOpen(false);
   };
 
   return (
@@ -387,7 +407,7 @@ function cart(): ReactElement {
                     Apply
                   </button>
                 </form>
-                <form className="flex w-full mt-4" onSubmit={handleClearCart}>
+                <form className="flex w-full mt-4" onSubmit={handleOpenModal}>
                   <button
                     type="submit"
                     className="h-[40px] w-full rounded-xl bg-red-500 text-white"
@@ -401,6 +421,13 @@ function cart(): ReactElement {
           </div>
         )}
       </main>
+      <ModalPrompt
+        isOpen={isModalOpen}
+        modalTitle="Clear cart"
+        modalContent="Are you sure want to clear the shopping cart?"
+        onConfirmClick={handleConfirmClick}
+        onCancelClick={handleCancelClick}
+      />
     </>
   );
 }
