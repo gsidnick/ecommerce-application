@@ -183,7 +183,8 @@ function cart(): ReactElement {
     image: product.variant.images ? product.variant.images[ZERO_INDEX].url : '',
     quantity: product.quantity,
     price: product.price.value.centAmount / CENTS_IN_DOLLAR,
-    discountedPrice: Number(product.price.discounted?.value.centAmount),
+    discountedPrice:
+      Number(product.price.discounted?.value.centAmount) / CENTS_IN_DOLLAR,
     promocode: product.price.discounted?.discount.id,
     totalPrice: product.totalPrice.centAmount / CENTS_IN_DOLLAR,
     isDiscounted: !!product.price.discounted?.discount.id,
@@ -295,6 +296,8 @@ function cart(): ReactElement {
               {userCartProducts.map((product) => {
                 const data = formatProductData(product);
 
+                console.log(product);
+
                 return (
                   <div
                     key={product.id}
@@ -374,13 +377,12 @@ function cart(): ReactElement {
                                 </div> */}
                             <div className="flex font-bold">
                               Price: ${' '}
-                              <span className="">
-                                {Math.round(data.discountedPrice) /
-                                  CENTS_IN_DOLLAR}
-                              </span>
+                              <span className="">{data.discountedPrice}</span>
                             </div>
                             <div className="flex">
-                              <strong>Total: $ {data.totalPrice}</strong>
+                              <strong>
+                                Total: $ {data.discountedPrice * data.quantity}
+                              </strong>
                             </div>
                           </>
                         )}
