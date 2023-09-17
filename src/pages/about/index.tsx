@@ -22,8 +22,7 @@ function About(): ReactElement {
       <p className="mt-6">
         The project was created as part of the course work of the students of
         the RSSchool from EPAM. The project is a web application for an online
-        store. The project is a web application for online shopping. The
-        application allows you to view products, add them to the cart, place an
+        store. The application allows you to view products, add them to the cart, place an
         order, etc. The application is implemented using the React library and
         the Next.js framework. The application uses the eCommerce Tools API for
         communication with the server. The application is implemented in
