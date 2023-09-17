@@ -221,6 +221,9 @@ function cart(): ReactElement {
         setCartTotal(ZERO);
         setcartTotalWithoutDiscount(ZERO);
         setDisplayCartItems([]);
+        setActivePromocode('');
+
+        dispatch(setPromocode(''));
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         dispatch(updateCart())
