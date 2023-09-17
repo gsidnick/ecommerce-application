@@ -1,9 +1,6 @@
 import { FormEvent, ReactElement, useEffect, useState } from 'react';
 import Image from 'next/image';
-import {
-  DiscountedLineItemPriceForQuantity,
-  LineItem,
-} from '@commercetools/platform-sdk';
+import { LineItem } from '@commercetools/platform-sdk';
 import { toast } from 'react-toastify';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { HttpErrorType } from '@commercetools/sdk-client-v2';
@@ -153,7 +150,7 @@ function cart(): ReactElement {
     image: string;
     quantity: number;
     price: number;
-    discountedPrice: DiscountedLineItemPriceForQuantity[];
+    discountedPrice: number;
     promocode?: string;
     totalPrice: number;
     isDiscounted?: boolean;
@@ -165,7 +162,7 @@ function cart(): ReactElement {
     image: product.variant.images ? product.variant.images[ZERO_INDEX].url : '',
     quantity: product.quantity,
     price: product.price.value.centAmount / CENTS_IN_DOLLAR,
-    discountedPrice: product.discountedPricePerQuantity,
+    discountedPrice: Number(product.price.discounted?.value.centAmount),
     promocode: product.price.discounted?.discount.id,
     totalPrice: product.totalPrice.centAmount / CENTS_IN_DOLLAR,
     isDiscounted: !!product.price.discounted?.discount.id,
@@ -221,6 +218,9 @@ function cart(): ReactElement {
         setCartTotal(ZERO);
         setcartTotalWithoutDiscount(ZERO);
         setDisplayCartItems([]);
+
+        void cartController.removeDiscountCode(activePromocode);
+
         setActivePromocode('');
 
         dispatch(setPromocode(''));
@@ -244,16 +244,12 @@ function cart(): ReactElement {
   };
 
   const handleConfirmClick = (): void => {
-    console.log('Confirm button clicked');
-
     handleClearCart();
 
     setIsModalOpen(false);
   };
 
   const handleCancelClick = (): void => {
-    console.log('Cancel button clicked');
-
     setIsModalOpen(false);
   };
 
@@ -340,16 +336,30 @@ function cart(): ReactElement {
                       <div className="ml-2 flex w-[300px] flex-col items-end lg:ml-10">
                         {data.isDiscounted && (
                           <>
-                            <div className="flex">
+                            {/* <div className="flex">
                               Base price: ${' '}
+                              <span className="line-through">
+                                {Math.round(data.price * CENTS_IN_DOLLAR) /
+                                  CENTS_IN_DOLLAR}
+                              </span>
+                            </div>
+                            <div className="flex">
+                              Base total: ${' '}
                               <span className="line-through">
                                 {Math.round(
                                   data.price * data.quantity * CENTS_IN_DOLLAR
                                 ) / CENTS_IN_DOLLAR}
                               </span>
+                                </div> */}
+                            <div className="flex font-bold">
+                              Price: ${' '}
+                              <span className="">
+                                {Math.round(data.discountedPrice) /
+                                  CENTS_IN_DOLLAR}
+                              </span>
                             </div>
                             <div className="flex">
-                              <strong>Final price: $ {data.totalPrice}</strong>
+                              <strong>Total: $ {data.totalPrice}</strong>
                             </div>
                           </>
                         )}
