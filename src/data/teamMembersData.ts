@@ -1,7 +1,7 @@
 import type { StaticImageData } from 'next/image';
-import photoNikolay from '../../assets/images/team/photo_Nikolay.jpg';
-import photoKirill from '../../assets/images/team/photo_Kirill.jpg';
-import photoSergey from '../../assets/images/team/photo_Sergey.png';
+import photoNikolay from '../assets/images/team/photo_Nikolay.jpg';
+import photoKirill from '../assets/images/team/photo_Kirill.jpg';
+import photoSergey from '../assets/images/team/photo_Sergey.png';
 
 export interface IMember {
   fullName: string;
@@ -44,7 +44,7 @@ export const membersData: IMember[] = [
     ],
   },
   {
-    fullName: 'SERGEY HRABAK',
+    fullName: 'SERGEY GRABAK',
     position: 'FrontEnd Developer',
     biography:
       'For 15 years he worked in various positions at AGBIS Company, including web developer and product manager of the web department.',

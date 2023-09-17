@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import Link from 'next/link';
 import TeamMember from '@/components/TeamMember';
-import { membersData } from './teamMembersData';
+import { membersData } from '../../data/teamMembersData';
 
 import RSSchoolIcon from '@/components/ui/icons/RSSchoolIcon';
 

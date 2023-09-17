@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { IMember } from '@/pages/about/teamMembersData';
+import { IMember } from '@/data/teamMembersData';
 
 import styles from './styles.module.css';
 
