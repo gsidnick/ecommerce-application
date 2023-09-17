@@ -3,6 +3,7 @@ import {
   AnonymousAuthMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
+import { RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import { ExistingTokenFlowOptions, UserCredentialData } from '../types';
 import TokenService from '@/api/services/TokenService';
 import {
@@ -76,5 +77,22 @@ export function getExistingTokenFlowOptions(
     options: {
       force: true,
     },
+  };
+}
+
+export function getRefreshAuthMiddlewareOptions(
+  refreshToken: string
+): RefreshAuthMiddlewareOptions {
+  const tokenService = new TokenService();
+  return {
+    host: AUTH_URL,
+    projectKey: PROJECT_KEY,
+    credentials: { clientId: CLIENT_ID, clientSecret: CLIENT_SECRET },
+    refreshToken,
+    tokenCache: {
+      get: () => tokenService.getToken(),
+      set: (cache) => tokenService.setToken(cache),
+    },
+    fetch,
   };
 }

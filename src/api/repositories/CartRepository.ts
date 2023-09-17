@@ -6,7 +6,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
-import TokenClient from '@/api/client/TokenClient';
+import RefreshTokenClient from '@/api/client/RefreshTokenClient';
 import NotFoundError from '@/api/errors/NotFoundError';
 import { MASTER_VARIANT_ID } from '@/constants';
 import { EMPTY_DISCOUNTS } from '@/api/constants';
@@ -22,7 +22,7 @@ class CartRepository {
     code: string
   ): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
 
@@ -51,7 +51,7 @@ class CartRepository {
     code: string
   ): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
       void (await this.isDiscountsApplied());
@@ -84,7 +84,7 @@ class CartRepository {
   }
 
   public async getTotalPrice(): Promise<CentPrecisionMoney | undefined> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const { ID } = await this.getCartIDAndVersion();
     const result = await apiRoot
@@ -101,7 +101,7 @@ class CartRepository {
   }
 
   public async getProducts(): Promise<LineItem[]> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const { ID } = await this.getCartIDAndVersion();
 
@@ -128,7 +128,7 @@ class CartRepository {
     variantId?: number;
   }): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
 
@@ -163,7 +163,7 @@ class CartRepository {
     quantity: number;
   }): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
       const lineItem = await this.getLineItemByProductID(productId);
@@ -203,7 +203,7 @@ class CartRepository {
     quantity: number;
   }): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
       const lineItem = await this.getLineItemByProductID(productId);
@@ -237,7 +237,7 @@ class CartRepository {
 
   public async createCart(): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
 
       const result = await apiRoot
@@ -257,7 +257,7 @@ class CartRepository {
 
   public async deleteCart(): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
 
@@ -279,7 +279,7 @@ class CartRepository {
 
   public async clearCart(): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
       const lineItems = await this.getProducts();
@@ -313,7 +313,7 @@ class CartRepository {
 
   public async getCart(): Promise<ClientResponse<Cart | ClientResult>> {
     try {
-      const client = new TokenClient();
+      const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
 
       const result = await apiRoot
@@ -335,7 +335,7 @@ class CartRepository {
     ID: string;
     version: number;
   }> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({
@@ -352,7 +352,7 @@ class CartRepository {
   }
 
   private async getLineItemByProductID(productId: string): Promise<LineItem> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({
@@ -373,7 +373,7 @@ class CartRepository {
   }
 
   private async getPromocodeID(code: string): Promise<string> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({
@@ -393,7 +393,7 @@ class CartRepository {
   }
 
   private async isDiscountsApplied(): Promise<boolean> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
 
     const result = await apiRoot

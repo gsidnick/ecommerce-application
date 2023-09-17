@@ -1,7 +1,7 @@
 import { CategoryPagedQueryResponse } from '@commercetools/platform-sdk';
 import { ClientResponse } from '@commercetools/sdk-client-v2';
 import { getProjectKey } from '@/api/helpers/options';
-import AnonymousClient from '@/api/client/AnonymousClient';
+import RefreshTokenClient from '@/api/client/RefreshTokenClient';
 
 class CategoryRepository {
   private readonly projectKey: string;
@@ -13,7 +13,7 @@ class CategoryRepository {
   public async getCategories(): Promise<
     ClientResponse<CategoryPagedQueryResponse>
   > {
-    const client = new AnonymousClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({
