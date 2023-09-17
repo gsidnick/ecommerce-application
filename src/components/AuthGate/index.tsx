@@ -10,9 +10,7 @@ import {
   setRefreshToken,
   setToken,
 } from '@/store/slices/authSlice';
-// import { setCartId } from '@/store/slices/cartSlice';
 import CustomerController from '@/api/controllers/CustomerController';
-import CartController from '@/api/controllers/CartController';
 import { IMMEDIATE_INVOKE } from '@/constants';
 
 export const AuthGate = ({
@@ -24,7 +22,6 @@ export const AuthGate = ({
   const dispatch = useAppDispatch();
   const { authState, token: tokenState } = useAppSelector(selectAuthState);
   const customerController = new CustomerController();
-  const cartController = new CartController();
 
   useEffect(() => {
     const anonymous = setTimeout(() => {
@@ -36,13 +33,6 @@ export const AuthGate = ({
             dispatch(setToken(token));
             dispatch(setRefreshToken(refreshToken ?? ''));
             dispatch(setExpirationTime(expirationTime));
-
-            cartController
-              .createCart()
-              .then(() => {
-                // dispatch(setCartId(cartResponse.body?.id ?? ''));
-              })
-              .catch(() => {});
           })
           .catch(console.error);
       }

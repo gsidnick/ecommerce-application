@@ -10,6 +10,7 @@ import { useAppSelector } from '../../hooks/useAppSelector';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 
 import {
+  getCartId,
   getCartProducts,
   getCartTotal,
   getPromoCode,
@@ -47,6 +48,7 @@ function cart(): ReactElement {
   const userCartProducts = useAppSelector(getCartProducts);
   const userCartTotal = useAppSelector(getCartTotal);
   const storeActivePromocode = useAppSelector(getPromoCode);
+  const activeCartId = useAppSelector(getCartId);
 
   const cartController = new CartController();
 
@@ -59,28 +61,42 @@ function cart(): ReactElement {
         )
       );
 
-      cartController
-        .getCart()
-        .then(() => {
-          setDisplayCartItems(userCartProducts);
-        })
-        .catch(() => {
-          console.log('error in getting cart');
-        });
+      if (activeCartId.length > ZERO) {
+        cartController
+          .getCart()
+          .then(() => {
+            setDisplayCartItems(userCartProducts);
+          })
+          .catch(() => {
+            console.log('error in getting cart');
+          });
+      }
     }
   }, [userCartProducts]);
 
   useEffect(() => {
     const getApiCartTotal = async (): Promise<void> => {
-      const response = await cartController.getTotalPrice();
+      try {
+        if (activeCartId.length > ZERO) {
+          const response = await cartController.getTotalPrice();
 
-      setCartTotal(response);
+          setCartTotal(response);
+        }
+      } catch {
+        console.log('No cart');
+      }
     };
 
     const getApiTotalWithoutDiscount = async (): Promise<void> => {
-      const response = await cartController.getOriginalTotalPrice();
+      try {
+        if (activeCartId.length > ZERO) {
+          const response = await cartController.getOriginalTotalPrice();
 
-      setcartTotalWithoutDiscount(response);
+          setcartTotalWithoutDiscount(response);
+        }
+      } catch {
+        console.log('No cart');
+      }
     };
 
     void getApiCartTotal();

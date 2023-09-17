@@ -122,15 +122,19 @@ class CartRepository {
     productId,
     quantity,
     variantId = MASTER_VARIANT_ID,
+    cartId,
   }: {
     productId: string;
     quantity: number;
     variantId?: number;
+    cartId?: string;
   }): Promise<ClientResponse<Cart | ClientResult>> {
     try {
       const client = new RefreshTokenClient();
       const apiRoot = client.getApiRoot();
       const { ID, version } = await this.getCartIDAndVersion();
+
+      const activeCart = cartId ?? ID;
 
       const result = await apiRoot
         .withProjectKey({
@@ -138,7 +142,7 @@ class CartRepository {
         })
         .me()
         .carts()
-        .withId({ ID })
+        .withId({ ID: activeCart })
         .post({
           body: {
             version,
