@@ -3,7 +3,7 @@ import {
   ProductProjection,
   ProductProjectionPagedQueryResponse,
 } from '@commercetools/platform-sdk';
-import AnonymousClient from '@/api/client/AnonymousClient';
+import RefreshTokenClient from '@/api/client/RefreshTokenClient';
 import { getProjectKey } from '@/api/helpers/options';
 import { DEFAULT_LIMIT, DEFAULT_OFFSET } from '@/api/constants';
 
@@ -21,7 +21,7 @@ class ProductRepository {
     offset = DEFAULT_OFFSET,
     search?: string
   ): Promise<ClientResponse<ProductProjectionPagedQueryResponse>> {
-    const client = new AnonymousClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const query = {
       queryArgs: {
@@ -46,7 +46,7 @@ class ProductRepository {
   public async getProductByID(
     id: string
   ): Promise<ClientResponse<ProductProjection>> {
-    const client = new AnonymousClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({
@@ -62,7 +62,7 @@ class ProductRepository {
   public async getProductByKey(
     key: string
   ): Promise<ClientResponse<ProductProjection>> {
-    const client = new AnonymousClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({

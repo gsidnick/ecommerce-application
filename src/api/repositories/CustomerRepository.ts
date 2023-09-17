@@ -18,7 +18,7 @@ import {
 import { getProjectKey } from '@/api/helpers/options';
 import AnonymousClient from '@/api/client/AnonymousClient';
 import TokenService from '@/api/services/TokenService';
-import TokenClient from '@/api/client/TokenClient';
+import RefreshTokenClient from '@/api/client/RefreshTokenClient';
 
 class CustomerRepository {
   private readonly projectKey: string;
@@ -63,8 +63,8 @@ class CustomerRepository {
   ): Promise<IApiLoginResult> {
     try {
       const { email, password } = userData;
-      const tokenClient = new TokenClient();
-      const tokenApiRoot = tokenClient.getApiRoot();
+      const refreshTokenClient = new RefreshTokenClient();
+      const tokenApiRoot = refreshTokenClient.getApiRoot();
       const tokenApiResult = await tokenApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
@@ -108,7 +108,7 @@ class CustomerRepository {
   }
 
   public async getCustomer(): Promise<ClientResponse<Customer>> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
 
     const result = await apiRoot
@@ -122,7 +122,7 @@ class CustomerRepository {
   public async updateCustomer(
     data: MyCustomerUpdate
   ): Promise<ClientResponse<Customer>> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({ projectKey: this.projectKey })
@@ -137,7 +137,7 @@ class CustomerRepository {
   public async changeCustomerPassword(
     data: MyCustomerChangePassword
   ): Promise<ClientResponse<Customer>> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({ projectKey: this.projectKey })
