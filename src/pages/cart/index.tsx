@@ -72,15 +72,23 @@ function cart(): ReactElement {
 
   useEffect(() => {
     const getApiCartTotal = async (): Promise<void> => {
-      const response = await cartController.getTotalPrice();
+      try {
+        const response = await cartController.getTotalPrice();
 
-      setCartTotal(response);
+        setCartTotal(response);
+      } catch {
+        console.log('No cart');
+      }
     };
 
     const getApiTotalWithoutDiscount = async (): Promise<void> => {
-      const response = await cartController.getOriginalTotalPrice();
+      try {
+        const response = await cartController.getOriginalTotalPrice();
 
-      setcartTotalWithoutDiscount(response);
+        setcartTotalWithoutDiscount(response);
+      } catch {
+        console.log('No cart');
+      }
     };
 
     void getApiCartTotal();

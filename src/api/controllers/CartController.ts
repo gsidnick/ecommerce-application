@@ -40,12 +40,19 @@ class CartController {
     productId,
     quantity,
     variantId = MASTER_VARIANT_ID,
+    cartId,
   }: {
     productId: string;
     quantity: number;
     variantId?: number;
+    cartId?: string;
   }): Promise<ClientResponse<Cart | ClientResult>> {
-    return this.cartRepository.addProduct({ productId, variantId, quantity });
+    return this.cartRepository.addProduct({
+      productId,
+      variantId,
+      quantity,
+      cartId,
+    });
   }
 
   public async removeProduct({

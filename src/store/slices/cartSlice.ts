@@ -28,21 +28,35 @@ export interface IProductItem {
 export interface ICartItems {
   totalPrice: CentPrecisionMoney;
   lineItems: LineItem[];
+  cartId?: string;
 }
 
 export const addProductToCart = createAsyncThunk(
   'cart/addProductToCart',
-  async ({
-    productId,
-    quantity,
-    variantId,
-  }: IProductItem): Promise<ICartItems> => {
+  async (
+    { productId, quantity, variantId }: IProductItem,
+    { getState }
+  ): Promise<ICartItems> => {
     const cartController = new CartController();
+
+    const allState = getState() as RootState;
+    console.log(allState);
+
+    let { cartId } = allState.cart;
+
+    if (allState.cart.cartId === '') {
+      cartId =
+        ((await cartController.createCart()) as ClientResponse<Cart>).body
+          ?.id ?? '';
+    }
+
+    console.log(cartId);
 
     const response = await cartController.addProduct({
       productId,
       quantity,
       variantId,
+      cartId,
     });
 
     return {
@@ -53,6 +67,7 @@ export const addProductToCart = createAsyncThunk(
         type: 'centPrecision',
       },
       lineItems: (response as ClientResponse<Cart>).body?.lineItems ?? [],
+      cartId,
     };
   }
 );
@@ -143,12 +158,14 @@ export interface CartState {
   userCartProducts: LineItem[];
   totalCartPrice: number;
   activePromocode: string;
+  cartId: string;
 }
 
 const initialState: CartState = {
   userCartProducts: [],
   totalCartPrice: ZERO_PRICE,
   activePromocode: '',
+  cartId: '',
 };
 
 enum ESlices {
@@ -189,14 +206,16 @@ export const cartSlice = createSlice({
         action: PayloadAction<{
           totalPrice: CentPrecisionMoney;
           lineItems: LineItem[];
+          cartId?: string;
         }>
       ): CartState => {
-        const { totalPrice, lineItems } = action.payload;
+        const { totalPrice, lineItems, cartId } = action.payload;
         const newCartProducts = [...lineItems];
         return {
           ...state,
           userCartProducts: newCartProducts,
           totalCartPrice: totalPrice.centAmount,
+          cartId: cartId ?? '',
         };
       }
     );
@@ -265,5 +284,6 @@ export const getCartProducts = (state: RootState): LineItem[] =>
   state.cart.userCartProducts;
 export const getCartTotal = (state: RootState): number =>
   state.cart.totalCartPrice;
+export const getCartId = (state: RootState): string => state.cart.cartId;
 
 export default cartSlice.reducer;
