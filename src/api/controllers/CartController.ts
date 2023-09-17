@@ -1,4 +1,4 @@
-import { Cart, LineItem } from '@commercetools/platform-sdk';
+import { Cart, LineItem, TypedMoney } from '@commercetools/platform-sdk';
 import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
 import CartRepository from '@/api/repositories/CartRepository';
 import {
@@ -103,15 +103,20 @@ class CartController {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const originalTotalPrice: number = lineItems.reduce((acc, item): number => {
+      let money: TypedMoney;
       let price = 0;
 
-      if (item.price.value) {
-        const { centAmount, fractionDigits } = item.price.value;
-
-        price =
-          (centAmount * item.quantity) /
-          POSITION_DIGIT_COEFFICIENT ** fractionDigits;
+      if (item.price.discounted) {
+        money = item.price.discounted.value;
+      } else {
+        money = item.price.value;
       }
+
+      const { centAmount, fractionDigits } = money;
+
+      price =
+        (centAmount * item.quantity) /
+        POSITION_DIGIT_COEFFICIENT ** fractionDigits;
 
       return acc + price;
     }, INITIAL_PRICE);
