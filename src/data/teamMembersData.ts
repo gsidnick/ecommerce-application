@@ -40,7 +40,7 @@ export const membersData: IMember[] = [
       'Implementation of products sorting',
       'Implementation of filters by category, brand, price, color of products',
       'Implementation of adding and removing products to the cart from the catalog page and from the product page',
-      'Implementation of the &quot;about us&quot; page',
+      'Implementation of the "About us" page',
     ],
   },
   {
