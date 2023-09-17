@@ -296,8 +296,6 @@ function cart(): ReactElement {
               {userCartProducts.map((product) => {
                 const data = formatProductData(product);
 
-                console.log(product);
-
                 return (
                   <div
                     key={product.id}
