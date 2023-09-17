@@ -17,12 +17,17 @@ import CloseIcon from '@/components/ui/icons/CloseIcon';
 import { ERoute } from '@/data/routes';
 import logo from '@/assets/images/logo/logo-orange.png';
 import styles from './styles.module.css';
+import { getCartProducts } from '../../../store/slices/cartSlice';
+
+const ZERO_PRODUCTS = 0;
 
 const BurgerMenu: NextPage = () => {
   const dispatch = useAppDispatch();
 
   const { isBurgerMenuOpen } = useAppSelector(selectMenuState);
   const { authState } = useAppSelector(selectAuthState);
+  const userCartProducts = useAppSelector(getCartProducts);
+
   const router = useRouter();
 
   if (!isBurgerMenuOpen) return null;
@@ -82,6 +87,22 @@ const BurgerMenu: NextPage = () => {
                 </div>
               </li>
             ))}
+            <li
+              key="cart"
+              className="w-full opacity-75 hover:bg-indigo-500"
+              onClick={handleNavigate(ERoute.cart)}
+            >
+              <div className="p-3">
+                <p>
+                  CART{' '}
+                  {userCartProducts.length > ZERO_PRODUCTS && (
+                    <span className="inline-flex items-center justify-center w-4 h-4 p-1 ml-2 text-xs font-semibold text-black rounded-full bg-orange-main">
+                      {userCartProducts.length}
+                    </span>
+                  )}
+                </p>
+              </div>
+            </li>
             {authState && (
               <>
                 <li

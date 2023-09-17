@@ -62,7 +62,6 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
   };
 
   const handleRemoveFromCart = (e: MouseEvent<HTMLButtonElement>): void => {
-    console.log('remove from cart');
     e.stopPropagation();
     e.preventDefault();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -109,7 +108,7 @@ const ProductDetail = ({ details }: ProductDetailProps): ReactElement => {
         {isInCart && (
           <button
             type="button"
-            className="flex w-1/3 items-center justify-center rounded-md bg-red-500 py-2 text-white hover:bg-red-600  disabled:cursor-not-allowed disabled:opacity-50 md:w-1/3"
+            className="flex items-center justify-center w-1/3 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50 md:w-1/3"
             onClick={handleRemoveFromCart}
           >
             Delete from cart

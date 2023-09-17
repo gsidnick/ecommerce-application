@@ -23,8 +23,8 @@ import menuReducer, { menuSlice } from '@/store/slices/menuSlice';
 import modalReducer, { modalSlice } from '@/store/slices/modalSlice';
 import productsReducer, { productsSlice } from '@/store/slices/productsSlice';
 import filterReducer, { filterSlice } from '@/store/slices/filterSlice';
-import cartReducer, { cartSlice } from '@/store/slices/cartSlice';
 import storage from './helpers/storage';
+import cartReducer, { cartSlice } from '@/store/slices/cartSlice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: authReducer,
