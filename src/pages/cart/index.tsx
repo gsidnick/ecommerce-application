@@ -52,7 +52,7 @@ function cart(): ReactElement {
   const cartController = new CartController();
 
   useEffect(() => {
-    if (userCartProducts.length > EMPTY_CART_ITEMS) {
+    if (userCartProducts.length >= EMPTY_CART_ITEMS) {
       setCartProductsQty(
         userCartProducts.reduce(
           (acc, value) => acc + value.quantity,
@@ -72,15 +72,25 @@ function cart(): ReactElement {
   }, [userCartProducts]);
 
   useEffect(() => {
-    setCartTotal(userCartTotal / CENTS_IN_DOLLAR);
+    const getApiCartTotal = async (): Promise<void> => {
+      const response = await cartController.getTotalPrice();
 
-    const getTolalWithoutDiscount = async (): Promise<void> => {
+      console.log(response);
+
+      setCartTotal(response);
+    };
+
+    const getApiTotalWithoutDiscount = async (): Promise<void> => {
       const response = await cartController.getOriginalTotalPrice();
+
+      console.log(response);
 
       setcartTotalWithoutDiscount(response);
     };
 
-    void getTolalWithoutDiscount();
+    void getApiCartTotal();
+
+    void getApiTotalWithoutDiscount();
   }, [userCartTotal]);
 
   useEffect(() => {

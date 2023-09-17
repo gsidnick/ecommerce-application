@@ -98,8 +98,8 @@ class CartController {
     const originalTotalPrice: number = lineItems.reduce((acc, item): number => {
       let price = 0;
 
-      if (item.price.discounted) {
-        const { centAmount, fractionDigits } = item.price.discounted.value;
+      if (item.price.value) {
+        const { centAmount, fractionDigits } = item.price.value;
 
         price =
           (centAmount * item.quantity) /
