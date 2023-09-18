@@ -4,10 +4,10 @@
 }
 
 .link {
-  color: #525252;
+  color: #2c2b2b;
 }
 
 .link:hover {
-  color: #a4a4a4;
+  /* color: #a4a4a4; */
   text-decoration: underline;
 }

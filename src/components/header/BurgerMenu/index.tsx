@@ -5,7 +5,6 @@ import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
@@ -15,7 +14,7 @@ import { selectMenuState, setStateBurgerMenu } from '@/store/slices/menuSlice';
 import CustomerController from '@/api/controllers/CustomerController';
 import CloseIcon from '@/components/ui/icons/CloseIcon';
 import { ERoute } from '@/data/routes';
-import logo from '@/assets/images/logo/logo-orange.png';
+import Logo from '@/components/ui/icons/Logo';
 import styles from './styles.module.css';
 import { getCartProducts } from '../../../store/slices/cartSlice';
 
@@ -60,18 +59,18 @@ const BurgerMenu: NextPage = () => {
         onClick={closeMenu}
         aria-hidden="true"
       />
-      <div className={styles.menuWrapper}>
+      <div
+        className={`${styles.menuWrapper} ${
+          isBurgerMenuOpen ? styles.active : ''
+        }`}
+      >
         <div className={styles.menuContent} role="button">
           <div className={`${styles.menuHeader} p-2`}>
-            <Link href="/">
-              <Image
-                src={logo}
-                alt="logo"
-                className={styles.menuLogoIcon}
-                width={150}
-                height={10}
-              />
-            </Link>
+            <div className={styles.logo}>
+              <Link href="/">
+                <Logo />
+              </Link>
+            </div>
             <CloseIcon className={styles.btnClose} onClick={closeMenu} />
           </div>
           <ul className={`${styles.navBar} py-3`}>
@@ -96,7 +95,7 @@ const BurgerMenu: NextPage = () => {
                 <p>
                   CART{' '}
                   {userCartProducts.length > ZERO_PRODUCTS && (
-                    <span className="inline-flex items-center justify-center w-4 h-4 p-1 ml-2 text-xs font-semibold text-black rounded-full bg-orange-main">
+                    <span className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-orange-main p-1 text-xs font-semibold text-black">
                       {userCartProducts.length}
                     </span>
                   )}
@@ -154,7 +153,4 @@ const BurgerMenu: NextPage = () => {
   );
 };
 
-BurgerMenu.defaultProps = {
-  style: {},
-};
 export default BurgerMenu;

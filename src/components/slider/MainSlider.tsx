@@ -10,6 +10,9 @@ import styles from './slider.module.css';
 
 import { ArrowProps } from './types';
 
+const FIRST_SLIDE = 0;
+const LAST_SLIDE_DIFFERENT_NUMBER = 1;
+
 function Arrow({ disabled, left = false, onClick }: ArrowProps): ReactElement {
   const disabeld = disabled ? styles.arrowDisabled : '';
   return (
@@ -35,7 +38,7 @@ function MainSlider(): ReactElement {
   const [loaded, setLoaded] = useState(false);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
     {
-      // loop: true,
+      loop: true,
       slideChanged(slider) {
         setCurrentSlide(slider.track.details.rel);
       },
@@ -80,16 +83,15 @@ function MainSlider(): ReactElement {
           <Arrow
             left
             onClick={arrowHandlerLeft}
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            disabled={currentSlide === 0}
+            disabled={currentSlide === FIRST_SLIDE}
           />
 
           <Arrow
             onClick={arrowHandlerRight}
             disabled={
               currentSlide ===
-              // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-              instanceRef.current.track.details.slides.length - 1
+              instanceRef.current.track.details.slides.length -
+                LAST_SLIDE_DIFFERENT_NUMBER
             }
             left={false}
           />

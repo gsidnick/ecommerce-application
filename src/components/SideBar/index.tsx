@@ -6,6 +6,7 @@ import { selectProductState } from '@/store/slices/productsSlice';
 import {
   setFilterBreadCrumbs,
   setFilterCategory,
+  selectFilterState,
 } from '@/store/slices/filterSlice';
 import { ICategory, ICategoryWithSubcategories } from '@/api/types';
 import { buildBreadcrumbsMaker } from '@/components/CategoryCrumb/buildCrumbMaker';
@@ -15,6 +16,7 @@ const SideBar = (): ReactElement => {
   const [openCategoryIds, setOpenCategoryIds] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const { categories } = useAppSelector(selectProductState);
+  const { filterCategory } = useAppSelector(selectFilterState);
 
   useEffect(() => {}, [categories]);
 
@@ -52,6 +54,13 @@ const SideBar = (): ReactElement => {
               }}
               role="button"
               tabIndex={0}
+              className={`${
+                filterCategory === menuItem.id ||
+                filterCategory === menuItem.parent ||
+                menuItem.parent === menuItem.id
+                  ? 'text-orange-500'
+                  : 'text-white'
+              } text-[20px]`}
             >
               {menuItem.name}
             </span>

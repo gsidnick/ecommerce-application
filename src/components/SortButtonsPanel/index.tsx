@@ -35,8 +35,9 @@ const SortButtonsPanel = ({
 
   return (
     <div className={styles.container}>
-      <p className="text-white">{productsCount} products</p>
+      <p className="text-black">{productsCount} products</p>
       <div className={styles.selectWrapper}>
+        <span>Sort: </span>
         <select
           onChange={handleChangeSelect}
           className={styles.select}
