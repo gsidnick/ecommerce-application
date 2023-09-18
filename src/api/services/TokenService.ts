@@ -12,7 +12,10 @@ class TokenService {
   }
 
   public setToken(data: TokenStore): void {
-    const json = JSON.stringify(data);
+    const TEN_DAYS = 864000000;
+    const expirationTime = data.expirationTime + TEN_DAYS;
+    const token = { ...data, expirationTime };
+    const json = JSON.stringify(token);
     this.localStorage.setItem(TOKEN_NAME, json);
   }
 
