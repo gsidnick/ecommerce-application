@@ -62,13 +62,10 @@ function Catalog(): ReactElement {
     const fetchAllProductsWithoutLimit = (): void => {
       dispatch(getAllFilteredProductsWithoutLimit({}));
     };
-    // const brandsArr = extractAllBrands(filteredAllProducts);
 
     fetchCategories();
     fetchProducts();
     fetchAllProductsWithoutLimit();
-
-    // setBrands(brandsArr);
   }, []);
 
   useEffect(() => {

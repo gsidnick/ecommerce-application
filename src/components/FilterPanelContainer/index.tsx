@@ -33,7 +33,7 @@ const FilterPanelContainer = ({
       </div>
       <div>
         {filterPrice && (
-          <FilterPriceSlider /* productsItems={filteredProducts} */ />
+          <FilterPriceSlider />
         )}
       </div>
       <div className={styles.resetButtonWrapper}>
