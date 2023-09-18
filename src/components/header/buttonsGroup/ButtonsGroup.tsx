@@ -10,7 +10,11 @@ import cart from '@/assets/images/cart-icon.png';
 import { ERoute } from '../../../data/routes';
 import styles from './styles.module.css';
 import CustomerController from '@/api/controllers/CustomerController';
-import { getCartProducts } from '../../../store/slices/cartSlice';
+import {
+  getCartProducts,
+  setCartId,
+  setCartProducts,
+} from '../../../store/slices/cartSlice';
 
 const ZERO_PRODUCTS = 0;
 
@@ -82,6 +86,8 @@ function ButtonsGroup(): ReactElement {
               className="ml-2 hidden rounded border-2 border-solid px-3 py-1 text-white60 transition-colors duration-300 hover:text-white md:block"
               onClick={(): void => {
                 void new CustomerController().logoutCustomer();
+                dispatch(setCartProducts([]));
+                dispatch(setCartId(''));
                 dispatch(resetAuthState());
                 toast.success('You have successfully logged out');
               }}
