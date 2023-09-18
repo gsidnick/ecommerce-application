@@ -187,6 +187,12 @@ export const cartSlice = createSlice({
         activePromocode: action.payload,
       };
     },
+    setCartId(state: CartState, action: PayloadAction<string>) {
+      return {
+        ...state,
+        cartId: action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -273,7 +279,7 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setCartProducts, setPromocode } = cartSlice.actions;
+export const { setCartProducts, setPromocode, setCartId } = cartSlice.actions;
 export const selectCartState = (state: RootState): CartState => state.cart;
 export const getPromoCode = (state: RootState): string =>
   state.cart.activePromocode;
