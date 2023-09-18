@@ -5,13 +5,19 @@ export const extractAllPrices = (
 ): number[] => {
   const allPrices: number[] = [];
 
+  console.log(productsArray);
+
   productsArray.forEach((product) => {
     product.masterVariant.prices?.forEach((price) => {
-      allPrices.push(price.value.centAmount);
+      allPrices.push(
+        price.discounted?.value.centAmount ?? price.value.centAmount
+      );
     });
     product.variants?.forEach((variant) => {
       variant.prices?.forEach((price) => {
-        allPrices.push(price.value.centAmount);
+        allPrices.push(
+          price.discounted?.value.centAmount ?? price.value.centAmount
+        );
       });
     });
   });
