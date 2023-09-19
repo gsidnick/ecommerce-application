@@ -5,8 +5,6 @@ export const extractAllPrices = (
 ): number[] => {
   const allPrices: number[] = [];
 
-  console.log(productsArray);
-
   productsArray.forEach((product) => {
     product.masterVariant.prices?.forEach((price) => {
       allPrices.push(
