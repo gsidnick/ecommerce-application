@@ -31,6 +31,21 @@ export interface ICartItems {
   cartId?: string;
 }
 
+export const loadUserCart = createAsyncThunk('cart/loadUserCart', async () => {
+  const cartController = new CartController();
+  const response = await cartController.getCart();
+
+  return {
+    totalPrice: (response as ClientResponse<Cart>).body?.totalPrice ?? {
+      centAmount: ZERO_PRICE,
+      currencyCode: 'USD',
+      fractionDigits: 2,
+      type: 'centPrecision',
+    },
+    lineItems: (response as ClientResponse<Cart>).body?.lineItems ?? [],
+  };
+});
+
 export const addProductToCart = createAsyncThunk(
   'cart/addProductToCart',
   async (
@@ -201,6 +216,24 @@ export const cartSlice = createSlice({
         ...state,
         ...action.payload.cart,
       })
+    );
+    builder.addCase(
+      loadUserCart.fulfilled,
+      (
+        state: CartState,
+        action: PayloadAction<{
+          totalPrice: CentPrecisionMoney;
+          lineItems: LineItem[];
+          cartId?: string;
+        }>
+      ) => {
+        const { totalPrice, lineItems } = action.payload;
+        return {
+          ...state,
+          userCartProducts: lineItems,
+          totalCartPrice: totalPrice.centAmount,
+        };
+      }
     );
     builder.addCase(
       addProductToCart.fulfilled,

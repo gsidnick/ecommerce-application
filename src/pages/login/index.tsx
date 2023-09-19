@@ -20,7 +20,7 @@ import CustomInput from '@/components/CustomInput';
 import CustomerController from '@/api/controllers/CustomerController';
 import { HttpStatus, IApiLoginResult, LoginProps } from '@/api/types';
 import { ERoute } from '@/data/routes';
-import { setCartId } from '@/store/slices/cartSlice';
+import { loadUserCart, setCartId } from '@/store/slices/cartSlice';
 import CartController from '@/api/controllers/CartController';
 
 const initialValues: LoginProps = {
@@ -61,6 +61,9 @@ const LoginPage: NextPage<AuthState> = () => {
                 const id =
                   (cartResponse as ClientResponse<Cart>).body?.id ?? '';
                 dispatch(setCartId(id));
+                if (id) {
+                  dispatch(loadUserCart());
+                }
               })
               .catch(console.error);
 
