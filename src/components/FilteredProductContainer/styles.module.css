@@ -27,13 +27,14 @@
 }
 
 .paginateContainer li a:hover {
-  background-color: rgb(80, 80, 80);
+  background-color: rgb(185, 185, 183);
+  color: black !important;
 }
 
 .activeLinkClassName {
   color: black !important;
-  border: none !important;
-  background-color: white;
+  border: 1px solid rgb(110, 110, 110) !important;
+  background-color: rgb(185, 185, 183);
 }
 
 .noItems {
@@ -41,49 +42,37 @@
 }
 
 @media screen and (max-width: 1919px) {
-
   .gridItemContainer {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
-
 }
 
 @media screen and (max-width: 1599px) {
-
   .gridItemContainer {
     grid-template-columns: 1fr 1fr 1fr;
   }
-
 }
 
 @media screen and (max-width: 1199px) {
-
   .gridItemContainer {
     grid-template-columns: 1fr 1fr;
   }
-
 }
 
 @media screen and (max-width: 991px) {
-
   .gridItemContainer {
     grid-template-columns: 1fr;
   }
-
 }
 
 @media screen and (max-width: 767px) {
-
   .gridItemContainer {
     grid-template-columns: 1fr 1fr;
   }
-
 }
 
 @media screen and (max-width: 567px) {
-
   .gridItemContainer {
     grid-template-columns: 1fr;
   }
-
 }

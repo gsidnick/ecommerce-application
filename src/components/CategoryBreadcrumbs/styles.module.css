@@ -5,10 +5,13 @@
 }
 
 .link {
-  color: #ffffff;
+  color: #313030;
+  transition:
+    color 0.3s ease-in-out,
+    text-decoration 0.3s ease-in-out;
 }
 
 .link:hover {
-  color: #cecece;
+  color: #838383;
   text-decoration: underline;
 }

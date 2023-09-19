@@ -253,7 +253,6 @@ const ProductCard: FC<ProductCardProps> = (props) => {
               ))}
             </div>
             <div className={styles.text}>
-              <p className={styles.title}>{name}</p>
               <p className={styles.modelName}>{model}</p>
               <p className={styles.description}>{briefDescription}</p>
             </div>
