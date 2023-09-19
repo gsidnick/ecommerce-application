@@ -278,11 +278,10 @@ function cart(): ReactElement {
 
   return (
     <>
-      <h1 className="ml-2">HOME / CART</h1>
       <main className="">
         {displayCartItems && displayCartItems.length === EMPTY_CART_ITEMS && (
           <div className="flex h-[50vh] flex-col items-center justify-center">
-            <h2>Cart is empty, add something!</h2>
+            <h1 className="mb-4 text-2xl font-bold">Cart is empty!</h1>
             <button
               type="button"
               className="mt-2 h-[40px] w-[100px] rounded-xl bg-orange-main"
