@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import CartIcon from '@/components/ui/icons/Cart';
