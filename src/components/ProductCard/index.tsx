@@ -24,6 +24,7 @@ import { useAppSelector } from '@/hooks/useAppSelector';
 import { convertPriceToFractionDigits } from '@/helpers/convertPrice';
 
 import styles from './styles.module.css';
+import Loader from '@/components/ui/loader/Loader';
 
 interface ProductCardProps {
   id: string;
@@ -58,6 +59,8 @@ const ProductCard: FC<ProductCardProps> = (props) => {
 
   const [activeVariantId, setActiveVariantId] =
     useState<number>(MAIN_VARIANT_ID);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -189,6 +192,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     e.stopPropagation();
     e.preventDefault();
     dispatch(setVariantOfCurrentProduct(activeVariantId));
+    setIsLoading(true);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     dispatch(
@@ -201,6 +205,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       .then(unwrapResult)
       .then(() => {
         toast.success('Product added to cart');
+        setIsLoading(false);
       })
       .catch(() => {
         toast.error('Error adding product to cart');
@@ -268,6 +273,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
                 aria-hidden="true"
                 disabled={isProductInCart}
               >
+                {isLoading ? <Loader /> : ''}
                 {isProductInCart ? 'In Cart' : 'Add to cart'}
               </button>
             </div>

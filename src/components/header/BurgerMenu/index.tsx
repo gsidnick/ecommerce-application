@@ -16,7 +16,11 @@ import CloseIcon from '@/components/ui/icons/CloseIcon';
 import { ERoute } from '@/data/routes';
 import Logo from '@/components/ui/icons/Logo';
 import styles from './styles.module.css';
-import { getCartProducts } from '../../../store/slices/cartSlice';
+import {
+  getCartProducts,
+  setCartId,
+  setCartProducts,
+} from '../../../store/slices/cartSlice';
 
 const ZERO_PRODUCTS = 0;
 
@@ -47,6 +51,8 @@ const BurgerMenu: NextPage = () => {
   const handleLogOut = (): void => {
     void new CustomerController().logoutCustomer();
     dispatch(resetAuthState());
+    dispatch(setCartProducts([]));
+    dispatch(setCartId(''));
     closeMenu();
     toast.success('You have successfully logged out');
   };

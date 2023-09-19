@@ -30,6 +30,7 @@ const ZERO = 0;
 const CENTS_IN_DOLLAR = 100;
 const CART_STEP = 1;
 const DISCOUNT_DIFF = 0.5;
+const FRACTION_DIGITS = 2;
 
 function cart(): ReactElement {
   const [displayCartItems, setDisplayCartItems] = useState<CartItem[]>([]);
@@ -277,11 +278,10 @@ function cart(): ReactElement {
 
   return (
     <>
-      <h1 className="ml-2">HOME / CART</h1>
       <main className="">
         {displayCartItems && displayCartItems.length === EMPTY_CART_ITEMS && (
           <div className="flex h-[50vh] flex-col items-center justify-center">
-            <h2>Cart is empty, add something!</h2>
+            <h1 className="mb-4 text-2xl font-bold">Cart is empty!</h1>
             <button
               type="button"
               className="mt-2 h-[40px] w-[100px] rounded-xl bg-orange-main"
@@ -299,7 +299,7 @@ function cart(): ReactElement {
                 return (
                   <div
                     key={product.id}
-                    className="flex flex-col pb-2 mt-4 border-b-2 border-b-orange-main"
+                    className="mt-4 flex flex-col border-b-2 border-b-orange-main pb-2"
                   >
                     <h3 className="mb-2">{data.name}</h3>
                     <div className="flex">
@@ -309,8 +309,8 @@ function cart(): ReactElement {
                         height="100"
                         alt="product-image"
                       />
-                      <div className="flex flex-col items-start mx-2 ml-10">
-                        <div className="flex px-1 py-2 mx-2 mb-2 border border-gray-700 rounded-lg">
+                      <div className="mx-2 ml-10 flex flex-col items-start">
+                        <div className="mx-2 mb-2 flex rounded-lg border border-gray-700 px-1 py-2">
                           <button
                             type="button"
                             className="mx-2 h-[20px] w-[20px] cursor-pointer rounded-full bg-orange-main text-xl leading-4"
@@ -343,7 +343,7 @@ function cart(): ReactElement {
                         </div>
                         <button
                           type="button"
-                          className="self-center cursor-pointer"
+                          className="cursor-pointer self-center"
                           onClick={(): void =>
                             removeProductFromCart(data.productId)
                           }
@@ -379,7 +379,10 @@ function cart(): ReactElement {
                             </div>
                             <div className="flex">
                               <strong>
-                                Total: $ {data.discountedPrice * data.quantity}
+                                Total: ${' '}
+                                {(data.discountedPrice * data.quantity).toFixed(
+                                  FRACTION_DIGITS
+                                )}
                               </strong>
                             </div>
                           </>
@@ -435,7 +438,7 @@ function cart(): ReactElement {
               </div>
               <div className="ml-0 flex w-[352px] flex-col md:ml-2 lg:ml-0">
                 <form
-                  className="flex w-full mt-4 md:mt-0 lg:mt-4"
+                  className="mt-4 flex w-full md:mt-0 lg:mt-4"
                   onSubmit={handleApplyPromocode}
                 >
                   <input
@@ -453,7 +456,7 @@ function cart(): ReactElement {
                     Apply
                   </button>
                 </form>
-                <form className="flex w-full mt-4" onSubmit={handleOpenModal}>
+                <form className="mt-4 flex w-full" onSubmit={handleOpenModal}>
                   <button
                     type="submit"
                     className="h-[40px] w-full rounded-xl bg-red-500 text-white"
