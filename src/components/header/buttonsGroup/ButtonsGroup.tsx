@@ -90,6 +90,9 @@ function ButtonsGroup(): ReactElement {
                 dispatch(setCartId(''));
                 dispatch(resetAuthState());
                 toast.success('You have successfully logged out');
+                router.push(ERoute.home).catch((error) => {
+                  toast.error(error as string);
+                });
               }}
             >
               Log out
