@@ -15,7 +15,7 @@ export interface IMember {
 export const membersData: IMember[] = [
   {
     fullName: 'NIKOLAY SIDORENKO',
-    position: 'Engeneer (TeamLead)',
+    position: 'Engineer (TeamLead)',
     biography:
       'For the first 6 years of his work experience, he worked as a system administrator in the IT department of an company. For the last 5 years he have been working as an engineer in the automation, metrological support and communications service. Main responsibilities - maintenance of automated process control systems (APCS). Additionally, Nikolay combine the responsibilities of an information security engineer in APCS.',
     photo: photoNikolay,
@@ -24,6 +24,9 @@ export const membersData: IMember[] = [
       'Application development in order of working with the eCommerce Tools API',
       'Working with the database, filling the database with products',
       'Developing a user registration page',
+      'Developing a detailed product page',
+      'Implementation breadcrumbs on catalog page',
+      'Kanban board management',
     ],
   },
   {
@@ -36,7 +39,8 @@ export const membersData: IMember[] = [
     contribution: [
       'Development of the main page, header',
       'Product card development',
-      'Catalog page developmentCatalog page development',
+      'Catalog page development',
+      '404 page development',
       'Implementation of products sorting',
       'Implementation of filters by category, brand, price, color of products',
       'Implementation of adding and removing products to the cart from the catalog page and from the product page',
@@ -53,6 +57,7 @@ export const membersData: IMember[] = [
     contribution: [
       'Initial project setup and working with addresses in the user profile',
       'Developing of the cart page',
+      'Developing of the user profile page',
       'Implementation of increasing/decreasing the quantity of products in the cart',
       'Implementation delete products from the cart',
       'Implementation of the opportunity to apply promo code',
