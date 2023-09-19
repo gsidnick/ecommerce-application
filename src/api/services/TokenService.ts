@@ -30,6 +30,7 @@ class TokenService implements TokenCache {
   }
 
   public removeToken(): void {
+    this.tokenStore = { token: '', expirationTime: 0, refreshToken: '' };
     this.localStorage.removeItem('refreshToken');
     this.localStorage.removeItem(TOKEN_NAME);
   }
