@@ -27,7 +27,7 @@ class TokenClient {
   private getClient(): Client {
     const projectKey = getProjectKey();
     const tokenService = new TokenService();
-    const { token } = tokenService.getToken();
+    const { token } = tokenService.get();
     const { authorization, options } = getExistingTokenFlowOptions(token);
     const httpMiddlewareOptions = getHttpMiddlewareOptions();
     return this.clientBuilder

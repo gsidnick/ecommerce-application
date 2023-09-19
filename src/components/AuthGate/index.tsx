@@ -35,6 +35,8 @@ export const AuthGate = ({
             dispatch(setExpirationTime(expirationTime));
           })
           .catch(console.error);
+      } else {
+        customerController.checkToken().then(console.log).catch(console.error);
       }
     }, IMMEDIATE_INVOKE);
 
