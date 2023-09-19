@@ -31,6 +31,21 @@ export interface ICartItems {
   cartId?: string;
 }
 
+export const loadUserCart = createAsyncThunk('cart/loadUserCart', async () => {
+  const cartController = new CartController();
+  const response = await cartController.getCart();
+
+  return {
+    totalPrice: (response as ClientResponse<Cart>).body?.totalPrice ?? {
+      centAmount: ZERO_PRICE,
+      currencyCode: 'USD',
+      fractionDigits: 2,
+      type: 'centPrecision',
+    },
+    lineItems: (response as ClientResponse<Cart>).body?.lineItems ?? [],
+  };
+});
+
 export const addProductToCart = createAsyncThunk(
   'cart/addProductToCart',
   async (
@@ -187,6 +202,12 @@ export const cartSlice = createSlice({
         activePromocode: action.payload,
       };
     },
+    setCartId(state: CartState, action: PayloadAction<string>) {
+      return {
+        ...state,
+        cartId: action.payload,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -195,6 +216,24 @@ export const cartSlice = createSlice({
         ...state,
         ...action.payload.cart,
       })
+    );
+    builder.addCase(
+      loadUserCart.fulfilled,
+      (
+        state: CartState,
+        action: PayloadAction<{
+          totalPrice: CentPrecisionMoney;
+          lineItems: LineItem[];
+          cartId?: string;
+        }>
+      ) => {
+        const { totalPrice, lineItems } = action.payload;
+        return {
+          ...state,
+          userCartProducts: lineItems,
+          totalCartPrice: totalPrice.centAmount,
+        };
+      }
     );
     builder.addCase(
       addProductToCart.fulfilled,
@@ -273,7 +312,7 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { setCartProducts, setPromocode } = cartSlice.actions;
+export const { setCartProducts, setPromocode, setCartId } = cartSlice.actions;
 export const selectCartState = (state: RootState): CartState => state.cart;
 export const getPromoCode = (state: RootState): string =>
   state.cart.activePromocode;
