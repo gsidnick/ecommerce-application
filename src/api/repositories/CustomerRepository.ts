@@ -92,7 +92,7 @@ class CustomerRepository {
 
       return {
         apiResult: tokenApiResult as ClientResponse<CustomerSignInResult>,
-        token: this.tokenService.getToken(),
+        token: this.tokenService.get(),
       };
     } catch (error) {
       return {
@@ -157,7 +157,23 @@ class CustomerRepository {
       .get()
       .execute();
 
-    return this.tokenService.getToken();
+    return this.tokenService.get();
+  }
+
+  public async checkToken(): Promise<void> {
+    const token = this.tokenService.get();
+    const now = Date.now();
+    const { expirationTime } = token;
+
+    if (expirationTime - now) {
+      const client = new AnonymousClient();
+      const apiRoot = client.getApiRoot();
+
+      await apiRoot
+        .withProjectKey({ projectKey: this.projectKey })
+        .get()
+        .execute();
+    }
   }
 }
 

@@ -27,7 +27,7 @@ class RefreshTokenClient {
   private getClient(): Client {
     const projectKey = getProjectKey();
     const tokenService = new TokenService();
-    const { refreshToken } = tokenService.getToken();
+    const { refreshToken } = tokenService.get();
     const refreshAuthMiddlewareOptions = getRefreshAuthMiddlewareOptions(
       refreshToken ?? ''
     );

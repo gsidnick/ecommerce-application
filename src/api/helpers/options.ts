@@ -16,7 +16,6 @@ import {
 } from '@/api/constants';
 
 export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOptions {
-  const tokenService = new TokenService();
   return {
     host: AUTH_URL,
     projectKey: PROJECT_KEY,
@@ -25,10 +24,7 @@ export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOpti
       clientSecret: CLIENT_SECRET,
     },
     scopes: SCOPES,
-    tokenCache: {
-      get: () => tokenService.getToken(),
-      set: (cache) => tokenService.setToken(cache),
-    },
+    tokenCache: new TokenService(),
     fetch,
   };
 }
@@ -37,7 +33,6 @@ export function getAuthMiddlewareOptions(
   userData: UserCredentialData
 ): PasswordAuthMiddlewareOptions {
   const { email, password } = userData;
-  const tokenService = new TokenService();
   return {
     host: AUTH_URL,
     projectKey: PROJECT_KEY,
@@ -50,10 +45,7 @@ export function getAuthMiddlewareOptions(
       },
     },
     scopes: SCOPES,
-    tokenCache: {
-      get: () => tokenService.getToken(),
-      set: (cache) => tokenService.setToken(cache),
-    },
+    tokenCache: new TokenService(),
     fetch,
   };
 }
@@ -83,16 +75,12 @@ export function getExistingTokenFlowOptions(
 export function getRefreshAuthMiddlewareOptions(
   refreshToken: string
 ): RefreshAuthMiddlewareOptions {
-  const tokenService = new TokenService();
   return {
     host: AUTH_URL,
     projectKey: PROJECT_KEY,
     credentials: { clientId: CLIENT_ID, clientSecret: CLIENT_SECRET },
     refreshToken,
-    tokenCache: {
-      get: () => tokenService.getToken(),
-      set: (cache) => tokenService.setToken(cache),
-    },
+    tokenCache: new TokenService(),
     fetch,
   };
 }

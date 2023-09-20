@@ -53,6 +53,10 @@ class CustomerController {
   public async createAnonymousCustomer(): Promise<TokenStore> {
     return this.customerRepository.createAnonymousCustomer();
   }
+
+  public async checkToken(): Promise<void> {
+    return this.customerRepository.checkToken();
+  }
 }
 
 export default CustomerController;
