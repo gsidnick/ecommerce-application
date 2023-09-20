@@ -41,14 +41,14 @@ describe('TokenService test', () => {
       expirationTime: 123456789,
       refreshToken: 'test-refresh-token',
     };
-    tokenService.setToken(sourceData);
-    const token = tokenService.getToken();
+    tokenService.set(sourceData);
+    const token = tokenService.get();
     expect(token).toStrictEqual(sourceData);
   });
 
   test('remove token from LocalStorage', () => {
     tokenService.removeToken();
-    const token = tokenService.getToken();
+    const token = tokenService.get();
     expect(token).toStrictEqual({
       token: '',
       expirationTime: 0,
