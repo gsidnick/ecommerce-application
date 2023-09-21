@@ -13,28 +13,32 @@
 
 .paginateContainer li {
   cursor: pointer;
-  margin: 10px 5px;
+  margin: auto 5px;
 }
 
 .paginateContainer li a {
-  font-family: 'Poppins', serif;
-  color: grey;
-  padding: 8px 14px;
-  border: 2px solid grey;
+  font-family: 'Inter', sans-serif;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(0, 0, 0);
+  border: 1px solid rgb(229, 231, 235);
   border-radius: 50%;
-  width: 15px;
   transition: background-color 0.3s ease-in-out;
+  user-select: none;
 }
 
 .paginateContainer li a:hover {
-  background-color: rgb(185, 185, 183);
-  color: black !important;
+  background-color: rgb(185, 185, 185);
+  color: rgb(94, 94, 94) !important;
 }
 
 .activeLinkClassName {
-  color: black !important;
-  border: 1px solid rgb(110, 110, 110) !important;
-  background-color: rgb(185, 185, 183);
+  color: white !important;
+  border: none !important;
+  background-color: rgb(249, 115, 22);
 }
 
 .noItems {
