@@ -3,9 +3,11 @@ import Header from '@/components/header/Header';
 import Footer from '@/components/Footer';
 
 const Container = ({ children }: { children: ReactElement }): ReactElement => (
-  <div>
-    <Header />
-    {children}
+  <div className="flex min-h-screen flex-col">
+    <div className="flex-grow">
+      <Header />
+      {children}
+    </div>
     <Footer />
   </div>
 );
