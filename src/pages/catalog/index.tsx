@@ -140,7 +140,7 @@ function Catalog(): ReactElement {
         </div>
         <div
           ref={filterBlockRef}
-          className="absolute left-[-300px]  z-50 h-full w-[50px] bg-background-main md:relative md:left-0 md:w-[300px]"
+          className="absolute left-[-300px] z-50 h-full w-[50px] bg-background-main md:static md:left-0 md:z-auto md:h-auto md:w-[300px]"
         >
           <SideBar className="w-72 flex-none" />
           <div className="w-[300px] bg-background-main text-white">
