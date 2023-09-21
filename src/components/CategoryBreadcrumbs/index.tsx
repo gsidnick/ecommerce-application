@@ -6,7 +6,6 @@ import {
   selectFilterState,
   setFilterBreadCrumbs,
 } from '@/store/slices/filterSlice';
-import styles from './styles.module.css';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import CategoryCrumb from '@/components/CategoryCrumb';
 
@@ -20,8 +19,12 @@ const CategoryBreadcrumbs = (): ReactElement => {
   };
 
   return (
-    <div className={styles.breadcrumbs}>
-      <Link className={styles.link} href="/catalog" onClick={linkHandler}>
+    <div className="text-2xl">
+      <Link
+        className="text-black hover:text-gray-400 hover:underline"
+        href="/catalog"
+        onClick={linkHandler}
+      >
         Catalog
       </Link>
       {filterBreadcrumbs.map(({ id, name }) => {

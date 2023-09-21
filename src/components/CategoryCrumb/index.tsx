@@ -4,7 +4,6 @@ import {
   setFilterBreadCrumbs,
   setFilterCategory,
 } from '@/store/slices/filterSlice';
-import styles from './styles.module.css';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectProductState } from '@/store/slices/productsSlice';
 import { buildBreadcrumbsMaker } from '@/components/CategoryCrumb/buildCrumbMaker';
@@ -28,10 +27,10 @@ function CategoryCrumb({ id, name }: CrumbProps): ReactElement {
 
   return (
     <>
-      <span className={styles.separator}>/</span>
+      <span className="inline-block px-1">/</span>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
       <span
-        className={styles.link}
+        className="text-black hover:text-gray-400 hover:underline"
         role="button"
         tabIndex={0}
         onClick={crumbHandler}
