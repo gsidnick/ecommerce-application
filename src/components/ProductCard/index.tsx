@@ -224,23 +224,26 @@ const ProductCard: FC<ProductCardProps> = (props) => {
       href={`/product/${productKey}?variantId=${activeVariantId}`}
       onClick={handleCardClick}
     >
-      <div id={id} className={styles.cardWrapper}>
-        <div className={`${styles.container} text-white`}>
-          <div className={`${styles.imageWrapper} bg-white`}>
-            <picture>
-              <img
-                src={getActiveVariantImage()}
-                alt={name}
-                className={styles.image}
-              />
-            </picture>
-          </div>
-          <div className={`${styles.infoWrapper}`}>
-            <div className={styles.colorsWrapper}>
+      <div
+        id={id}
+        className="relative z-10 flex h-full flex-col rounded-lg border border-gray-100 text-black transition-shadow duration-300 hover:shadow-lg"
+      >
+        <div className="h-[350px] w-full overflow-hidden rounded-lg bg-white p-8">
+          <picture>
+            <img
+              src={getActiveVariantImage()}
+              alt={name}
+              className={styles.image}
+            />
+          </picture>
+        </div>
+        <div className="flex flex-grow flex-col justify-between gap-8 px-6 py-6">
+          <div>
+            <div className="z-10 mb-4 flex min-h-[30px] content-start items-center gap-2">
               {getAvailableColors().map((color) => (
                 <div
                   key={color.color}
-                  className={`${styles.colorVariantElem}`}
+                  className={`${styles.colorVariantElem} h-[20px] w-[20px] rounded-full border-2 hover:scale-125`}
                   style={{ backgroundColor: color.color }}
                   onClick={(e): void =>
                     handleChangeActiveVariant(e, color.variantId)
@@ -252,31 +255,43 @@ const ProductCard: FC<ProductCardProps> = (props) => {
                 />
               ))}
             </div>
-            <div className={styles.text}>
-              <p className={styles.modelName}>{model}</p>
-              <p className={styles.description}>{briefDescription}</p>
+            <div>
+              <p className="mb-2 text-2xl font-semibold">{model}</p>
+              <p className="text-sm text-gray-600">{briefDescription}</p>
             </div>
-            <div className={`${styles.priceSection} flex justify-between`}>
-              <div>
-                <p className={`${styles.oldPciceWrapper} text-sm line-through`}>
-                  {currency} {getActiveVariantPrice()}
-                </p>
-                <p className={`${styles.pciceWrapper} text-lg font-bold`}>
-                  {currency} {getActiveVariantDiscountPrice()}
-                </p>
-              </div>
-              <button
-                type="button"
-                className={`${styles.button} rounded-md bg-slate-500 text-white`}
-                onClick={(e): void => handleAddToCart(e, id)}
-                tabIndex={0}
-                aria-hidden="true"
-                disabled={isProductInCart}
-              >
-                {isLoading ? <Loader /> : ''}
-                {isProductInCart ? 'In Cart' : 'Add to cart'}
-              </button>
+          </div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-300 line-through">
+                {currency}{' '}
+                {Number(getActiveVariantPrice()).toFixed(
+                  FRACTION_DIGITS_COUNT_DEFAULT
+                )}
+              </p>
+              <p className="text-lg font-bold text-black">
+                {currency}{' '}
+                {Number(getActiveVariantDiscountPrice()).toFixed(
+                  FRACTION_DIGITS_COUNT_DEFAULT
+                )}
+              </p>
             </div>
+            <button
+              type="button"
+              className={`${
+                styles.button
+              } flex h-10 items-center justify-center gap-2 rounded-md px-4 text-white ${
+                isProductInCart
+                  ? 'bg-lime-500 hover:bg-lime-600'
+                  : 'bg-blue-500 hover:bg-blue-600'
+              }`}
+              onClick={(e): void => handleAddToCart(e, id)}
+              tabIndex={0}
+              aria-hidden="true"
+              disabled={isProductInCart}
+            >
+              {isLoading ? <Loader /> : ''}
+              {isProductInCart ? 'In Cart' : 'Add to cart'}
+            </button>
           </div>
         </div>
       </div>
