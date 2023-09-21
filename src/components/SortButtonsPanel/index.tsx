@@ -34,7 +34,9 @@ const SortButtonsPanel = ({
   };
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`mb-4 flex flex-col content-center items-center justify-between rounded px-4 py-2 md:flex-row ${styles.container}`}
+    >
       <p className="text-black">{productsCount} products</p>
       <div className={styles.selectWrapper}>
         <span>Sort: </span>

@@ -1,11 +1,5 @@
 .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 10px;
   background-color: #e6e6e6;
-  margin-bottom: 8px;
-  border-radius: 5px;
 }
 
 .selectWrapper {
