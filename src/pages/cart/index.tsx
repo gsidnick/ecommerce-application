@@ -278,7 +278,7 @@ function cart(): ReactElement {
 
   return (
     <>
-      <main className="">
+      <main className="mx-auto my-0 max-w-screen-xl p-4 sm:p-6 md:p-8">
         {displayCartItems && displayCartItems.length === EMPTY_CART_ITEMS && (
           <div className="flex h-[50vh] flex-col items-center justify-center">
             <h1 className="mb-4 text-2xl font-bold">Cart is empty!</h1>
@@ -291,29 +291,51 @@ function cart(): ReactElement {
           </div>
         )}
         {displayCartItems && displayCartItems.length > EMPTY_CART_ITEMS && (
-          <div className="flex flex-col-reverse justify-between px-10 lg:flex-row">
-            <div className="flex flex-col justify-center">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[auto_350px]">
+            <div className="flex flex-col justify-start gap-4">
+              <div className="border-b-2 border-b-orange-main pb-4 text-2xl font-bold lg:pt-8">
+                Cart
+              </div>
               {userCartProducts.map((product) => {
                 const data = formatProductData(product);
 
                 return (
                   <div
                     key={product.id}
-                    className="mt-4 flex flex-col border-b-2 border-b-orange-main pb-2"
+                    className="grid grid-cols-1 gap-4 border-b border-b-gray-200 pb-4 last:border-0 sm:grid-cols-[100px_auto]"
                   >
-                    <h3 className="mb-2">{data.name}</h3>
-                    <div className="flex">
-                      <Image
-                        src={data.image}
-                        width="100"
-                        height="100"
-                        alt="product-image"
-                      />
-                      <div className="mx-2 ml-10 flex flex-col items-start">
-                        <div className="mx-2 mb-2 flex rounded-lg border border-gray-700 px-1 py-2">
+                    <Image
+                      className="h-[100px] w-[100px] justify-self-center object-contain"
+                      src={data.image}
+                      width="100"
+                      height="100"
+                      alt="product-image"
+                    />
+                    <div className="grid grid-cols-1 content-start gap-6">
+                      <div className="flex flex-row items-start justify-between gap-4 text-base font-bold">
+                        <span>{data.name}</span>
+                        <button
+                          type="button"
+                          className="cursor-pointer justify-self-end"
+                          onClick={(): void =>
+                            removeProductFromCart(data.productId)
+                          }
+                        >
+                          <Image
+                            className="h-[20px] w-[20px]"
+                            src={TrashIcon as string}
+                            alt="Trash icon"
+                          />
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-[100px_100px_1fr]">
+                        <div className="flex justify-self-start">
+                          <span>$ {data.discountedPrice}</span>
+                        </div>
+                        <div className="flex flex-row justify-between gap-2">
                           <button
                             type="button"
-                            className="mx-2 h-[20px] w-[20px] cursor-pointer rounded-full bg-orange-main text-xl leading-4"
+                            className="h-[20px] w-[20px] cursor-pointer rounded-full bg-orange-main text-xl leading-4"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={(): void =>
                               changeProductQuantity(
@@ -328,7 +350,7 @@ function cart(): ReactElement {
                           <div className="flex">{data.quantity}</div>
                           <button
                             type="button"
-                            className="mx-2 h-[20px] w-[20px] cursor-pointer rounded-full  bg-orange-main  text-xl leading-4"
+                            className="h-[20px] w-[20px] cursor-pointer rounded-full  bg-orange-main  text-xl leading-4"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={(): void =>
                               changeProductQuantity(
@@ -341,58 +363,12 @@ function cart(): ReactElement {
                             +
                           </button>
                         </div>
-                        <button
-                          type="button"
-                          className="cursor-pointer self-center"
-                          onClick={(): void =>
-                            removeProductFromCart(data.productId)
-                          }
-                        >
-                          <Image
-                            className="h-[20px] w-[20px]"
-                            src={TrashIcon as string}
-                            alt="Trash icon"
-                          />
-                        </button>
-                      </div>
-                      <div className="ml-2 flex w-[300px] flex-col items-end lg:ml-10">
-                        {data.isDiscounted && (
-                          <>
-                            {/* <div className="flex">
-                              Base price: ${' '}
-                              <span className="line-through">
-                                {Math.round(data.price * CENTS_IN_DOLLAR) /
-                                  CENTS_IN_DOLLAR}
-                              </span>
-                            </div>
-                            <div className="flex">
-                              Base total: ${' '}
-                              <span className="line-through">
-                                {Math.round(
-                                  data.price * data.quantity * CENTS_IN_DOLLAR
-                                ) / CENTS_IN_DOLLAR}
-                              </span>
-                                </div> */}
-                            <div className="flex font-bold">
-                              Price: ${' '}
-                              <span className="">{data.discountedPrice}</span>
-                            </div>
-                            <div className="flex">
-                              <strong>
-                                Total: ${' '}
-                                {(data.discountedPrice * data.quantity).toFixed(
-                                  FRACTION_DIGITS
-                                )}
-                              </strong>
-                            </div>
-                          </>
-                        )}
-                        {!data.isDiscounted && (
-                          <div className="flex">
-                            Original price: ${' '}
-                            <span className="">{data.totalPrice}</span>
-                          </div>
-                        )}
+                        <div className="flex justify-self-start font-bold">
+                          ${' '}
+                          {(data.discountedPrice * data.quantity).toFixed(
+                            FRACTION_DIGITS
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -400,70 +376,81 @@ function cart(): ReactElement {
               })}
             </div>
             <div className="flex flex-row xs:flex-col md:flex-row lg:flex-col">
-              <div className="flex h-[213px] w-[352px] flex-col justify-around self-start rounded-[15px] border border-gray-700  p-4  shadow">
-                <div className="border-b-2 border-b-orange-main">Total</div>
-                <div className="flex justify-between">
-                  <span>Quantity: </span>
-                  <span>{cartProductsQty} pcs.</span>
-                </div>
+              <div className="flex w-full flex-col justify-around self-start rounded-lg border border-gray-100 p-8 shadow-lg">
                 <div>
-                  {cartTotalWithoutDiscount - cartTotal > DISCOUNT_DIFF && (
-                    <>
-                      <div className="flex justify-between">
-                        <span>Order total: </span>
-                        <span className="line-through">
-                          $ {cartTotalWithoutDiscount}
-                        </span>
-                      </div>
-                      <div className="flex justify-between font-bold">
-                        <span>Discounted total: </span>
-                        <span>$ {cartTotal}</span>
-                      </div>
-                    </>
-                  )}
-                  {cartTotalWithoutDiscount - cartTotal <= DISCOUNT_DIFF && (
-                    <div className="flex justify-between">
-                      <span>Order total: </span>
-                      <span className="">$ {cartTotalWithoutDiscount}</span>
+                  <div className="border-b-2 border-b-orange-main pb-4 text-2xl font-bold">
+                    Total
+                  </div>
+                  <div className="flex flex-col gap-4 border-b border-b-gray-400 py-4 pb-4">
+                    <div className="flex flex-col justify-between sm:flex-row">
+                      <span className="font-bold">Quantity</span>
+                      <span>{cartProductsQty} pcs.</span>
                     </div>
-                  )}
-                  {activePromocode.length > ZERO && (
-                    <div className="flex">
-                      <span className="text-green-500">
+                    <div className="flex flex-col justify-start gap-4">
+                      {cartTotalWithoutDiscount - cartTotal > DISCOUNT_DIFF && (
+                        <>
+                          <div className="flex flex-col justify-between sm:flex-row">
+                            <span className="font-bold">Order total</span>
+                            <span className="text-gray-400 line-through">
+                              ${' '}
+                              {cartTotalWithoutDiscount.toFixed(
+                                FRACTION_DIGITS
+                              )}
+                            </span>
+                          </div>
+                          <div className="flex flex-col justify-between font-bold sm:flex-row">
+                            <span>Discounted total</span>
+                            <span>$ {cartTotal.toFixed(FRACTION_DIGITS)}</span>
+                          </div>
+                        </>
+                      )}
+                      {cartTotalWithoutDiscount - cartTotal <=
+                        DISCOUNT_DIFF && (
+                        <div className="flex justify-between">
+                          <span className="font-bold">Order total</span>
+                          <span className="font-bold">
+                            ${' '}
+                            {cartTotalWithoutDiscount.toFixed(FRACTION_DIGITS)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    {activePromocode.length > ZERO && (
+                      <div className="font-semibold text-green-500">
                         Promocode applied: {activePromocode}
-                      </span>
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="ml-0 flex w-[352px] flex-col md:ml-2 lg:ml-0">
-                <form
-                  className="mt-4 flex w-full md:mt-0 lg:mt-4"
-                  onSubmit={handleApplyPromocode}
-                >
-                  <input
-                    className="border-1 mr-2 flex h-[40px] flex-grow rounded-xl border border-gray-700 p-2"
-                    type="text"
-                    name="promo"
-                    placeholder={activePromocode ?? 'Enter promocode'}
-                    disabled={isDisabledPromoInput}
-                  />
-                  <button
-                    type="submit"
-                    className="h-[40px] rounded-xl bg-orange-main p-2 text-white"
-                    disabled={isDisabledPromoInput}
+                <div className="ml-0 flex w-full flex-col gap-4 pt-4 md:ml-2 lg:ml-0 ">
+                  <form
+                    className="flex w-full flex-col gap-4 sm:flex-row sm:gap-2"
+                    onSubmit={handleApplyPromocode}
                   >
-                    Apply
-                  </button>
-                </form>
-                <form className="mt-4 flex w-full" onSubmit={handleOpenModal}>
-                  <button
-                    type="submit"
-                    className="h-[40px] w-full rounded-xl bg-red-500 text-white"
-                  >
-                    Clear cart
-                  </button>
-                </form>
+                    <input
+                      className="border-1 mr-2 flex h-[40px] w-full flex-grow rounded-md border border-gray-200 p-2 text-gray-500"
+                      type="text"
+                      name="promo"
+                      placeholder={activePromocode ?? 'Enter promocode'}
+                      disabled={isDisabledPromoInput}
+                    />
+                    <button
+                      type="submit"
+                      className="h-10 rounded-md bg-orange-main px-4 text-white"
+                      disabled={isDisabledPromoInput}
+                    >
+                      Apply
+                    </button>
+                  </form>
+                  <form className="flex w-full" onSubmit={handleOpenModal}>
+                    <button
+                      type="submit"
+                      className="h-[40px] w-full rounded-md bg-red-500 text-white"
+                    >
+                      Clear cart
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>

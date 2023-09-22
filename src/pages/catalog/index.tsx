@@ -120,9 +120,9 @@ function Catalog(): ReactElement {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="relative grid grid-cols-[auto] md:grid-cols-[300px_auto]">
       {isLoading && (
-        <div className={styles.loadingWrapper}>
+        <div className="absolute left-0 top-0 z-[9999] flex h-full w-full items-center justify-center">
           <Loading />
         </div>
       )}
@@ -140,17 +140,15 @@ function Catalog(): ReactElement {
         </div>
         <div
           ref={filterBlockRef}
-          className="absolute left-[-300px]  z-50 h-full w-[50px] bg-background-main md:relative md:left-0 md:w-[300px]"
+          className="absolute left-[-300px] z-40 h-full w-[50px] bg-background-main md:static md:left-0 md:z-auto md:h-auto md:w-[300px]"
         >
           <SideBar className="w-72 flex-none" />
-          <div
-            className={`${styles.filterPanelWrapper} bg-background-main text-white`}
-          >
+          <div className="w-[300px] bg-background-main text-white">
             <FilterPanelContainer filteredBrands={brands} />
           </div>
         </div>
       </div>
-      <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 px-5">
+      <div className="mb-8 flex flex-1 flex-wrap justify-between gap-2 p-4">
         <div className="flex-1">
           <CategoryBreadcrumbs />
           <SortButtonsPanel productsCount={totalFilteredProducts} />
