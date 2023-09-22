@@ -292,28 +292,50 @@ function cart(): ReactElement {
         )}
         {displayCartItems && displayCartItems.length > EMPTY_CART_ITEMS && (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[auto_350px]">
-            <div className="flex flex-col justify-start">
+            <div className="flex flex-col justify-start gap-4">
+              <div className="border-b-2 border-b-orange-main pb-4 pt-8 text-2xl font-bold">
+                Cart
+              </div>
               {userCartProducts.map((product) => {
                 const data = formatProductData(product);
 
                 return (
                   <div
                     key={product.id}
-                    className="mt-4 flex flex-col border-b-2 border-b-orange-main pb-2"
+                    className="grid grid-cols-[100px_auto] gap-4 border-b border-b-gray-200 pb-4 last:border-0"
                   >
-                    <h3 className="mb-2">{data.name}</h3>
-                    <div className="flex">
-                      <Image
-                        src={data.image}
-                        width="100"
-                        height="100"
-                        alt="product-image"
-                      />
-                      <div className="mx-2 ml-10 flex flex-col items-start">
-                        <div className="mx-2 mb-2 flex rounded-lg border border-gray-700 px-1 py-2">
+                    <Image
+                      className="h-[100px] w-[100px] object-contain"
+                      src={data.image}
+                      width="100"
+                      height="100"
+                      alt="product-image"
+                    />
+                    <div className="grid grid-cols-1 content-start gap-6">
+                      <div className="flex flex-row items-start justify-between gap-4 text-xl font-bold">
+                        <span>{data.name}</span>
+                        <button
+                          type="button"
+                          className="cursor-pointer justify-self-end"
+                          onClick={(): void =>
+                            removeProductFromCart(data.productId)
+                          }
+                        >
+                          <Image
+                            className="h-[20px] w-[20px]"
+                            src={TrashIcon as string}
+                            alt="Trash icon"
+                          />
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-[100px_100px_1fr] gap-4">
+                        <div className="flex justify-self-start">
+                          <span>$ {data.discountedPrice}</span>
+                        </div>
+                        <div className="flex flex-row justify-between gap-2">
                           <button
                             type="button"
-                            className="mx-2 h-[20px] w-[20px] cursor-pointer rounded-full bg-orange-main text-xl leading-4"
+                            className="h-[20px] w-[20px] cursor-pointer rounded-full bg-orange-main text-xl leading-4"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={(): void =>
                               changeProductQuantity(
@@ -328,7 +350,7 @@ function cart(): ReactElement {
                           <div className="flex">{data.quantity}</div>
                           <button
                             type="button"
-                            className="mx-2 h-[20px] w-[20px] cursor-pointer rounded-full  bg-orange-main  text-xl leading-4"
+                            className="h-[20px] w-[20px] cursor-pointer rounded-full  bg-orange-main  text-xl leading-4"
                             // eslint-disable-next-line @typescript-eslint/no-misused-promises
                             onClick={(): void =>
                               changeProductQuantity(
@@ -341,58 +363,12 @@ function cart(): ReactElement {
                             +
                           </button>
                         </div>
-                        <button
-                          type="button"
-                          className="cursor-pointer self-center"
-                          onClick={(): void =>
-                            removeProductFromCart(data.productId)
-                          }
-                        >
-                          <Image
-                            className="h-[20px] w-[20px]"
-                            src={TrashIcon as string}
-                            alt="Trash icon"
-                          />
-                        </button>
-                      </div>
-                      <div className="ml-2 flex w-[300px] flex-col items-end lg:ml-10">
-                        {data.isDiscounted && (
-                          <>
-                            {/* <div className="flex">
-                              Base price: ${' '}
-                              <span className="line-through">
-                                {Math.round(data.price * CENTS_IN_DOLLAR) /
-                                  CENTS_IN_DOLLAR}
-                              </span>
-                            </div>
-                            <div className="flex">
-                              Base total: ${' '}
-                              <span className="line-through">
-                                {Math.round(
-                                  data.price * data.quantity * CENTS_IN_DOLLAR
-                                ) / CENTS_IN_DOLLAR}
-                              </span>
-                                </div> */}
-                            <div className="flex font-bold">
-                              Price: ${' '}
-                              <span className="">{data.discountedPrice}</span>
-                            </div>
-                            <div className="flex">
-                              <strong>
-                                Total: ${' '}
-                                {(data.discountedPrice * data.quantity).toFixed(
-                                  FRACTION_DIGITS
-                                )}
-                              </strong>
-                            </div>
-                          </>
-                        )}
-                        {!data.isDiscounted && (
-                          <div className="flex">
-                            Original price: ${' '}
-                            <span className="">{data.totalPrice}</span>
-                          </div>
-                        )}
+                        <div className="flex justify-self-start font-bold">
+                          ${' '}
+                          {(data.discountedPrice * data.quantity).toFixed(
+                            FRACTION_DIGITS
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -402,7 +378,7 @@ function cart(): ReactElement {
             <div className="flex flex-row xs:flex-col md:flex-row lg:flex-col">
               <div className="flex w-full flex-col justify-around self-start rounded-lg border border-gray-100 p-8 shadow-lg">
                 <div>
-                  <div className="border-b-2 border-b-orange-main pb-4 text-3xl font-bold">
+                  <div className="border-b-2 border-b-orange-main pb-4 text-2xl font-bold">
                     Total
                   </div>
                   <div className="flex flex-col gap-4 border-b border-b-gray-400 py-4 pb-4">
