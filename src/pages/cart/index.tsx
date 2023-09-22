@@ -278,7 +278,7 @@ function cart(): ReactElement {
 
   return (
     <>
-      <main className="">
+      <main className="mx-auto my-0 max-w-screen-xl p-8">
         {displayCartItems && displayCartItems.length === EMPTY_CART_ITEMS && (
           <div className="flex h-[50vh] flex-col items-center justify-center">
             <h1 className="mb-4 text-2xl font-bold">Cart is empty!</h1>
@@ -291,8 +291,8 @@ function cart(): ReactElement {
           </div>
         )}
         {displayCartItems && displayCartItems.length > EMPTY_CART_ITEMS && (
-          <div className="flex flex-col-reverse justify-between px-10 lg:flex-row">
-            <div className="flex flex-col justify-center">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[auto_350px]">
+            <div className="flex flex-col justify-start">
               {userCartProducts.map((product) => {
                 const data = formatProductData(product);
 
@@ -400,70 +400,72 @@ function cart(): ReactElement {
               })}
             </div>
             <div className="flex flex-row xs:flex-col md:flex-row lg:flex-col">
-              <div className="flex h-[213px] w-[352px] flex-col justify-around self-start rounded-[15px] border border-gray-700  p-4  shadow">
-                <div className="border-b-2 border-b-orange-main">Total</div>
-                <div className="flex justify-between">
-                  <span>Quantity: </span>
-                  <span>{cartProductsQty} pcs.</span>
-                </div>
+              <div className="flex w-full flex-col justify-around self-start rounded-lg border border-gray-100 p-8 shadow-lg">
                 <div>
-                  {cartTotalWithoutDiscount - cartTotal > DISCOUNT_DIFF && (
-                    <>
-                      <div className="flex justify-between">
-                        <span>Order total: </span>
-                        <span className="line-through">
-                          $ {cartTotalWithoutDiscount}
-                        </span>
-                      </div>
-                      <div className="flex justify-between font-bold">
-                        <span>Discounted total: </span>
-                        <span>$ {cartTotal}</span>
-                      </div>
-                    </>
-                  )}
-                  {cartTotalWithoutDiscount - cartTotal <= DISCOUNT_DIFF && (
+                  <div className="border-b-2 border-b-orange-main pb-4 text-3xl font-bold">
+                    Total
+                  </div>
+                  <div className="flex flex-col gap-4 border-b border-b-gray-400 py-4 pb-4">
                     <div className="flex justify-between">
-                      <span>Order total: </span>
-                      <span className="">$ {cartTotalWithoutDiscount}</span>
+                      <span className="font-bold">Quantity</span>
+                      <span>{cartProductsQty} pcs.</span>
                     </div>
-                  )}
-                  {activePromocode.length > ZERO && (
-                    <div className="flex">
-                      <span className="text-green-500">
+                    <div className="flex flex-col justify-start gap-4">
+                      {cartTotalWithoutDiscount - cartTotal > DISCOUNT_DIFF && (
+                        <>
+                          <div className="flex justify-between">
+                            <span className="font-bold">Order total</span>
+                            <span className="line-through">
+                              $ {cartTotalWithoutDiscount}
+                            </span>
+                          </div>
+                          <div className="flex justify-between font-bold">
+                            <span>Discounted total</span>
+                            <span>$ {cartTotal}</span>
+                          </div>
+                        </>
+                      )}
+                      {cartTotalWithoutDiscount - cartTotal <=
+                        DISCOUNT_DIFF && (
+                        <div className="flex justify-between">
+                          <span className="font-bold">Order total</span>
+                          <span className="">$ {cartTotalWithoutDiscount}</span>
+                        </div>
+                      )}
+                    </div>
+                    {activePromocode.length > ZERO && (
+                      <div className="font-semibold text-green-500">
                         Promocode applied: {activePromocode}
-                      </span>
-                    </div>
-                  )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="ml-0 flex w-[352px] flex-col md:ml-2 lg:ml-0">
-                <form
-                  className="mt-4 flex w-full md:mt-0 lg:mt-4"
-                  onSubmit={handleApplyPromocode}
-                >
-                  <input
-                    className="border-1 mr-2 flex h-[40px] flex-grow rounded-xl border border-gray-700 p-2"
-                    type="text"
-                    name="promo"
-                    placeholder={activePromocode ?? 'Enter promocode'}
-                    disabled={isDisabledPromoInput}
-                  />
-                  <button
-                    type="submit"
-                    className="h-[40px] rounded-xl bg-orange-main p-2 text-white"
-                    disabled={isDisabledPromoInput}
-                  >
-                    Apply
-                  </button>
-                </form>
-                <form className="mt-4 flex w-full" onSubmit={handleOpenModal}>
-                  <button
-                    type="submit"
-                    className="h-[40px] w-full rounded-xl bg-red-500 text-white"
-                  >
-                    Clear cart
-                  </button>
-                </form>
+                <div className="ml-0 flex w-full flex-col gap-4 pt-4 md:ml-2 lg:ml-0 ">
+                  <form className="flex w-full" onSubmit={handleApplyPromocode}>
+                    <input
+                      className="border-1 mr-2 flex h-[40px] w-full flex-grow rounded-md border border-gray-200 p-2 text-gray-500"
+                      type="text"
+                      name="promo"
+                      placeholder={activePromocode ?? 'Enter promocode'}
+                      disabled={isDisabledPromoInput}
+                    />
+                    <button
+                      type="submit"
+                      className="h-10 rounded-md bg-orange-main px-4 text-white"
+                      disabled={isDisabledPromoInput}
+                    >
+                      Apply
+                    </button>
+                  </form>
+                  <form className="flex w-full" onSubmit={handleOpenModal}>
+                    <button
+                      type="submit"
+                      className="h-[40px] w-full rounded-md bg-red-500 text-white"
+                    >
+                      Clear cart
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>
