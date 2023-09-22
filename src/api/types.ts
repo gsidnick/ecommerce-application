@@ -111,3 +111,9 @@ export interface ICategory {
   id: string;
   name: string;
 }
+
+export interface CartItem {
+  productId: string;
+  quantity: number;
+  variantId?: string;
+}

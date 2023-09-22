@@ -34,28 +34,21 @@ const SortButtonsPanel = ({
   };
 
   return (
-    <div className={styles.container}>
-      <p className="text-white">{productsCount} products</p>
+    <div
+      className={`mb-4 flex flex-col content-center items-center justify-between rounded px-4 py-2 md:flex-row ${styles.container}`}
+    >
+      <p className="text-black">{productsCount} products</p>
       <div className={styles.selectWrapper}>
-        <select onChange={handleChangeSelect} className={styles.select}>
-          <option value="price asc" selected={sortBy[FIRST_INDEX_OF_ARRAY] === 'price asc'}>
-            Price: low to high
-          </option>
-          <option value="price desc" selected={sortBy[FIRST_INDEX_OF_ARRAY] === 'price desc'}>
-            Price: high to low
-          </option>
-          <option
-            value="name.en-US asc"
-            selected={sortBy[FIRST_INDEX_OF_ARRAY] === 'name.en-US asc'}
-          >
-            Product name: A to Z
-          </option>
-          <option
-            value="name.en-US desc"
-            selected={sortBy[FIRST_INDEX_OF_ARRAY] === 'name.en-US desc'}
-          >
-            Product name: Z to A
-          </option>
+        <span>Sort: </span>
+        <select
+          onChange={handleChangeSelect}
+          className={styles.select}
+          defaultValue={sortBy[FIRST_INDEX_OF_ARRAY]}
+        >
+          <option value="price asc">Price: low to high</option>
+          <option value="price desc">Price: high to low</option>
+          <option value="name.en-US asc">Product name: A to Z</option>
+          <option value="name.en-US desc">Product name: Z to A</option>
         </select>
       </div>
     </div>

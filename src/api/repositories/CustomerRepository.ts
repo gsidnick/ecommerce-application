@@ -1,4 +1,8 @@
-import { ClientResponse, ClientResult } from '@commercetools/sdk-client-v2';
+import {
+  ClientResponse,
+  ClientResult,
+  TokenStore,
+} from '@commercetools/sdk-client-v2';
 import {
   Customer,
   CustomerSignInResult,
@@ -14,7 +18,7 @@ import {
 import { getProjectKey } from '@/api/helpers/options';
 import AnonymousClient from '@/api/client/AnonymousClient';
 import TokenService from '@/api/services/TokenService';
-import TokenClient from '@/api/client/TokenClient';
+import RefreshTokenClient from '@/api/client/RefreshTokenClient';
 
 class CustomerRepository {
   private readonly projectKey: string;
@@ -57,13 +61,11 @@ class CustomerRepository {
   public async loginCustomer(
     userData: UserCredentialData
   ): Promise<IApiLoginResult> {
-    const client = new AuthClient(userData);
-    const apiRoot = client.getApiRoot();
-
     try {
       const { email, password } = userData;
-
-      const apiResult = await apiRoot
+      const refreshTokenClient = new RefreshTokenClient();
+      const tokenApiRoot = refreshTokenClient.getApiRoot();
+      const tokenApiResult = await tokenApiRoot
         .withProjectKey({
           projectKey: this.projectKey,
         })
@@ -73,13 +75,24 @@ class CustomerRepository {
           body: {
             email,
             password,
+            activeCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
         .execute();
 
+      const authClient = new AuthClient(userData);
+      const authApiRoot = authClient.getApiRoot();
+      await authApiRoot
+        .withProjectKey({
+          projectKey: this.projectKey,
+        })
+        .me()
+        .get()
+        .execute();
+
       return {
-        apiResult: apiResult as ClientResponse<CustomerSignInResult>,
-        token: this.tokenService.getToken(),
+        apiResult: tokenApiResult as ClientResponse<CustomerSignInResult>,
+        token: this.tokenService.get(),
       };
     } catch (error) {
       return {
@@ -89,12 +102,13 @@ class CustomerRepository {
     }
   }
 
-  public logoutCustomer(): void {
+  public async logoutCustomer(): Promise<void> {
     this.tokenService.removeToken();
+    void (await this.createAnonymousCustomer());
   }
 
   public async getCustomer(): Promise<ClientResponse<Customer>> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
 
     const result = await apiRoot
@@ -108,7 +122,7 @@ class CustomerRepository {
   public async updateCustomer(
     data: MyCustomerUpdate
   ): Promise<ClientResponse<Customer>> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({ projectKey: this.projectKey })
@@ -123,7 +137,7 @@ class CustomerRepository {
   public async changeCustomerPassword(
     data: MyCustomerChangePassword
   ): Promise<ClientResponse<Customer>> {
-    const client = new TokenClient();
+    const client = new RefreshTokenClient();
     const apiRoot = client.getApiRoot();
     const result = await apiRoot
       .withProjectKey({ projectKey: this.projectKey })
@@ -132,6 +146,34 @@ class CustomerRepository {
       .post({ body: data })
       .execute();
     return result as ClientResponse<Customer>;
+  }
+
+  public async createAnonymousCustomer(): Promise<TokenStore> {
+    const client = new AnonymousClient();
+    const apiRoot = client.getApiRoot();
+
+    await apiRoot
+      .withProjectKey({ projectKey: this.projectKey })
+      .get()
+      .execute();
+
+    return this.tokenService.get();
+  }
+
+  public async checkToken(): Promise<void> {
+    const token = this.tokenService.get();
+    const now = Date.now();
+    const { expirationTime } = token;
+
+    if (expirationTime - now) {
+      const client = new AnonymousClient();
+      const apiRoot = client.getApiRoot();
+
+      await apiRoot
+        .withProjectKey({ projectKey: this.projectKey })
+        .get()
+        .execute();
+    }
   }
 }
 

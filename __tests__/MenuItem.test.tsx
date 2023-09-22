@@ -3,11 +3,17 @@ import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import MenuItem from '@/components/header/menu/menu-item/MenuItem';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+jest.mock('next/router', () => jest.requireActual('next-router-mock'));
+
 describe('MenuItem', () => {
   test('render a MenuItem component', () => {
     const initialState = {
       auth: {
         authState: true,
+      },
+      cart: {
+        userCartProducts: [],
       },
       menu: {
         isBurgerMenuOpen: true,
@@ -26,6 +32,9 @@ describe('MenuItem', () => {
     const initialState = {
       auth: {
         authState: true,
+      },
+      cart: {
+        userCartProducts: [],
       },
       menu: {
         isBurgerMenuOpen: true,

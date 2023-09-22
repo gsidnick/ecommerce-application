@@ -1,22 +1,37 @@
-import { TokenStore } from '@commercetools/sdk-client-v2';
+import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
 import { TOKEN_NAME } from '@/api/constants';
 
-class TokenService {
+class TokenService implements TokenCache {
+  private tokenStore: TokenStore;
+
   private localStorage: Storage = window.localStorage;
 
-  public getToken(): TokenStore {
+  private refreshToken = '';
+
+  constructor() {
     const json =
       this.localStorage.getItem(TOKEN_NAME) ??
       '{"token":"","expirationTime":0,"refreshToken":""}';
-    return JSON.parse(json) as TokenStore;
+    this.tokenStore = JSON.parse(json) as TokenStore;
+    const { refreshToken } = this.tokenStore;
+    this.refreshToken = refreshToken ?? this.refreshToken;
   }
 
-  public setToken(data: TokenStore): void {
-    const json = JSON.stringify(data);
+  public get(): TokenStore {
+    return this.tokenStore;
+  }
+
+  public set(data: TokenStore): void {
+    this.refreshToken = data.refreshToken ?? this.refreshToken;
+    this.tokenStore = { ...data, refreshToken: this.refreshToken };
+    const json = JSON.stringify(this.tokenStore);
+    this.localStorage.setItem('refreshToken', this.refreshToken);
     this.localStorage.setItem(TOKEN_NAME, json);
   }
 
   public removeToken(): void {
+    this.tokenStore = { token: '', expirationTime: 0, refreshToken: '' };
+    this.localStorage.removeItem('refreshToken');
     this.localStorage.removeItem(TOKEN_NAME);
   }
 }

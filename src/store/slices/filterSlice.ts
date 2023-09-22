@@ -20,7 +20,6 @@ interface ProductProjectionPagedQueryResponse {
 const NO_PRODUCTS_COUNT = 0;
 const FIRST_INDEX_OF_ARRAY = 0;
 const LAST_INDEX_OF_ARRAY = -1;
-const FRACTION_DIGITS_DEFAULT_MULT = 100;
 
 export const getFilteredProducts = createAsyncThunk(
   'filter/fetchFilteredProducts',
@@ -65,7 +64,7 @@ export const getFilteredProducts = createAsyncThunk(
 
     if (filterByBrand.length) {
       let res = '';
-      filterByBrand.forEach((brand) => {
+      filterByBrand.forEach((brand: string) => {
         res = `${res}"${brand}",`;
       });
 
@@ -80,9 +79,7 @@ export const getFilteredProducts = createAsyncThunk(
     const { min, max } = priceSliderValues;
     if (min && max) {
       allFiltersQueryString.push(
-        `variants.price.centAmount:range (${
-          Number(min) * FRACTION_DIGITS_DEFAULT_MULT
-        } to ${Number(max) * FRACTION_DIGITS_DEFAULT_MULT})`
+        `variants.price.centAmount:range (${min} to ${max})`
       );
     }
 
@@ -128,7 +125,6 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
       sortBy,
       offSet,
       filterByBrand,
-      priceSliderValues,
       searchQuery,
     } = allState.filter;
     const allFiltersQueryString: string[] = [];
@@ -152,15 +148,6 @@ export const getAllFilteredProductsWithoutLimit = createAsyncThunk(
           FIRST_INDEX_OF_ARRAY,
           LAST_INDEX_OF_ARRAY
         )
-      );
-    }
-
-    const { min, max } = priceSliderValues;
-    if (min && max) {
-      allFiltersQueryString.push(
-        `variants.price.centAmount:range (${
-          Number(min) * FRACTION_DIGITS_DEFAULT_MULT
-        } to ${Number(max) * FRACTION_DIGITS_DEFAULT_MULT})`
       );
     }
 
@@ -188,8 +175,8 @@ export interface FilterState {
   filterByBrand: string[];
   filterCategory: string;
   priceSliderValues: {
-    min: string;
-    max: string;
+    min: number;
+    max: number;
   };
   filterPaginationPage: number;
   sortBy: string[];
@@ -198,6 +185,7 @@ export interface FilterState {
   totalFilteredProducts: number;
   searchQuery: string;
   filterBreadcrumbs: ICategory[];
+  isLoading: boolean;
 }
 
 const initialState: FilterState = {
@@ -207,8 +195,8 @@ const initialState: FilterState = {
   filterByBrand: [],
   filterCategory: '',
   priceSliderValues: {
-    min: '',
-    max: '',
+    min: 5,
+    max: 1000,
   },
   filterPaginationPage: 0,
   sortBy: ['price asc'],
@@ -217,6 +205,7 @@ const initialState: FilterState = {
   totalFilteredProducts: 0,
   searchQuery: '',
   filterBreadcrumbs: [],
+  isLoading: false,
 };
 
 enum ESlices {
@@ -242,13 +231,13 @@ export const filterSlice = createSlice({
         filterPaginationPage: 0,
       };
     },
-    setMinSliderValue(state: FilterState, action: PayloadAction<string>) {
+    setMinSliderValue(state: FilterState, action: PayloadAction<number>) {
       return {
         ...state,
         priceSliderValues: { ...state.priceSliderValues, min: action.payload },
       };
     },
-    setMaxSliderValue(state: FilterState, action: PayloadAction<string>) {
+    setMaxSliderValue(state: FilterState, action: PayloadAction<number>) {
       return {
         ...state,
         priceSliderValues: { ...state.priceSliderValues, max: action.payload },
@@ -301,8 +290,8 @@ export const filterSlice = createSlice({
         filterByBrand: [],
         filterCategory: '',
         priceSliderValues: {
-          min: '',
-          max: '',
+          min: 0,
+          max: 0,
         },
         filterPaginationPage: 0,
         sortBy: ['price asc'],
@@ -334,6 +323,10 @@ export const filterSlice = createSlice({
         ...action.payload.filter,
       })
     );
+    builder.addCase(getFilteredProducts.pending, (state) => ({
+      ...state,
+      isLoading: true,
+    }));
     builder.addCase(
       getFilteredProducts.fulfilled,
       (
@@ -347,6 +340,7 @@ export const filterSlice = createSlice({
           filteredProducts: newFilteredProducts,
           totalFilteredProducts: total,
           searchQuery: '',
+          isLoading: false,
         };
       }
     );

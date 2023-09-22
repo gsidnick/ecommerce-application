@@ -3,6 +3,7 @@ import {
   AnonymousAuthMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
+import { RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import { ExistingTokenFlowOptions, UserCredentialData } from '../types';
 import TokenService from '@/api/services/TokenService';
 import {
@@ -23,6 +24,7 @@ export function getAnonymousAuthMiddlewareOptions(): AnonymousAuthMiddlewareOpti
       clientSecret: CLIENT_SECRET,
     },
     scopes: SCOPES,
+    tokenCache: new TokenService(),
     fetch,
   };
 }
@@ -31,7 +33,6 @@ export function getAuthMiddlewareOptions(
   userData: UserCredentialData
 ): PasswordAuthMiddlewareOptions {
   const { email, password } = userData;
-  const tokenService = new TokenService();
   return {
     host: AUTH_URL,
     projectKey: PROJECT_KEY,
@@ -44,10 +45,7 @@ export function getAuthMiddlewareOptions(
       },
     },
     scopes: SCOPES,
-    tokenCache: {
-      get: () => tokenService.getToken(),
-      set: (cache) => tokenService.setToken(cache),
-    },
+    tokenCache: new TokenService(),
     fetch,
   };
 }
@@ -71,5 +69,18 @@ export function getExistingTokenFlowOptions(
     options: {
       force: true,
     },
+  };
+}
+
+export function getRefreshAuthMiddlewareOptions(
+  refreshToken: string
+): RefreshAuthMiddlewareOptions {
+  return {
+    host: AUTH_URL,
+    projectKey: PROJECT_KEY,
+    credentials: { clientId: CLIENT_ID, clientSecret: CLIENT_SECRET },
+    refreshToken,
+    tokenCache: new TokenService(),
+    fetch,
   };
 }

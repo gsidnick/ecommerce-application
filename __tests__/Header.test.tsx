@@ -12,6 +12,9 @@ describe('Header', () => {
       auth: {
         authState: false,
       },
+      cart: {
+        userCartProducts: [],
+      },
       menu: {
         isBurgerMenuOpen: false,
       },
@@ -30,6 +33,9 @@ describe('Header', () => {
     const initialState = {
       auth: {
         authState: false,
+      },
+      cart: {
+        userCartProducts: [],
       },
       menu: {
         isBurgerMenuOpen: false,
@@ -52,6 +58,9 @@ describe('Header', () => {
     const initialState = {
       auth: {
         authState: true,
+      },
+      cart: {
+        userCartProducts: [],
       },
       menu: {
         isBurgerMenuOpen: false,

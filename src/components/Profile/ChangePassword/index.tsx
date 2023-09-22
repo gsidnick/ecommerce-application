@@ -17,6 +17,7 @@ import {
   setToken,
 } from '../../../store/slices/authSlice';
 import Loader from '../../ui/loader/Loader';
+import { setCartId, setCartProducts } from '../../../store/slices/cartSlice';
 
 interface IPasswordProps {
   currentPassword: string;
@@ -57,7 +58,9 @@ const PasswordChangeModal: FC<IChangePassProps> = ({
         await customerController.changeCustomerPassword(changePassAction);
       }
 
-      customerController.logoutCustomer();
+      void customerController.logoutCustomer();
+      dispatch(setCartProducts([]));
+      dispatch(setCartId(''));
 
       await customerController
         .loginCustomer({

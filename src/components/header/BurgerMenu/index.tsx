@@ -5,7 +5,6 @@ import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
@@ -15,14 +14,23 @@ import { selectMenuState, setStateBurgerMenu } from '@/store/slices/menuSlice';
 import CustomerController from '@/api/controllers/CustomerController';
 import CloseIcon from '@/components/ui/icons/CloseIcon';
 import { ERoute } from '@/data/routes';
-import logo from '@/assets/images/logo/logo-orange.png';
+import Logo from '@/components/ui/icons/Logo';
 import styles from './styles.module.css';
+import {
+  getCartProducts,
+  setCartId,
+  setCartProducts,
+} from '../../../store/slices/cartSlice';
+
+const ZERO_PRODUCTS = 0;
 
 const BurgerMenu: NextPage = () => {
   const dispatch = useAppDispatch();
 
   const { isBurgerMenuOpen } = useAppSelector(selectMenuState);
   const { authState } = useAppSelector(selectAuthState);
+  const userCartProducts = useAppSelector(getCartProducts);
+
   const router = useRouter();
 
   if (!isBurgerMenuOpen) return null;
@@ -41,8 +49,10 @@ const BurgerMenu: NextPage = () => {
   };
 
   const handleLogOut = (): void => {
-    new CustomerController().logoutCustomer();
+    void new CustomerController().logoutCustomer();
     dispatch(resetAuthState());
+    dispatch(setCartProducts([]));
+    dispatch(setCartId(''));
     closeMenu();
     toast.success('You have successfully logged out');
   };
@@ -54,19 +64,19 @@ const BurgerMenu: NextPage = () => {
         role="button"
         onClick={closeMenu}
         aria-hidden="true"
-       />
-      <div className={styles.menuWrapper}>
+      />
+      <div
+        className={`${styles.menuWrapper} ${
+          isBurgerMenuOpen ? styles.active : ''
+        }`}
+      >
         <div className={styles.menuContent} role="button">
           <div className={`${styles.menuHeader} p-2`}>
-            <Link href="/">
-              <Image
-                src={logo}
-                alt="logo"
-                className={styles.menuLogoIcon}
-                width={150}
-                height={10}
-              />
-            </Link>
+            <div className={styles.logo}>
+              <Link href="/">
+                <Logo />
+              </Link>
+            </div>
             <CloseIcon className={styles.btnClose} onClick={closeMenu} />
           </div>
           <ul className={`${styles.navBar} py-3`}>
@@ -82,6 +92,22 @@ const BurgerMenu: NextPage = () => {
                 </div>
               </li>
             ))}
+            <li
+              key="cart"
+              className="w-full opacity-75 hover:bg-indigo-500"
+              onClick={handleNavigate(ERoute.cart)}
+            >
+              <div className="p-3">
+                <p>
+                  CART{' '}
+                  {userCartProducts.length > ZERO_PRODUCTS && (
+                    <span className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-orange-main p-1 text-xs font-semibold text-black">
+                      {userCartProducts.length}
+                    </span>
+                  )}
+                </p>
+              </div>
+            </li>
             {authState && (
               <>
                 <li
@@ -133,7 +159,4 @@ const BurgerMenu: NextPage = () => {
   );
 };
 
-BurgerMenu.defaultProps = {
-  style: {},
-};
 export default BurgerMenu;

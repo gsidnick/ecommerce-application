@@ -12,6 +12,9 @@ describe('BurgerMenu', () => {
       auth: {
         authState: false,
       },
+      cart: {
+        userCartProducts: [],
+      },
       menu: {
         isBurgerMenuOpen: true,
       },
@@ -30,6 +33,9 @@ describe('BurgerMenu', () => {
     const initialState = {
       auth: {
         authState: false,
+      },
+      cart: {
+        userCartProducts: [],
       },
       menu: {
         isBurgerMenuOpen: true,
@@ -52,6 +58,9 @@ describe('BurgerMenu', () => {
     const initialState = {
       auth: {
         authState: true,
+      },
+      cart: {
+        userCartProducts: [],
       },
       menu: {
         isBurgerMenuOpen: true,

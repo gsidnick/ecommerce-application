@@ -1,3 +1,20 @@
+.burgerButtonWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.burgerButtonWrapper:hover {
+  border: 1px solid #dfdfdf;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
 .burgerButton {
   z-index: 10;
   cursor: pointer;
@@ -7,7 +24,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
 }
 
 .burgerSpan {

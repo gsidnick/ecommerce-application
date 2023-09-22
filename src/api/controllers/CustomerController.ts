@@ -1,4 +1,4 @@
-import { ClientResponse } from '@commercetools/sdk-client-v2';
+import { ClientResponse, TokenStore } from '@commercetools/sdk-client-v2';
 import {
   Customer,
   MyCustomerChangePassword,
@@ -30,8 +30,8 @@ class CustomerController {
     return this.customerRepository.loginCustomer(userData);
   }
 
-  public logoutCustomer(): void {
-    this.customerRepository.logoutCustomer();
+  public async logoutCustomer(): Promise<void> {
+    return this.customerRepository.logoutCustomer();
   }
 
   public async getCustomer(): Promise<ClientResponse<Customer>> {
@@ -48,6 +48,14 @@ class CustomerController {
     data: MyCustomerChangePassword
   ): Promise<ClientResponse<Customer>> {
     return this.customerRepository.changeCustomerPassword(data);
+  }
+
+  public async createAnonymousCustomer(): Promise<TokenStore> {
+    return this.customerRepository.createAnonymousCustomer();
+  }
+
+  public async checkToken(): Promise<void> {
+    return this.customerRepository.checkToken();
   }
 }
 

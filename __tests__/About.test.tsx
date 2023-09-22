@@ -8,7 +8,7 @@ describe('About', () => {
   });
   test('should show home link', () => {
     render(<About />);
-    const link = screen.getByText(/To Home/i);
+    const link = screen.getByText(/Introduction/i);
     expect(link).toBeInTheDocument();
   });
 });

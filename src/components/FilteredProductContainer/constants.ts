@@ -3,6 +3,8 @@ export const DEFAULT_VARIANT_PRICE = 0;
 export const FIRST_IMAGE_INDEX = 0;
 export const PRICE_ARRAY_DEFAULT_LENGTH = 0;
 export const FRACTION_DIGITS_COUNT_DEFAULT = 2;
+export const DEFAULT_PAGE_TOTAL_COUNT = 1;
+export const ZERO_INDEX = 0;
 
 export const WIDTH_MAX = 1919;
 export const WIDTH_XL = 1599;

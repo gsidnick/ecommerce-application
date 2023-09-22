@@ -1,14 +1,13 @@
 import React, { ReactElement } from 'react';
 import Link from 'next/link';
 
-import Image from 'next/image';
 import Search from './search/Search';
 import ButtonsGroup from './buttonsGroup/ButtonsGroup';
 import NavMenu from './menu/NavMenu';
+import Logo from '@/components/ui/icons/Logo';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import { selectMenuState } from '@/store/slices/menuSlice';
 import BurgerMenu from './BurgerMenu';
-import logo from '@/assets/images/logo/logo-orange.png';
 import styles from './styles.module.css';
 
 function Header(): ReactElement {
@@ -22,7 +21,7 @@ function Header(): ReactElement {
         </div>
         <div className={styles.logo}>
           <Link href="/">
-            <Image src={logo} alt="logo" />
+            <Logo />
           </Link>
         </div>
         <div className={styles.buttonsGroup}>

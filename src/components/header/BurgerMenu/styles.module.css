@@ -11,7 +11,6 @@
 
 .menuWrapper {
   top: -1px;
-  right: -1px;
   min-width: 320px;
   width: 55%;
   height: 100vh;
@@ -21,17 +20,27 @@
   background-color: #131218;
   border: 1px solid black;
   color: #ffffff;
-  font-family: ABeeZee;
   font-size: 18px;
   font-weight: 400;
   line-height: normal;
+  right: -2000px;
+  transition: right 0.3s ease-in-out;
+}
+
+.menuWrapper.active {
+  right: 0;
 }
 
 .menuHeader {
   display: flex;
   justify-content: space-between;
+  padding: 10px 30px;
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.logo {
+  width: 50px;
 }
 
 @media screen and (min-width: 768px) {

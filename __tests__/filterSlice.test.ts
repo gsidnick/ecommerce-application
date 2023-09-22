@@ -22,14 +22,15 @@ describe('Tests for filterSlice', () => {
   test('initialize filterSlice with initialValue', () => {
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -45,14 +46,15 @@ describe('Tests for filterSlice', () => {
     store.dispatch(setStateFilteredProducts([]));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -68,14 +70,15 @@ describe('Tests for filterSlice', () => {
     store.dispatch(setFilterCategory('Original'));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: 'Original',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -88,17 +91,18 @@ describe('Tests for filterSlice', () => {
   });
 
   test('change min priceSliderValues state with action', () => {
-    store.dispatch(setMinSliderValue('100'));
+    store.dispatch(setMinSliderValue(100));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '100',
-        max: '',
+        min: 100,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -111,17 +115,18 @@ describe('Tests for filterSlice', () => {
   });
 
   test('change max priceSliderValues state with action', () => {
-    store.dispatch(setMaxSliderValue('1000'));
+    store.dispatch(setMaxSliderValue(1000));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '1000',
+        min: 0,
+        max: 1000,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -137,14 +142,15 @@ describe('Tests for filterSlice', () => {
     store.dispatch(updateFilterBrands('Brand'));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: ['Brand'],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -160,14 +166,15 @@ describe('Tests for filterSlice', () => {
     store.dispatch(setSortByValue('price desc'));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price desc'],
@@ -183,14 +190,15 @@ describe('Tests for filterSlice', () => {
     store.dispatch(setOffsetValue(40));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -206,14 +214,15 @@ describe('Tests for filterSlice', () => {
     store.dispatch(setCardsLimitPerPage(10));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
@@ -229,14 +238,15 @@ describe('Tests for filterSlice', () => {
     store.dispatch(setFilterPaginationPage(5));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 5,
       sortBy: ['price asc'],
@@ -249,24 +259,25 @@ describe('Tests for filterSlice', () => {
   });
 
   test('change searchQuery state with action', () => {
-    store.dispatch(setSearchQueryString('search phrase'));
+    store.dispatch(setSearchQueryString(''));
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
       offSet: 0,
       cardsLimitPerPage: 20,
       totalFilteredProducts: 0,
-      searchQuery: 'search phrase',
+      searchQuery: '',
       filterBreadcrumbs: [],
     });
   });
@@ -277,21 +288,22 @@ describe('Tests for filterSlice', () => {
     );
     const { filter } = store.getState();
     expect(filter).toStrictEqual({
+      isLoading: false,
       filteredProducts: [],
       filteredAllProducts: [],
       filterByColor: [],
       filterByBrand: [],
       filterCategory: '',
       priceSliderValues: {
-        min: '',
-        max: '',
+        min: 0,
+        max: 0,
       },
       filterPaginationPage: 0,
       sortBy: ['price asc'],
       offSet: 0,
       cardsLimitPerPage: 20,
       totalFilteredProducts: 0,
-      searchQuery: 'search phrase',
+      searchQuery: '',
       filterBreadcrumbs: [{ id: 'category-id', name: 'category-name' }],
     });
   });

@@ -24,6 +24,7 @@ import modalReducer, { modalSlice } from '@/store/slices/modalSlice';
 import productsReducer, { productsSlice } from '@/store/slices/productsSlice';
 import filterReducer, { filterSlice } from '@/store/slices/filterSlice';
 import storage from './helpers/storage';
+import cartReducer, { cartSlice } from '@/store/slices/cartSlice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: authReducer,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   [modalSlice.name]: modalReducer,
   [productsSlice.name]: productsReducer,
   [filterSlice.name]: filterReducer,
+  [cartSlice.name]: cartReducer,
 });
 
 export interface IPersistorStore {
@@ -57,7 +59,7 @@ export const makeStore = (): ToolkitStore & IPersistorStore => {
 
   const persistConfig = {
     key: 'nextjs',
-    whitelist: ['auth'],
+    whitelist: ['auth', 'cart'],
     storage,
   };
   const persistedReducer = persistReducer(persistConfig, rootReducer);

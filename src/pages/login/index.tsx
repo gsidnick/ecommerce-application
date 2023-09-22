@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { HttpErrorType } from '@commercetools/sdk-client-v2';
+import { ClientResponse, HttpErrorType } from '@commercetools/sdk-client-v2';
+import { Cart } from '@commercetools/platform-sdk';
 import {
   AuthState,
   setAuthState,
@@ -19,6 +20,8 @@ import CustomInput from '@/components/CustomInput';
 import CustomerController from '@/api/controllers/CustomerController';
 import { HttpStatus, IApiLoginResult, LoginProps } from '@/api/types';
 import { ERoute } from '@/data/routes';
+import { loadUserCart, setCartId } from '@/store/slices/cartSlice';
+import CartController from '@/api/controllers/CartController';
 
 const initialValues: LoginProps = {
   email: '',
@@ -34,6 +37,7 @@ const LoginPage: NextPage<AuthState> = () => {
     setIsLoading(true);
 
     const customerController = new CustomerController();
+    const cartController = new CartController();
 
     customerController
       .loginCustomer(values)
@@ -49,8 +53,19 @@ const LoginPage: NextPage<AuthState> = () => {
             dispatch(setToken(token));
             dispatch(setRefreshToken(refreshToken ?? ''));
             dispatch(setExpirationTime(expirationTime));
-
             toast.success('Authenticated successfully');
+
+            cartController
+              .getCart()
+              .then((cartResponse) => {
+                const id =
+                  (cartResponse as ClientResponse<Cart>).body?.id ?? '';
+                dispatch(setCartId(id));
+                if (id) {
+                  dispatch(loadUserCart());
+                }
+              })
+              .catch(console.error);
 
             router.push(ERoute.home).catch(() => {
               toast.error('Error while redirecting to home page');

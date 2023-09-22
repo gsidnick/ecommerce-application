@@ -1,9 +1,5 @@
-import React, { useState, ReactElement, ReactNode, useEffect } from 'react';
-// import Slider from 'rc-slider';
-// import { useDebouncedCallback } from 'use-debounce';
-// import { ProductProjection } from '@commercetools/platform-sdk';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import React, { useState, ReactElement, useEffect, ChangeEvent } from 'react';
+import Slider from 'rc-slider';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
 import {
@@ -11,196 +7,128 @@ import {
   setMinSliderValue,
   setMaxSliderValue,
 } from '@/store/slices/filterSlice';
-// import { extractAllPrices } from '../../helpers/productsHelpers';
-import { numberSchema } from '@/validation/schemas';
+import { extractAllPrices } from '../../helpers/productsHelpers';
 
 import 'rc-slider/assets/index.css';
 import styles from './styles.module.scss';
 
-// interface IFilterPriceSlider {
-//   productsItems: ProductProjection[];
-// }
+const DEGREE_OF_TEN = 10;
+const DIGITS_AFTER_COMMA = 2;
+const FIRST_INDEX = 0;
+const DIFFERENT_COUNT_LAST_INDEX = 1;
+const DEFAULT_PRICE = 0;
 
-// const DEBOUNCE_TIME = 200;
-// const INDEX_BEGIN = 0;
-// const INDEX_END = 1;
-
-// const FilterPriceSlider = ({
-//   productsItems,
-// }: IFilterPriceSlider): ReactElement => {
-
-const initialValues: { minPrice: string; maxPrice: string } = {
-  minPrice: '',
-  maxPrice: '',
-};
 const FilterPriceSlider = (): ReactElement => {
   const dispatch = useAppDispatch();
 
-  const [minPrice, setMinPrice] = useState<string>('');
-  const [maxPrice, setMaxPrice] = useState<string>('');
+  const [minPrice, setMinPrice] = useState<number>(DEFAULT_PRICE);
+  const [maxPrice, setMaxPrice] = useState<number>(DEFAULT_PRICE);
+  const [minPriceValue, setMinPriceValue] = useState<number>(DEFAULT_PRICE);
+  const [maxPriceValue, setMaxPriceValue] = useState<number>(DEFAULT_PRICE);
 
-  const {
-    priceSliderValues: { min, max },
-    filteredProducts,
-    filterCategory,
-  } = useAppSelector(selectFilterState);
+  const { filterCategory, filteredAllProducts, filterByBrand } =
+    useAppSelector(selectFilterState);
 
-  // const { handleReset } = useFormikContext();
-
-  // const minFilterPriceGlobal = useAppSelector(
-  //   (state) => state.filter.priceSliderValues.min
-  // );
-  // const maxFilterPriceGlobal: number = useAppSelector(
-  //   (state) => state.filter.priceSliderValues.max
-  // );
-
-  // const [priceValue, setPriceValue] = useState<number[]>([
-  //   minFilterPriceGlobal,
-  //   maxFilterPriceGlobal,
-  // ]);
-
-  // const priceArray = extractAllPrices(productsItems);
-
-  // const reduxRequest = useDebouncedCallback(
-  //   (value: [min: number, max: number]) => {
-  //     const [min, max] = value;
-
-  //     dispatch(setMinSliderValue(min));
-  //     dispatch(setMaxSliderValue(max));
-  //   },
-  //   DEBOUNCE_TIME
-  // );
-
-  // const handleChangePrice = (value: number[]): void => {
-  //   const [min, max] = value;
-  //   setPriceValue([min, max]);
-  //   reduxRequest([min, max]);
-  // };
-
-  // useEffect(() => {
-  //   setPriceValue([
-  //     priceArray[INDEX_BEGIN],
-  //     priceArray[priceArray.length - INDEX_END],
-  //   ]);
-  //   reduxRequest([
-  //     priceArray[INDEX_BEGIN],
-  //     priceArray[priceArray.length - INDEX_END],
-  //   ]);
-  // }, []);
-
-  const handleChangePrice = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const { name, value } = event.target;
-    if (name === 'minPrice') {
-      setMinPrice(value);
-      // dispatch(setMinSliderValue(value));
-    }
-    if (name === 'maxPrice') {
-      setMaxPrice(value);
-      // dispatch(setMaxSliderValue(value));
-    }
+  const handleChangePriceBySlider = (value: number | number[]): void => {
+    const [minLocal, maxLocal] = value as number[];
+    setMinPriceValue(minLocal);
+    setMaxPriceValue(maxLocal);
   };
 
-  const handleSubmit = (values: {
-    minPrice: string;
-    maxPrice: string;
-  }): void => {
-    dispatch(setMinSliderValue(values.minPrice));
-    dispatch(setMaxSliderValue(values.maxPrice));
+  const handleChangePriceByInput = (e: ChangeEvent<HTMLInputElement>): void => {
+    const regex = /^[0-9]*|^$$/
+    if (!regex.test(e.target.value)) {
+      return;
+    }
+    if (e.target.name === 'minPriceValue') {
+      setMinPriceValue(
+        Number(e.target.value) * DEGREE_OF_TEN ** DIGITS_AFTER_COMMA
+      );
+    }
+    if (e.target.name === 'maxPriceValue') {
+      setMaxPriceValue(
+        Number(e.target.value) * DEGREE_OF_TEN ** DIGITS_AFTER_COMMA
+      );
+    }
   };
-
-  const validationSchema = Yup.object({
-    minPrice: numberSchema,
-    maxPrice: numberSchema,
-  });
 
   useEffect(() => {
+    const prices = extractAllPrices(filteredAllProducts);
+    const min = prices[FIRST_INDEX];
+    const max = prices[prices.length - DIFFERENT_COUNT_LAST_INDEX];
+    setMinPriceValue(min);
+    setMaxPriceValue(max);
     setMinPrice(min);
     setMaxPrice(max);
-    // handleReset();
-  }, [min, max, filteredProducts, filterCategory]);
+    dispatch(setMinSliderValue(min));
+    dispatch(setMaxSliderValue(max));
+  }, []);
+
+  useEffect(() => {
+    const prices = extractAllPrices(filteredAllProducts);
+    const min = prices[FIRST_INDEX];
+    const max = prices[prices.length - DIFFERENT_COUNT_LAST_INDEX];
+    setMinPriceValue(min);
+    setMaxPriceValue(max);
+    setMinPrice(min);
+    setMaxPrice(max);
+  }, [filterCategory, filteredAllProducts, filterByBrand]);
+
+  const handleSubmit = (): void => {
+    dispatch(setMinSliderValue(minPriceValue));
+    dispatch(setMaxSliderValue(maxPriceValue));
+  };
 
   return (
     <div className={styles.priceFilterWrapper}>
       <p className={styles.priceTitle}>Price</p>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
+      <div
+        className={`${styles.inputWrapper} text-white-200 items-left flex justify-center gap-2`}
       >
-        {({
-          // values,
-          // resetForm,
-          handleChange,
-          errors,
-        }): ReactNode => (
-          <Form>
-            <div
-              className={`${styles.inputWrapper} text-white-200 items-left flex justify-center gap-2`}
-            >
-              <input
-                type="text"
-                name="minPrice"
-                value={minPrice}
-                onChange={(e): void => {
-                  handleChange(e);
-                  handleChangePrice(e);
-                }}
-                className={`${styles.inputText} ${
-                  errors.minPrice ? styles.inputError : ''
-                } w-[60px] text-black`}
-              />
-              <span>-</span>
-              <input
-                type="text"
-                name="maxPrice"
-                value={maxPrice}
-                onChange={(e): void => {
-                  handleChange(e);
-                  handleChangePrice(e);
-                }}
-                className={`${styles.inputText} ${
-                  errors.maxPrice ? styles.inputError : ''
-                } w-[60px] text-black`}
-              />
-              <button
-                type="submit"
-                // onClick={handleSubmit}
-                className={styles.submitBtn}
-              >
-                OK
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-      {/* <div className="flex items-center justify-around h-16 text-xl font-bold text-white-200">
-        <p>{priceValue[INDEX_BEGIN]}</p>
-
+        <input
+          type="text"
+          name="minPriceValue"
+          value={minPriceValue / DEGREE_OF_TEN ** DIGITS_AFTER_COMMA}
+          onChange={(e): void => {
+            handleChangePriceByInput(e);
+          }}
+          className={`${styles.inputText} w-[80px] text-black`}
+        />
         <span>-</span>
-        <p>{priceValue[INDEX_END]}</p>
-      </div> */}
-      {/* <div className={styles.sliderWrapper}>
-        {priceValue[INDEX_BEGIN] && priceValue[INDEX_END] && (
-          <Slider
-            range
-            value={priceValue}
-            allowCross={false}
-            min={priceArray[INDEX_BEGIN]}
-            max={priceArray[priceArray.length - INDEX_END]}
-            onChange={(value): void => {
-              handleChangePrice(value as number[]);
-            }}
-            handleStyle={[
-              { borderColor: '#4527a0', borderWidth: 4 },
-              { borderColor: '#4527a0', borderWidth: 4 },
-            ]}
-            trackStyle={[{ backgroundColor: '#4527a0' }]}
-            railStyle={{ backgroundColor: '#f1b8ff' }}
-          />
-        )}
-      </div> */}
+        <input
+          type="text"
+          name="maxPriceValue"
+          value={maxPriceValue / DEGREE_OF_TEN ** DIGITS_AFTER_COMMA}
+          onChange={(e): void => {
+            handleChangePriceByInput(e);
+          }}
+          className={`${styles.inputText}  w-[80px] text-black`}
+        />
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className={styles.submitBtn}
+        >
+          OK
+        </button>
+      </div>
+
+      <div className={styles.sliderWrapper}>
+        <Slider
+          range
+          value={[minPriceValue, maxPriceValue]}
+          allowCross={false}
+          min={Number(minPrice)}
+          max={Number(maxPrice)}
+          onChange={handleChangePriceBySlider}
+          handleStyle={[
+            { borderColor: '#4527a0', borderWidth: 4 },
+            { borderColor: '#4527a0', borderWidth: 4 },
+          ]}
+          trackStyle={[{ backgroundColor: '#4527a0' }]}
+          railStyle={{ backgroundColor: '#f1b8ff' }}
+        />
+      </div>
     </div>
   );
 };

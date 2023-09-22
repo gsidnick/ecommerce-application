@@ -6,7 +6,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --background-main: #131218;
+  --background-main: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,12 +14,13 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-    --background-main: #131218;
+    --background-main: #fff;
   }
 }
 
 body {
   background-color: var(--background-main);
+  font-family: 'ABeeZee', 'Arial', sans-serif;
 }
 
 [class^='numberSlide'],
@@ -78,4 +79,8 @@ body {
 
 .modal {
   overflow: hidden;
+}
+
+.svg-icon path {
+  fill: currentColor;
 }
