@@ -1,0 +1,82 @@
+.gridItemContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.paginateContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 55px auto;
+  justify-content: center;
+}
+
+.paginateContainer li {
+  cursor: pointer;
+  margin: auto 5px;
+}
+
+.paginateContainer li a {
+  font-family: 'Inter', sans-serif;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(0, 0, 0);
+  border: 1px solid rgb(229, 231, 235);
+  border-radius: 50%;
+  transition: background-color 0.3s ease-in-out;
+  user-select: none;
+}
+
+.paginateContainer li a:hover {
+  background-color: rgb(185, 185, 185);
+  color: rgb(94, 94, 94) !important;
+}
+
+.activeLinkClassName {
+  color: white !important;
+  border: none !important;
+  background-color: rgb(249, 115, 22);
+}
+
+.noItems {
+  color: #ffffff;
+}
+
+@media screen and (max-width: 1919px) {
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 1599px) {
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .gridItemContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .gridItemContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 567px) {
+  .gridItemContainer {
+    grid-template-columns: 1fr;
+  }
+}

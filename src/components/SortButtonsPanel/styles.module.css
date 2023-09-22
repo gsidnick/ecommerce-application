@@ -1,0 +1,31 @@
+.container {
+  background-color: #e6e6e6;
+}
+
+.selectWrapper {
+  width: 230px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0px 10px;
+}
+
+.select {
+  appearance: none;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  line-height: inherit;
+  outline: none;
+  min-width: 15ch;
+  max-width: 30ch;
+  border: none;
+  border: 1px solid #777;
+  border-radius: 0.25em;
+  padding: 0.25em 0.5em;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1.1;
+  background-color: #fff;
+  background-image: linear-gradient(to top, #f9f9f9, #fff 33%);
+}

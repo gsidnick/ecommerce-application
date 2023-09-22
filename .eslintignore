@@ -1,0 +1,11 @@
+.eslintrc.js
+*.d.ts
+tailwind.config.js
+postcss.config.js
+tsconfig.json
+dist
+jest.config.ts
+*.test.ts
+next.config.js
+jest.config.js
+jest.setup.js

@@ -1,0 +1,13 @@
+.separator {
+  display: inline-block;
+  padding: 0 5px;
+}
+
+.link {
+  color: #2c2b2b;
+}
+
+.link:hover {
+  /* color: #a4a4a4; */
+  text-decoration: underline;
+}

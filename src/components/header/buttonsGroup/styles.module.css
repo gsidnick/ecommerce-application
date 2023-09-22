@@ -1,0 +1,67 @@
+.burgerButtonWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.burgerButtonWrapper:hover {
+  border: 1px solid #dfdfdf;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.burgerButton {
+  z-index: 10;
+  cursor: pointer;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.burgerSpan {
+  width: 17px;
+  height: 2px;
+  color: #ffffff;
+  position: absolute;
+  border-bottom: 2px solid #ffffff;
+  z-index: 10;
+}
+
+.burgerButton::after {
+  top: 2px;
+  z-index: 10;
+  width: 17px;
+  content: ' ';
+  color: #ffffff;
+  position: absolute;
+  border-bottom: 2px solid #ffffff;
+  height: 2px;
+}
+
+.burgerButton::before {
+  top: 16px;
+  width: 17px;
+  height: 2px;
+  z-index: 10;
+  content: ' ';
+  color: #ffffff;
+  position: absolute;
+  border-bottom: 2px solid #ffffff;
+}
+
+@media screen and (min-width: 768px) {
+  .burgerButton,
+  .burgerSpan,
+  .burgerButton::after,
+  .burgerButton::before {
+    display: none;
+  }
+}
