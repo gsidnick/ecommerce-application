@@ -20,21 +20,21 @@ const ModalPrompt = ({
       isOpen ? 'flex' : 'hidden'
     } z-50 items-center justify-center bg-white bg-opacity-80`}
   >
-    <div className="p-4 bg-white border border-black opacity-100 border-1 rounded-xl">
+    <div className="mx-4 rounded-lg border border-gray-100 bg-white p-8 opacity-100 shadow-lg">
       <div>
         <h2 className="mb-4 text-2xl font-bold">{modalTitle}</h2>
         <p>{modalContent}</p>
-        <div className="flex justify-end mt-4">
+        <div className="mt-4 flex justify-end">
           <button
             type="button"
-            className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700"
+            className="mr-2 rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700"
             onClick={onConfirmClick}
           >
             Confirm
           </button>
           <button
             type="button"
-            className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700"
+            className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
             onClick={onCancelClick}
           >
             Cancel
