@@ -278,7 +278,7 @@ function cart(): ReactElement {
 
   return (
     <>
-      <main className="mx-auto my-0 max-w-screen-xl p-8">
+      <main className="mx-auto my-0 max-w-screen-xl p-4 sm:p-6 md:p-8">
         {displayCartItems && displayCartItems.length === EMPTY_CART_ITEMS && (
           <div className="flex h-[50vh] flex-col items-center justify-center">
             <h1 className="mb-4 text-2xl font-bold">Cart is empty!</h1>
@@ -293,7 +293,7 @@ function cart(): ReactElement {
         {displayCartItems && displayCartItems.length > EMPTY_CART_ITEMS && (
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[auto_350px]">
             <div className="flex flex-col justify-start gap-4">
-              <div className="border-b-2 border-b-orange-main pb-4 pt-8 text-2xl font-bold">
+              <div className="border-b-2 border-b-orange-main pb-4 text-2xl font-bold lg:pt-8">
                 Cart
               </div>
               {userCartProducts.map((product) => {
@@ -302,17 +302,17 @@ function cart(): ReactElement {
                 return (
                   <div
                     key={product.id}
-                    className="grid grid-cols-[100px_auto] gap-4 border-b border-b-gray-200 pb-4 last:border-0"
+                    className="grid grid-cols-1 gap-4 border-b border-b-gray-200 pb-4 last:border-0 sm:grid-cols-[100px_auto]"
                   >
                     <Image
-                      className="h-[100px] w-[100px] object-contain"
+                      className="h-[100px] w-[100px] justify-self-center object-contain"
                       src={data.image}
                       width="100"
                       height="100"
                       alt="product-image"
                     />
                     <div className="grid grid-cols-1 content-start gap-6">
-                      <div className="flex flex-row items-start justify-between gap-4 text-xl font-bold">
+                      <div className="flex flex-row items-start justify-between gap-4 text-base font-bold">
                         <span>{data.name}</span>
                         <button
                           type="button"
@@ -328,7 +328,7 @@ function cart(): ReactElement {
                           />
                         </button>
                       </div>
-                      <div className="grid grid-cols-[100px_100px_1fr] gap-4">
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-[100px_100px_1fr]">
                         <div className="flex justify-self-start">
                           <span>$ {data.discountedPrice}</span>
                         </div>
