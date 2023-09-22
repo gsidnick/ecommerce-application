@@ -382,22 +382,25 @@ function cart(): ReactElement {
                     Total
                   </div>
                   <div className="flex flex-col gap-4 border-b border-b-gray-400 py-4 pb-4">
-                    <div className="flex justify-between">
+                    <div className="flex flex-col justify-between sm:flex-row">
                       <span className="font-bold">Quantity</span>
                       <span>{cartProductsQty} pcs.</span>
                     </div>
                     <div className="flex flex-col justify-start gap-4">
                       {cartTotalWithoutDiscount - cartTotal > DISCOUNT_DIFF && (
                         <>
-                          <div className="flex justify-between">
+                          <div className="flex flex-col justify-between sm:flex-row">
                             <span className="font-bold">Order total</span>
-                            <span className="line-through">
-                              $ {cartTotalWithoutDiscount}
+                            <span className="text-gray-400 line-through">
+                              ${' '}
+                              {cartTotalWithoutDiscount.toFixed(
+                                FRACTION_DIGITS
+                              )}
                             </span>
                           </div>
-                          <div className="flex justify-between font-bold">
+                          <div className="flex flex-col justify-between font-bold sm:flex-row">
                             <span>Discounted total</span>
-                            <span>$ {cartTotal}</span>
+                            <span>$ {cartTotal.toFixed(FRACTION_DIGITS)}</span>
                           </div>
                         </>
                       )}
@@ -405,7 +408,10 @@ function cart(): ReactElement {
                         DISCOUNT_DIFF && (
                         <div className="flex justify-between">
                           <span className="font-bold">Order total</span>
-                          <span className="">$ {cartTotalWithoutDiscount}</span>
+                          <span className="font-bold">
+                            ${' '}
+                            {cartTotalWithoutDiscount.toFixed(FRACTION_DIGITS)}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -417,7 +423,10 @@ function cart(): ReactElement {
                   </div>
                 </div>
                 <div className="ml-0 flex w-full flex-col gap-4 pt-4 md:ml-2 lg:ml-0 ">
-                  <form className="flex w-full" onSubmit={handleApplyPromocode}>
+                  <form
+                    className="flex w-full flex-col gap-4 sm:flex-row sm:gap-2"
+                    onSubmit={handleApplyPromocode}
+                  >
                     <input
                       className="border-1 mr-2 flex h-[40px] w-full flex-grow rounded-md border border-gray-200 p-2 text-gray-500"
                       type="text"
